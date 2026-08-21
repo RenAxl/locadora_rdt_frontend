@@ -1,0 +1,25 @@
+<div class="filter-container">
+  <form class="filter-form">
+    <div class="filter-name-container">
+      <input
+        pInputText
+        type="text"
+        class="form-control"
+        placeholder="{{ text }}"
+        name="name"
+        [(ngModel)]="nameFilter"
+      />
+      <button class="filter-search-icon" (click)="searchName()">
+        <img src="assets/images/search-icon.svg" alt="filtro" />
+      </button>
+    </div>
+    <div class="filter-bottom-container">
+      <button
+        class="btn btn-outline-secondary btn-filter-clear"
+        (click)="formClear()"
+      >
+        LIMPAR<span class="btn-filter-word"> FILTRO</span>
+      </button>
+    </div>
+  </form>
+</div>

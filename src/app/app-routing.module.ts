@@ -4,7 +4,7 @@ import { MainComponent } from './shell/main/main.component';
 
 const routes: Routes = [
 
-    {
+  {
     path: '',
     component: MainComponent,
     children: [
@@ -12,6 +12,18 @@ const routes: Routes = [
         path: 'home',
         loadChildren: () =>
           import('./features/home/home.module').then((m) => m.HomeModule),
+      },
+    ],
+  },
+
+  {
+    path: '',
+    component: MainComponent,
+    children: [
+      {
+        path: 'users',
+        loadChildren: () =>
+          import('./features/identity/users/users.module').then((m) => m.UsersModule),
       },
     ],
   },

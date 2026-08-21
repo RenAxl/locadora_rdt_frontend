@@ -1,1 +1,22 @@
+<p-toast></p-toast>
+
 <router-outlet></router-outlet>
+
+<p-confirmDialog header="Confirmação" icon="pi pi-question-circle" #Confirmation>
+  <p-footer>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      label="Sim"
+      (click)="Confirmation.accept()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      label="Não"
+      (click)="Confirmation.reject()"
+    ></button>
+  </p-footer>
+</p-confirmDialog>

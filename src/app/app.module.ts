@@ -11,6 +11,7 @@ import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { SharedModule } from './shared/shared.module';
 import { ShellModule } from './shell/shell.module';
+import { CoreModule } from './core/core.module';
 
 registerLocaleData(localePt);
 
@@ -25,6 +26,7 @@ registerLocaleData(localePt);
     TableModule,
     SharedModule,
     ShellModule,
+    CoreModule,
    
     AppRoutingModule
   ],

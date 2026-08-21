@@ -103,6 +103,29 @@
      1px  1px 0 #000;
 }
 
+.submenu-toggle-icon.open {
+  display: none;
+}
+
+.treeview > a:not(.collapsed) .submenu-toggle-icon.closed {
+  display: none;
+}
+
+.treeview > a:not(.collapsed) .submenu-toggle-icon.open {
+  display: inline-block;
+}
+
+.treeview-menu .nav-link {
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.treeview-menu .nav-link:hover,
+.treeview-menu .nav-link.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
 @media (max-width: 767.98px) {
   .sidebar {
     top: 56px;

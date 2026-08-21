@@ -1,0 +1,103 @@
+<div class="user-form-container">
+  <div class="user-card">
+    <form #userForm="ngForm" (ngSubmit)="save(userForm)">
+      <div class="col-12 mb-3">
+        <h1>Dados do Usuário</h1>
+      </div>
+
+      <div class="row g-3 user-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Nome *</label>
+          <input pInputText placeholder="Nome" type="text" name="name" [(ngModel)]="user.name" #name="ngModel" required
+            minlength="5" class="form-control" />
+
+          <app-message [control]="name" error="required" text="Informe o nome completo do usuário"></app-message>
+
+          <app-message [control]="name" error="minlength" text="Mínimo de {{
+              name.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              name.errors?.['minlength']?.actualLength
+            }}"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">E-mail *</label>
+          <input pInputText placeholder="E-mail" type="email" name="email" [(ngModel)]="user.email" #email="ngModel"
+            required class="form-control" />
+
+          <app-message [control]="email" error="required" text="Informe o e-mail do usuário"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Telefone *</label>
+          <input pInputText placeholder="Telefone" type="text" name="telephone" [(ngModel)]="user.telephone"
+            #telephone="ngModel" required class="form-control" mask="(00) 00000-0000" />
+
+          <app-message [control]="telephone" error="required" text="Informe o telefone do usuário"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">CEP *</label>
+          <input pInputText placeholder="CEP" type="text" name="zipCode" mask="00000-000"
+            [(ngModel)]="user.address.zipCode" #zipCode="ngModel" required class="form-control" />
+          <app-message [control]="zipCode" error="required" text="Informe o CEP"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Rua *</label>
+          <input pInputText placeholder="Rua" type="text" name="street" [(ngModel)]="user.address.street"
+            #street="ngModel" required class="form-control" />
+
+          <app-message [control]="street" error="required" text="Informe a rua do usuário"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">Número *</label>
+          <input pInputText placeholder="Número" type="text" name="number" [(ngModel)]="user.address.number"
+            #number="ngModel" required class="form-control" />
+          <app-message [control]="number" error="required" text="Informe o número"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Complemento</label>
+          <input pInputText placeholder="Complemento" type="text" name="complement"
+            [(ngModel)]="user.address.complement" class="form-control" />
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Bairro *</label>
+          <input pInputText placeholder="Bairro" type="text" name="neighborhood" [(ngModel)]="user.address.neighborhood"
+            #neighborhood="ngModel" required class="form-control" />
+          <app-message [control]="neighborhood" error="required" text="Informe o bairro"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Cidade *</label>
+          <input pInputText placeholder="Cidade" type="text" name="city" [(ngModel)]="user.address.city" #city="ngModel"
+            required class="form-control" />
+          <app-message [control]="city" error="required" text="Informe a cidade"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">UF *</label>
+          <input pInputText placeholder="UF" type="text" name="state" maxlength="2" [(ngModel)]="user.address.state"
+            #state="ngModel" required class="form-control" />
+          <app-message [control]="state" error="required" text="Informe a UF"></app-message>
+        </div>
+
+      </div>
+
+      <div class="user-form-buttons mt-4">
+        <button type="submit" [disabled]="userForm.invalid" class="btn btn-primary user-form-button">
+          SALVAR
+        </button>
+
+        <a routerLink="/users/">
+          <button type="button" class="btn btn-outline-danger user-form-button">
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

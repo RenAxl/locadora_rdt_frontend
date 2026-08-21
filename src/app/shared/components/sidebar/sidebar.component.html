@@ -1,9 +1,5 @@
-<aside
-  id="sidebarOffcanvas"
-  class="sidebar offcanvas-md offcanvas-start d-flex flex-column"
-  tabindex="-1"
-  aria-labelledby="sidebarOffcanvasLabel"
->
+<aside id="sidebarOffcanvas" class="sidebar offcanvas-md offcanvas-start d-flex flex-column" tabindex="-1"
+  aria-labelledby="sidebarOffcanvasLabel">
   <div class="sidebar-header">
     <div class="d-flex align-items-center w-100">
       <div class="system-icon me-2">
@@ -21,14 +17,36 @@
       </li>
 
       <li class="treeview">
-        <a
-          routerLink="/home"
-          routerLinkActive="active"
-          class="d-flex align-items-center nav-link px-3"
-        >
+        <a routerLink="/home" routerLinkActive="active" class="d-flex align-items-center nav-link px-3">
           <i class="fa-solid fa-house me-2"></i>
           <span>Home</span>
         </a>
+      </li>
+
+      <li class="treeview">
+        <a class="d-flex align-items-center justify-content-between nav-link px-3 collapsed" data-bs-toggle="collapse"
+          data-bs-target="#submenuAdministracaoDesktop">
+          <span class="d-flex align-items-center">
+            <i class="fa-solid fa-user-shield me-2"></i>
+            <span>Administração</span>
+          </span>
+
+          <span>
+            <i class="fa-solid fa-caret-right submenu-toggle-icon closed"></i>
+            <i class="fa-solid fa-caret-down submenu-toggle-icon open"></i>
+          </span>
+        </a>
+
+        <ul class="treeview-menu collapse list-unstyled mb-0" id="submenuAdministracaoDesktop">
+          <li>
+            <a routerLink="/users" routerLinkActive="active" class="d-flex align-items-center nav-link px-4">
+              <i class="fa-solid fa-user me-2"></i>
+              <span>Usuários</span>
+            </a>
+          </li>
+        </ul>
+
+        
       </li>
     </ul>
   </nav>
