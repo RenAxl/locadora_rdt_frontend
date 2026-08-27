@@ -42,6 +42,11 @@
 
         <button pButton class="p-button-rounded p-button-text p-button-danger" icon="pi pi-trash"
             pTooltip="Excluir usuário" tooltipPosition="top" (click)="delete(user)"></button>
+
+        <button pButton class="p-button-rounded p-button-text p-button-warning"
+            [icon]="user.active ? 'pi pi-ban' : 'pi pi-check'" pTooltip="Ativar / Desativar Usuário"
+            tooltipPosition="top" (click)="toggleActive(user)"></button>
+
     </div>
 </ng-template>
 
