@@ -4,6 +4,12 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
+.table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
 :host ::ng-deep .global-table thead th {
   color: #ffffff;
   background-color: #2f3a45;

@@ -1,4 +1,16 @@
 <div class="global-table-card">
+  <div class="table-toolbar" *ngIf="showColumnsButton">
+    <button
+      pButton
+      type="button"
+      class="p-button-rounded p-button-text"
+      icon="pi pi-cog"
+      pTooltip="Personalizar colunas"
+      tooltipPosition="left"
+      (click)="openColumns()"
+    ></button>
+  </div>
+
   <p-table
     #table
     styleClass="global-table"
@@ -48,7 +60,7 @@
           <span class="p-column-title">{{ column.label }}:</span>
 
           <span *ngIf="!hasTemplate(column.field)">
-            {{ record[column.field] }}
+            {{ getFieldValue(record, column.field) }}
           </span>
 
           <ng-container
@@ -77,4 +89,3 @@
     </ng-template>
   </p-table>
 </div>
-

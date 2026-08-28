@@ -9,6 +9,10 @@ import { MessageComponent } from './components/message/message.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { TableModule } from 'primeng/table';
 import { DataTableComponent } from './components/data-table/data-table.component';
+import { TableColumnsModalComponent } from './components/table-columns-modal/table-columns-modal.component';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -16,7 +20,8 @@ import { DataTableComponent } from './components/data-table/data-table.component
     SidebarComponent,
     NameFilterComponent,
     MessageComponent,
-    DataTableComponent
+    DataTableComponent,
+    TableColumnsModalComponent
   ],
 
   imports: [
@@ -24,6 +29,9 @@ import { DataTableComponent } from './components/data-table/data-table.component
     FormsModule,
     NgxMaskModule.forRoot(),
     TableModule,
+    ButtonModule,
+    TooltipModule,
+    DialogModule,
 
     RouterModule
     
@@ -35,7 +43,8 @@ import { DataTableComponent } from './components/data-table/data-table.component
     NameFilterComponent,
     MessageComponent,
     DataTableComponent,
-    NgxMaskModule
+    NgxMaskModule,
+    TableColumnsModalComponent
   ],
 })
 export class SharedModule { }

@@ -1,12 +1,14 @@
-import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { LazyLoadEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
-
-export interface DataTableColumn {
-  field: string;
-  label: string;
-  sortable?: boolean;
-}
+import { DataTableColumn } from 'src/app/shared/components/data-table/models/data-table-column';
 
 @Component({
   selector: 'app-data-table',
@@ -24,11 +26,13 @@ export class DataTableComponent {
   @Input() emptyMessage: string = 'Nenhum registro encontrado.';
   @Input() columnTemplates: { [field: string]: TemplateRef<any> } = {};
   @Input() actionsTemplate: TemplateRef<any> | null = null;
+  @Input() showColumnsButton: boolean = false;
 
   @Output() selectedRecordsChange = new EventEmitter<any[]>();
   @Output() lazyLoad = new EventEmitter<LazyLoadEvent>();
   @Output() rowSelect = new EventEmitter<any>();
   @Output() rowUnselect = new EventEmitter<any>();
+  @Output() columnsButtonClick = new EventEmitter<void>();
 
   @ViewChild('table') table!: Table;
 
@@ -57,8 +61,28 @@ export class DataTableComponent {
     return this.columnTemplates[field];
   }
 
+  getFieldValue(record: any, field: string): any {
+    const fields = field.split('.');
+    let value = record;
+
+    fields.forEach((item) => {
+      if (value != null) {
+        value = value[item];
+      }
+    });
+
+    if (value === null || value === undefined || value === '') {
+      return '-';
+    }
+
+    return value;
+  }
+
+  openColumns(): void {
+    this.columnsButtonClick.emit();
+  }
+
   reset(): void {
     this.table.reset();
   }
-  
 }

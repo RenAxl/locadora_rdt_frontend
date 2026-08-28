@@ -2,11 +2,12 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 import { Pagination } from 'src/app/core/models/Pagination';
-import { ConfirmationService, LazyLoadEvent, MessageService } from 'primeng/api';
 import {
-  DataTableColumn,
-  DataTableComponent,
-} from 'src/app/shared/components/data-table/data-table.component';
+  ConfirmationService,
+  LazyLoadEvent,
+  MessageService,
+} from 'primeng/api';
+import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
 
 import { PhotoUrlRegistry } from 'src/app/core/utils/photo-preview.util';
 import { User } from '../../models/User';
@@ -15,7 +16,7 @@ import { UserDTO } from '../../dtos/user-dto';
 import { UserMapper } from '../../mapper/user.mapper';
 import { UserDetailsDTO } from '../../dtos/user-details-dto';
 import { catchError, EMPTY } from 'rxjs';
-
+import { DataTableColumn } from 'src/app/shared/components/data-table/models/data-table-column';
 
 @Component({
   selector: 'app-user-list',
@@ -37,19 +38,42 @@ export class UserListComponent implements OnDestroy {
 
   loading: boolean = false;
 
+  tableColumnsVisible: boolean = false;
+
+  visibleColumns: string[] = ['name', 'email', 'telephone', 'photo'];
+
   tableColumns: DataTableColumn[] = [
-    { field: 'name', label: 'Nome', sortable: true },
-    { field: 'email', label: 'E-mail', sortable: true },
-    { field: 'telephone', label: 'Telefone', sortable: true },
+    { field: 'name', label: 'Nome' },
+    { field: 'email', label: 'E-mail' },
+    { field: 'telephone', label: 'Telefone' },
+    { field: 'active', label: 'Ativo' },
+    { field: 'address.street', label: 'Rua' },
+    { field: 'address.number', label: 'Número' },
+    { field: 'address.complement', label: 'Complemento' },
+    { field: 'address.neighborhood', label: 'Bairro' },
+    { field: 'address.city', label: 'Cidade' },
+    { field: 'address.state', label: 'UF' },
+    { field: 'address.zipCode', label: 'CEP' },
     { field: 'photo', label: 'Foto' },
   ];
+
+  get visibleTableColumns(): DataTableColumn[] {
+    const columns: DataTableColumn[] = [];
+
+    for (const column of this.tableColumns) {
+      if (this.visibleColumns.includes(column.field)) {
+        columns.push(column);
+      }
+    }
+
+    return columns;
+  }
 
   @ViewChild('userTable') grid!: DataTableComponent;
 
   detailsVisible = false;
 
   userDetails: User | null = null;
-
 
   photoMap: { [key: number]: SafeUrl } = {};
   private photoUrls: PhotoUrlRegistry;
@@ -63,7 +87,6 @@ export class UserListComponent implements OnDestroy {
     this.photoUrls = new PhotoUrlRegistry(sanitizer);
   }
 
-
   ngOnDestroy(): void {
     this.photoUrls.clear();
   }
@@ -72,33 +95,31 @@ export class UserListComponent implements OnDestroy {
     this.pagination.page = page;
     this.loading = true;
 
-    this.userService
-      .list(this.pagination, this.filterName)
-      .subscribe({
-        next: (data) => {
-          this.users = [];
+    this.userService.list(this.pagination, this.filterName).subscribe({
+      next: (data) => {
+        this.users = [];
 
-          data.content.forEach((dto: UserDTO) => {
-            const user = UserMapper.toModel(dto);
-            this.users.push(user);
-          });
+        data.content.forEach((dto: UserDTO) => {
+          const user = UserMapper.toModel(dto);
+          this.users.push(user);
+        });
 
-          this.totalElements = data.totalElements;
+        this.totalElements = data.totalElements;
 
-          this.selectedUsers = [];
-          this.users.forEach((user) => {
-            if (user.id != null && this.selectedUserIds.includes(user.id)) {
-              this.selectedUsers.push(user);
-            }
-          });
+        this.selectedUsers = [];
+        this.users.forEach((user) => {
+          if (user.id != null && this.selectedUserIds.includes(user.id)) {
+            this.selectedUsers.push(user);
+          }
+        });
 
-          this.loadPhotos();
-          this.loading = false;
-        },
-        error: () => {
-          this.loading = false;
-        },
-      });
+        this.loadPhotos();
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      },
+    });
   }
 
   changePage(event: LazyLoadEvent): void {
@@ -233,6 +254,14 @@ export class UserListComponent implements OnDestroy {
     });
   }
 
+  openTableColumnsModal(): void {
+    this.tableColumnsVisible = true;
+  }
+
+  applyTableColumns(columns: string[]): void {
+    this.visibleColumns = [...columns];
+  }
+
   private loadPhotos(): void {
     this.photoUrls.clear();
     this.photoMap = {};
@@ -258,5 +287,4 @@ export class UserListComponent implements OnDestroy {
         });
     });
   }
-
 }

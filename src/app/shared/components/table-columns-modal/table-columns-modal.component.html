@@ -1,0 +1,30 @@
+<p-dialog
+  header="Personalizar colunas"
+  [visible]="visible"
+  (visibleChange)="onVisibilityChange($event)"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '600px', maxWidth: '95vw' }"
+>
+  <p class="modal-description">
+    Selecione as colunas que devem aparecer na tabela de {{ entityName }}.
+  </p>
+
+  <div class="columns-list">
+    <label class="column-option" *ngFor="let column of columns">
+      <input
+        type="checkbox"
+        [checked]="isSelected(column.field)"
+        (change)="changeColumn(column.field, $any($event.target).checked)"
+      />
+      <span>{{ column.label }}</span>
+    </label>
+  </div>
+
+  <div class="modal-actions">
+    <button type="button" class="btn btn-secondary" (click)="onVisibilityChange(false)">
+      FECHAR
+    </button>
+  </div>
+</p-dialog>

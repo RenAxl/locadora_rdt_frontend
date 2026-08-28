@@ -30,7 +30,7 @@ export class UserDetailsModalComponent implements OnChanges, OnDestroy {
 
   constructor(
     private userService: UserService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -96,7 +96,7 @@ export class UserDetailsModalComponent implements OnChanges, OnDestroy {
           this.removeObjectUrl();
           this.objectUrl = URL.createObjectURL(photo);
           this.photoPreviewUrl = this.sanitizer.bypassSecurityTrustUrl(
-            this.objectUrl
+            this.objectUrl,
           );
         },
         error: () => {
