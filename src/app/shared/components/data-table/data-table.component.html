@@ -1,6 +1,7 @@
 <div class="global-table-card">
-  <div class="table-toolbar" *ngIf="showColumnsButton">
+  <div class="table-toolbar" *ngIf="showColumnsButton || showExportButton">
     <button
+      *ngIf="showColumnsButton"
       pButton
       type="button"
       class="p-button-rounded p-button-text"
@@ -9,6 +10,16 @@
       tooltipPosition="left"
       (click)="openColumns()"
     ></button>
+
+    <app-excel-export
+      *ngIf="showExportButton"
+      [title]="exportTitle"
+      [fileName]="exportFileName"
+      [fields]="columns"
+      [pagination]="exportPagination"
+      [totalRecords]="totalRecords"
+      [loadRecords]="exportLoadRecords"
+    ></app-excel-export>
   </div>
 
   <p-table
@@ -82,7 +93,10 @@
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td class="empty-message" [attr.colspan]="columns.length + (actionsTemplate ? 2 : 1)">
+        <td
+          class="empty-message"
+          [attr.colspan]="columns.length + (actionsTemplate ? 2 : 1)"
+        >
           {{ emptyMessage }}
         </td>
       </tr>

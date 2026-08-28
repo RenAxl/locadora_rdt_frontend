@@ -17,6 +17,8 @@ import { UserMapper } from '../../mapper/user.mapper';
 import { UserDetailsDTO } from '../../dtos/user-details-dto';
 import { catchError, EMPTY } from 'rxjs';
 import { DataTableColumn } from 'src/app/shared/components/data-table/models/data-table-column';
+import { Observable } from 'rxjs';
+import { PageResponse } from 'src/app/core/models/page-response';
 
 @Component({
   selector: 'app-user-list',
@@ -38,11 +40,11 @@ export class UserListComponent implements OnDestroy {
 
   loading: boolean = false;
 
-  tableColumnsVisible: boolean = false;
+  fieldCustomizationVisible: boolean = false;
 
-  visibleColumns: string[] = ['name', 'email', 'telephone', 'photo'];
+  visibleFields: string[] = ['name', 'email', 'telephone', 'photo'];
 
-  tableColumns: DataTableColumn[] = [
+  availableFields: DataTableColumn[] = [
     { field: 'name', label: 'Nome' },
     { field: 'email', label: 'E-mail' },
     { field: 'telephone', label: 'Telefone' },
@@ -60,8 +62,8 @@ export class UserListComponent implements OnDestroy {
   get visibleTableColumns(): DataTableColumn[] {
     const columns: DataTableColumn[] = [];
 
-    for (const column of this.tableColumns) {
-      if (this.visibleColumns.includes(column.field)) {
+    for (const column of this.availableFields) {
+      if (this.visibleFields.includes(column.field)) {
         columns.push(column);
       }
     }
@@ -254,13 +256,19 @@ export class UserListComponent implements OnDestroy {
     });
   }
 
-  openTableColumnsModal(): void {
-    this.tableColumnsVisible = true;
+  openFieldCustomization(): void {
+    this.fieldCustomizationVisible = true;
   }
 
-  applyTableColumns(columns: string[]): void {
-    this.visibleColumns = [...columns];
+  applyVisibleFields(fields: string[]): void {
+    this.visibleFields = [...fields];
   }
+
+  loadUsersForExport = (
+    pagination: Pagination,
+  ): Observable<PageResponse<UserDTO>> => {
+    return this.userService.list(pagination, this.filterName);
+  };
 
   private loadPhotos(): void {
     this.photoUrls.clear();

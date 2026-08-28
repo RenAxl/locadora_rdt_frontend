@@ -98,10 +98,15 @@
   [columnTemplates]="{ active: activeTemplate, photo: photoTemplate }"
   [actionsTemplate]="actionsTemplate"
   [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Usuários"
+  exportFileName="usuarios"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadUsersForExport"
   emptyMessage="Nenhum usuário encontrado."
   (lazyLoad)="changePage($event)"
   (selectedRecordsChange)="onSelectionChange($event)"
-  (columnsButtonClick)="openTableColumnsModal()"
+  (columnsButtonClick)="openFieldCustomization()"
 ></app-data-table>
 
 <app-user-details-modal
@@ -111,11 +116,11 @@
   [user]="userDetails"
 ></app-user-details-modal>
 
-<app-table-columns-modal
-  [visible]="tableColumnsVisible"
-  (visibleChange)="tableColumnsVisible = $event"
-  [selectedColumns]="visibleColumns"
-  [columns]="tableColumns"
-  entityName="usuários"
-  (apply)="applyTableColumns($event)"
-></app-table-columns-modal>
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="usuários"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>

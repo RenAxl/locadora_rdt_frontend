@@ -9,10 +9,11 @@ import { MessageComponent } from './components/message/message.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { TableModule } from 'primeng/table';
 import { DataTableComponent } from './components/data-table/data-table.component';
-import { TableColumnsModalComponent } from './components/table-columns-modal/table-columns-modal.component';
+import { FieldCustomizationComponent } from './components/field-customization/field-customization.component';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
+import { ExcelExportComponent } from './components/excel-export/excel-export.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { DialogModule } from 'primeng/dialog';
     NameFilterComponent,
     MessageComponent,
     DataTableComponent,
-    TableColumnsModalComponent
+    FieldCustomizationComponent,
+    ExcelExportComponent
   ],
 
   imports: [
@@ -44,7 +46,8 @@ import { DialogModule } from 'primeng/dialog';
     MessageComponent,
     DataTableComponent,
     NgxMaskModule,
-    TableColumnsModalComponent
+    FieldCustomizationComponent,
+    ExcelExportComponent
   ],
 })
 export class SharedModule { }

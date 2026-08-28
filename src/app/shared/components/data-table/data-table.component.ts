@@ -9,6 +9,9 @@ import {
 import { LazyLoadEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { DataTableColumn } from 'src/app/shared/components/data-table/models/data-table-column';
+import { Observable } from 'rxjs';
+import { PageResponse } from 'src/app/core/models/page-response';
+import { Pagination } from 'src/app/core/models/Pagination';
 
 @Component({
   selector: 'app-data-table',
@@ -27,6 +30,13 @@ export class DataTableComponent {
   @Input() columnTemplates: { [field: string]: TemplateRef<any> } = {};
   @Input() actionsTemplate: TemplateRef<any> | null = null;
   @Input() showColumnsButton: boolean = false;
+  @Input() showExportButton: boolean = false;
+  @Input() exportTitle: string = '';
+  @Input() exportFileName: string = '';
+  @Input() exportPagination: Pagination = new Pagination();
+  @Input() exportLoadRecords!: (
+    pagination: Pagination,
+  ) => Observable<PageResponse<any>>;
 
   @Output() selectedRecordsChange = new EventEmitter<any[]>();
   @Output() lazyLoad = new EventEmitter<LazyLoadEvent>();

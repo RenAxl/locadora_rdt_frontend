@@ -1,0 +1,34 @@
+<p-dialog
+  header="Personalizar campos"
+  [visible]="visible"
+  (visibleChange)="onVisibilityChange($event)"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '600px', maxWidth: '95vw' }"
+>
+  <p class="modal-description">
+    Selecione os campos que devem aparecer em {{ contentName }}.
+  </p>
+
+  <div class="fields-list">
+    <label class="field-option" *ngFor="let field of fields">
+      <input
+        type="checkbox"
+        [checked]="isSelected(field.field)"
+        (change)="changeField(field.field, $any($event.target).checked)"
+      />
+      <span>{{ field.label }}</span>
+    </label>
+  </div>
+
+  <div class="modal-actions">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="onVisibilityChange(false)"
+    >
+      FECHAR
+    </button>
+  </div>
+</p-dialog>
