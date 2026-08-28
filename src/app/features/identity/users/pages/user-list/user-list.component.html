@@ -47,6 +47,9 @@
             [icon]="user.active ? 'pi pi-ban' : 'pi pi-check'" pTooltip="Ativar / Desativar Usuário"
             tooltipPosition="top" (click)="toggleActive(user)"></button>
 
+        <button pButton class="p-button-rounded p-button-text" icon="pi pi-eye" pTooltip="Detalhamento do usuário"
+            tooltipPosition="top" (click)="openDetails(user)"></button>
+
     </div>
 </ng-template>
 
@@ -55,3 +58,6 @@
     [columnTemplates]="{ photo: photoTemplate }" [actionsTemplate]="actionsTemplate"
     emptyMessage="Nenhum usuário encontrado." (lazyLoad)="changePage($event)"
     (selectedRecordsChange)="onSelectionChange($event)"></app-data-table>
+
+<app-user-details-modal [visible]="detailsVisible" (visibleChange)="detailsVisible = $event"
+    [title]="'Detalhamento do Usuário'" [user]="userDetails"></app-user-details-modal>

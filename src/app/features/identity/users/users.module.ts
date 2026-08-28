@@ -11,13 +11,15 @@ import { UsersRoutingModule } from './users-routing.module';
 import { UserListComponent } from './pages/user-list/user-list.component';
 import { UserFormComponent } from './pages/user-form/user-form.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { UserDetailsModalComponent } from './components/user-details-modal/user-details-modal.component';
 
 
 
 @NgModule({
   declarations: [
     UserListComponent,
-    UserFormComponent
+    UserFormComponent,
+    UserDetailsModalComponent
   ],
   imports: [
     CommonModule,

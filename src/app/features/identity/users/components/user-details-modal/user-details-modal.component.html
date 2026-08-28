@@ -1,0 +1,40 @@
+<p-dialog [header]="title" [(visible)]="visible" [modal]="true" [style]="{ width: '720px', maxWidth: '95vw' }"
+  (onHide)="close()">
+  <div class="details-grid" *ngIf="user; else loading">
+    <div class="wide"><span>Nome</span><strong>{{ user.name || "-" }}</strong></div>
+    <div><span>Telefone</span><strong>{{ user.telephone || "-" }}</strong></div>
+    <div><span>Ativo</span><strong>{{ getActiveLabel(user.active) }}</strong></div>
+    <div class="wide"><span>Email</span><strong>{{ user.email || "-" }}</strong></div>
+    <div><span>Data cadastro</span><strong>{{ user.createdAt ? (user.createdAt | date: "dd/MM/yyyy") : "-" }}</strong>
+    </div>
+    <div><span>Data atualização</span><strong>{{ user.updatedAt ? (user.updatedAt | date: "dd/MM/yyyy") : "-"
+        }}</strong></div>
+    <div><span>Criado por</span><strong>{{ user.createdBy ?? "-" }}</strong></div>
+    <div><span>Atualizado por</span><strong>{{ user.updatedBy ?? "-" }}</strong></div>
+    <div><span>Rua</span><strong>{{ user.address.street || "-" }}</strong></div>
+    <div><span>Número</span><strong>{{ user.address.number || "-" }}</strong></div>
+    <div><span>Complemento</span><strong>{{ user.address.complement || "-" }}</strong></div>
+    <div><span>Bairro</span><strong>{{ user.address.neighborhood || "-" }}</strong></div>
+    <div><span>Cidade</span><strong>{{ user.address.city || "-" }}</strong></div>
+    <div><span>UF</span><strong>{{ user.address.state || "-" }}</strong></div>
+    <div><span>CEP</span><strong>{{ user.address.zipCode || "-" }}</strong></div>
+    <div class="wide">
+      <span>Perfis</span>
+    </div>
+    <div class="wide photo">
+      <span>Foto</span>
+      <strong>
+        <ng-container *ngIf="photoPreviewUrl; else noPhoto">
+          <img [src]="photoPreviewUrl" alt="Foto do usuário" (error)="onImgError()" />
+        </ng-container>
+        <ng-template #noPhoto>
+          <span class="photo-placeholder">Sem foto</span>
+        </ng-template>
+      </strong>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <div class="empty">Carregando...</div>
+  </ng-template>
+</p-dialog>
