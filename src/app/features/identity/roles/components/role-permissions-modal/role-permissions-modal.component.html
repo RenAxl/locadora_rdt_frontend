@@ -1,0 +1,105 @@
+<p-dialog
+  header="Gerenciar Permissões"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '860px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <div class="role-name">
+    <span>Perfil</span>
+    <strong>{{ roleAuthority || "ID " + roleId }}</strong>
+  </div>
+
+  <div class="permission-filters">
+    <div>
+      <label class="form-label-custom">Grupo</label>
+      <p-dropdown
+        [options]="groups"
+        [(ngModel)]="selectedGroup"
+        (onChange)="loadPermissions()"
+        [disabled]="loading || groups.length === 0"
+        placeholder="Selecione um grupo"
+        [style]="{ width: '100%' }"
+        appendTo="body"
+      ></p-dropdown>
+    </div>
+
+    <div>
+      <label class="form-label-custom">Filtrar</label>
+      <span class="p-input-icon-left w-100">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          class="w-100"
+          placeholder="Ex: USER_READ"
+          [(ngModel)]="filterName"
+          (input)="filterPermissions()"
+          [disabled]="loading"
+        />
+      </span>
+    </div>
+  </div>
+
+  <div class="permission-selection" *ngIf="!loading">
+    <p-checkbox
+      [binary]="true"
+      [ngModel]="areAllPermissionsSelected()"
+      (onChange)="changeAllPermissions($event.checked)"
+      label="Selecionar ou desmarcar todas"
+    ></p-checkbox>
+
+    <span>
+      Marcadas neste grupo: {{ getSelectedPermissionsCount() }} /
+      {{ filteredPermissions.length }}
+    </span>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <p-progressSpinner></p-progressSpinner>
+    <span>Carregando...</span>
+  </div>
+
+  <div class="permission-grid" *ngIf="!loading">
+    <div
+      class="permission-item"
+      *ngFor="let permission of filteredPermissions"
+    >
+      <p-checkbox
+        [binary]="true"
+        [ngModel]="isSelected(permission.id)"
+        (onChange)="changePermission(permission.id, $event.checked)"
+        [label]="permission.name"
+      ></p-checkbox>
+    </div>
+
+    <div class="empty" *ngIf="filteredPermissions.length === 0">
+      Nenhuma permissão encontrada.
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="permission-buttons">
+      <button
+        pButton
+        type="button"
+        class="p-button-outlined p-button-secondary"
+        label="Cancelar"
+        (click)="close()"
+        [disabled]="loading || saving"
+      ></button>
+
+      <button
+        pButton
+        type="button"
+        class="p-button-primary"
+        label="Salvar"
+        icon="pi pi-save"
+        (click)="save()"
+        [disabled]="
+          loading || saving || !roleId || selectedPermissionIds.length === 0
+        "
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>

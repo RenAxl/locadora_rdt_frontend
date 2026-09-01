@@ -25,6 +25,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./features/identity/users/users.module').then((m) => m.UsersModule),
       },
+      {
+        path: 'roles',
+        loadChildren: () =>
+          import('./features/identity/roles/roles.module').then(
+            (m) => m.RolesModule,
+          ),
+      },
     ],
   },
 

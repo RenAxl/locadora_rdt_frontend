@@ -36,6 +36,26 @@
           <app-message [control]="telephone" error="required" text="Informe o telefone do usuário"></app-message>
         </div>
 
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Perfis *</label>
+          <p-multiSelect
+            name="roleIds"
+            [options]="roles"
+            [(ngModel)]="user.roleIds"
+            optionLabel="authority"
+            optionValue="id"
+            placeholder="Selecione os perfis"
+            defaultLabel="Selecione os perfis"
+            #roleIds="ngModel"
+            required
+            class="w-100"
+            [style]="{ width: '100%' }"
+          ></p-multiSelect>
+
+          <app-message [control]="roleIds" error="required"
+            text="Informe pelo menos um perfil"></app-message>
+        </div>
+
         <div class="col-12 col-lg-3">
           <label class="form-label-custom">CEP *</label>
           <input pInputText placeholder="CEP" type="text" name="zipCode" mask="00000-000"

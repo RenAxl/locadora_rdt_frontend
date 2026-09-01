@@ -1,0 +1,58 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">ADMINISTRAÇÃO</span>
+    <h1>Perfis</h1>
+    <p>Consulte e gerencie os perfis e suas permissões.</p>
+  </div>
+  <div class="module-page-header-icon">
+    <i class="fa-solid fa-user-shield"></i>
+  </div>
+</header>
+
+<div class="role-filter-container">
+  <div class="role-actions-group">
+    <a routerLink="/roles/create" class="action-link">
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVO PERFIL
+      </button>
+    </a>
+  </div>
+
+  <app-name-filter
+    text="Digite o nome do perfil"
+    (search)="searchRole($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #actionsTemplate let-role>
+  <div class="actions-wrap">
+    <button
+      pButton
+      type="button"
+      class="p-button-rounded p-button-text"
+      icon="pi pi-key"
+      pTooltip="Gerenciar permissões"
+      tooltipPosition="top"
+      (click)="openPermissions(role)"
+    ></button>
+  </div>
+</ng-template>
+
+<app-data-table
+  #roleTable
+  [records]="roles"
+  [columns]="columns"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [actionsTemplate]="actionsTemplate"
+  emptyMessage="Nenhum perfil encontrado."
+  (lazyLoad)="changePage($event)"
+></app-data-table>
+
+<app-role-permissions-modal
+  [(visible)]="permissionsDialogVisible"
+  [roleId]="selectedRoleId"
+  [roleAuthority]="selectedRoleAuthority"
+  (saved)="reloadRoles()"
+></app-role-permissions-modal>

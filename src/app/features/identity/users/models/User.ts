@@ -10,6 +10,8 @@ export class User {
   active: boolean = true;
   telephone: string = '';
   address: Address = new Address();
+  roleIds: number[] = [];
+  roles: string[] = [];
   photo?: any;
   photoContentType?: string;
   createdAt?: Date;
@@ -27,6 +29,8 @@ export class User {
       this.password = user.password;
       this.active = user.active;
       this.telephone = user.telephone;
+      this.roleIds = user.roleIds;
+      this.roles = user.roles;
       this.photo = user.photo;
       this.photoContentType = user.photoContentType;
       this.createdBy = user.createdBy;

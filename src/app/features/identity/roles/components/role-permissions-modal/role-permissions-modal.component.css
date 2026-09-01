@@ -1,0 +1,89 @@
+.role-name {
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid rgba(35, 50, 71, 0.12);
+  border-radius: 8px;
+  background: #fbfcfe;
+}
+
+.role-name span {
+  display: block;
+  margin-bottom: 4px;
+  color: #6c757d;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.permission-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.form-label-custom {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #233247;
+}
+
+.permission-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.permission-selection span {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 0;
+  color: #6c757d;
+}
+
+.permission-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 16px;
+  margin-top: 16px;
+}
+
+.permission-item {
+  display: flex;
+  align-items: center;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  padding: 24px;
+  color: #6c757d;
+  text-align: center;
+}
+
+.permission-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 720px) {
+  .permission-filters,
+  .permission-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .permission-selection {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

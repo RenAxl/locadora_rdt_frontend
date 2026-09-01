@@ -1,0 +1,39 @@
+<div class="role-form-container">
+  <div class="role-card">
+    <form #roleForm="ngForm" (ngSubmit)="save(roleForm)">
+      <div class="col-12 mb-3">
+        <h1>Dados do Perfil</h1>
+      </div>
+
+      <div class="row g-3 role-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Nome do Perfil *</label>
+          <input pInputText placeholder="Nome do Perfil" type="text" name="authority"
+            [(ngModel)]="role.authority" #authority="ngModel" required minlength="3" maxlength="100"
+            class="form-control" />
+
+          <app-message [control]="authority" error="required"
+            text="Informe o nome do perfil"></app-message>
+
+          <app-message [control]="authority" error="minlength" text="Mínimo de {{
+              authority.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              authority.errors?.['minlength']?.actualLength
+            }}"></app-message>
+        </div>
+      </div>
+
+      <div class="role-form-buttons mt-4">
+        <button type="submit" [disabled]="roleForm.invalid" class="btn btn-primary role-form-button">
+          SALVAR
+        </button>
+
+        <a routerLink="/roles/">
+          <button type="button" class="btn btn-outline-danger role-form-button">
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

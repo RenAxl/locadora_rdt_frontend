@@ -75,6 +75,15 @@
 
     <div class="wide">
       <span>Perfis</span>
+      <ng-container *ngIf="user.roles.length > 0; else noRoles">
+        <strong class="role-chip" *ngFor="let role of user.roles">
+          {{ role }}
+        </strong>
+      </ng-container>
+
+      <ng-template #noRoles>
+        <strong>-</strong>
+      </ng-template>
     </div>
 
     <div class="wide photo">

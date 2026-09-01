@@ -11,6 +11,9 @@ export class UserDetailsDTO {
   telephone?: string;
   address?: AddressDTO;
 
+  roles: string[] = [];
+  roleIds: number[] = [];
+
   photoContentType?: string;
 
   createdAt?: Date;
@@ -27,6 +30,15 @@ export class UserDetailsDTO {
       this.active = user.active;
       this.telephone = user.telephone;
       this.address = user.address;
+
+      if (user.roles != null) {
+        this.roles = user.roles;
+      }
+
+      if (user.roleIds != null) {
+        this.roleIds = user.roleIds;
+      }
+
       this.photoContentType = user.photoContentType;
       this.createdBy = user.createdBy;
       this.updatedBy = user.updatedBy;

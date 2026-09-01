@@ -6,6 +6,11 @@ import { MessageService } from 'primeng/api';
 import { UserService } from '../../services/user.service';
 import { UserMapper } from '../../mapper/user.mapper';
 import { User } from '../../models/User';
+import { Role } from '../../../roles/models/Role';
+import { RoleDTO } from '../../../roles/dtos/role.dto';
+import { RoleMapper } from '../../../roles/mapper/role.mapper';
+import { RoleService } from '../../../roles/services/role.service';
+import { Pagination } from 'src/app/core/models/Pagination';
 
 @Component({
   selector: 'app-user-form',
@@ -14,20 +19,38 @@ import { User } from '../../models/User';
 })
 export class UserFormComponent implements OnInit {
   user: User = new User();
+
+  roles: Role[] = [];
   
   constructor(
     private userService: UserService,
     private messageService: MessageService,
     private router: Router,
     private route: ActivatedRoute,
+    private roleService: RoleService,
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('userId');
 
+    this.loadRoles();
+
     if (id != null) {
       this.loadUser(id);
     }
+  }
+
+  loadRoles(): void {
+    const pagination = new Pagination(0, 100, 'ASC', 'authority');
+
+    this.roleService.list(pagination, '').subscribe((data) => {
+      this.roles = [];
+
+      data.content.forEach((dto: RoleDTO) => {
+        const role = RoleMapper.toModel(dto);
+        this.roles.push(role);
+      });
+    });
   }
 
   loadUser(id: number | string): void {

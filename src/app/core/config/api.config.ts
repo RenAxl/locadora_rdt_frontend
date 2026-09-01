@@ -18,4 +18,16 @@ export const API = {
     PHOTO: (id: number) => `${BASE_URL}/users/${id}/photo`,
   },
 
+  ROLES: {
+    ROOT: `${BASE_URL}/roles`,
+    BY_ID: (id: number | string) => `${BASE_URL}/roles/${id}`,
+    PERMISSIONS: (id: number | string) =>
+      `${BASE_URL}/roles/${id}/permissions`,
+  },
+
+  PERMISSIONS: {
+    ROOT: `${BASE_URL}/permissions`,
+    GROUPS: `${BASE_URL}/permissions/groups`,
+  },
+
 } as const;

@@ -30,6 +30,10 @@ export class UserMapper {
 
       photoContentType: dto.photoContentType,
 
+      roleIds: [],
+
+      roles: [],
+
     });
   }
 
@@ -57,6 +61,10 @@ export class UserMapper {
 
       photoContentType: dto.photoContentType,
 
+      roles: dto.roles || [],
+
+      roleIds: dto.roleIds || [],
+
       createdAt: dto.createdAt,
 
       updatedAt: dto.updatedAt,
@@ -79,6 +87,8 @@ export class UserMapper {
 
       address: user.address,
 
+      roleIds: user.roleIds,
+
     });
   }
 
@@ -95,6 +105,8 @@ export class UserMapper {
       telephone: user.telephone,
 
       address: user.address,
+
+      roleIds: user.roleIds,
 
     });
   }
