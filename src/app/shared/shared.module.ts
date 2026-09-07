@@ -14,6 +14,7 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { ExcelExportComponent } from './components/excel-export/excel-export.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { ExcelExportComponent } from './components/excel-export/excel-export.com
     ButtonModule,
     TooltipModule,
     DialogModule,
+    OverlayPanelModule,
 
     RouterModule
     

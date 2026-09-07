@@ -9,6 +9,10 @@ export const API = {
     EXCEL: `${BASE_URL}/listing-exports/excel`,
   },
 
+  AUTH: {
+    TOKEN: `${BASE_URL}/oauth/token`,
+  },
+
   USERS: {
     ROOT: `${BASE_URL}/users`,
     BY_ID: (id: number | string) => `${BASE_URL}/users/${id}`,
@@ -21,13 +25,11 @@ export const API = {
   ROLES: {
     ROOT: `${BASE_URL}/roles`,
     BY_ID: (id: number | string) => `${BASE_URL}/roles/${id}`,
-    PERMISSIONS: (id: number | string) =>
-      `${BASE_URL}/roles/${id}/permissions`,
+    PERMISSIONS: (id: number | string) => `${BASE_URL}/roles/${id}/permissions`,
   },
 
   PERMISSIONS: {
     ROOT: `${BASE_URL}/permissions`,
     GROUPS: `${BASE_URL}/permissions/groups`,
   },
-
 } as const;

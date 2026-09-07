@@ -16,11 +16,12 @@
       href="javascript:void(0)"
       aria-haspopup="true"
       aria-expanded="false"
+      (click)="userMenu.toggle($event)"
     >
       <span class="profile-img-wrapper me-2">
-          <div class="profile-photo-placeholder" aria-label="Sem foto">
-            <span class="profile-photo-icon">👤</span>
-          </div>
+        <div class="profile-photo-placeholder" aria-label="Sem foto">
+          <span class="profile-photo-icon">👤</span>
+        </div>
       </span>
 
       <span class="user-details text-start">
@@ -29,5 +30,24 @@
 
       <i class="fa fa-caret-down ms-2 dropdown-arrow" aria-hidden="true"></i>
     </a>
+
+    <p-overlayPanel
+      #userMenu
+      [dismissable]="true"
+      [appendTo]="'body'"
+      styleClass="user-overlay user-overlay-small"
+    >
+      <nav class="overlay-menu" aria-label="Menu do usuário">
+        <a
+          class="overlay-item logout"
+          href="javascript:void(0)"
+          (click)="logout()"
+        >
+          <i class="fa fa-sign-out" aria-hidden="true"></i>
+          <span>Sair</span>
+        </a>
+      </nav>
+    </p-overlayPanel>
+
   </div>
 </nav>

@@ -1,0 +1,74 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>Login</h1>
+    </div>
+
+    <form #loginForm="ngForm" class="login-form">
+      <div class="field">
+        <label for="email">E-mail</label>
+        <span class="p-input-icon-left w-100">
+          <i class="pi pi-envelope"></i>
+          <input
+            id="email"
+            pInputText
+            type="email"
+            class="form-control w-100"
+            placeholder="ex: renan@email.com"
+            name="email"
+            [(ngModel)]="user.email"
+            #email="ngModel"
+            required
+          />
+        </span>
+
+        <app-message
+          [control]="email"
+          error="required"
+          text="Informe o E-mail"
+        ></app-message>
+      </div>
+
+      <div class="field">
+        <label for="password">Senha</label>
+        <span class="p-input-icon-left w-100">
+          <i class="pi pi-lock"></i>
+          <input
+            id="password"
+            pInputText
+            type="password"
+            class="form-control w-100"
+            placeholder="Digite sua senha"
+            name="password"
+            [(ngModel)]="user.password"
+            #password="ngModel"
+            required
+          />
+        </span>
+
+        <app-message
+          [control]="password"
+          error="required"
+          text="Informe a senha"
+        ></app-message>
+      </div>
+
+      <div class="forgot-password">
+        <a routerLink="/auth/forgot">Esqueceu a senha?</a>
+      </div>
+
+      <div class="forgot-password">
+        <a routerLink="/customer-account/register">Ainda não é um cliente?</a>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary login-form-button"
+        [disabled]="loginForm.invalid"
+        (click)="save()"
+      >
+        Entrar
+      </button>
+    </form>
+  </div>
+</div>
