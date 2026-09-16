@@ -32,4 +32,9 @@ export const API = {
     ROOT: `${BASE_URL}/permissions`,
     GROUPS: `${BASE_URL}/permissions/groups`,
   },
+
+  ACTIVATE_ACCOUNT: {
+    ACTIVATE: `${BASE_URL}/auth/activate`,
+  },
+  
 } as const;

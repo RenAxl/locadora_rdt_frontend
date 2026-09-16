@@ -1,0 +1,98 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>Criar senha</h1>
+    </div>
+
+    <form #activateForm="ngForm" class="login-form" (ngSubmit)="activate(activateForm)">
+      <div class="field">
+        <label for="password">Nova senha</label>
+
+        <span class="p-input-icon-left w-100">
+          <i class="pi pi-lock"></i>
+          <input
+            id="password"
+            pInputText
+            type="password"
+            class="form-control w-100"
+            placeholder="Digite sua nova senha"
+            name="password"
+            [(ngModel)]="password"
+            #passwordCtrl="ngModel"
+            required
+            minlength="6"
+            [disabled]="loading"
+          />
+        </span>
+
+        <app-message
+          [control]="passwordCtrl"
+          error="required"
+          text="Informe uma senha"
+        ></app-message>
+
+        <app-message
+          [control]="passwordCtrl"
+          error="minlength"
+          text="Mínimo de {{
+            passwordCtrl.errors?.['minlength']?.requiredLength
+          }} caracteres."
+        ></app-message>
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">Confirmar senha</label>
+
+        <span class="p-input-icon-left w-100">
+          <i class="pi pi-lock"></i>
+          <input
+            id="confirmPassword"
+            pInputText
+            type="password"
+            class="form-control w-100"
+            placeholder="Confirme sua senha"
+            name="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            #confirmPasswordCtrl="ngModel"
+            required
+            minlength="6"
+            [disabled]="loading"
+          />
+        </span>
+
+        <app-message
+          [control]="confirmPasswordCtrl"
+          error="required"
+          text="Confirme a senha"
+        ></app-message>
+
+        <app-message
+          [control]="confirmPasswordCtrl"
+          error="mismatch"
+          text="As senhas não conferem"
+        ></app-message>
+      </div>
+
+      <div class="token-warning" *ngIf="!token">
+        Token não encontrado na URL. Abra novamente o link do e-mail.
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary login-form-button"
+        [disabled]="activateForm.invalid || loading || !token"
+      >
+        {{ loading ? 'ENVIANDO...' : 'Confirmar' }}
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-danger cancel-button"
+        (click)="cancel()"
+        [disabled]="loading"
+      >
+        Cancelar
+      </button>
+    </form>
+  </div>
+</div>

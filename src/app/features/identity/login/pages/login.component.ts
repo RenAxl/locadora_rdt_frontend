@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
-import { User } from '../../../users/models/User';
+import { User } from '../../users/models/User';
 
 @Component({
   selector: 'app-login',

@@ -6,7 +6,7 @@ import { AuthComponent } from './shell/auth/auth.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'auth/login',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
 
@@ -15,10 +15,24 @@ const routes: Routes = [
     component: AuthComponent,
     children: [
       {
-        path: 'auth',
+        path: 'login',
         loadChildren: () =>
-          import('./features/identity/auth/auth.module').then(
-            (m) => m.AuthModule,
+          import('./features/identity/login/login.module').then(
+            (m) => m.LoginModule,
+          ),
+      },
+    ],
+  },
+
+  {
+    path: '',
+    component: AuthComponent,
+    children: [
+      {
+        path: 'activate',
+        loadChildren: () =>
+          import('./features/identity/activate-account/activate-account.module').then(
+            (m) => m.ActivateAccountModule,
           ),
       },
     ],

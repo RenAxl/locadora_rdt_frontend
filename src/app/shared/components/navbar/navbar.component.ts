@@ -26,6 +26,6 @@ export class NavbarComponent {
       detail: 'Usuário deslogado com sucesso.',
     });
 
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(['/login']);
   }
 }
