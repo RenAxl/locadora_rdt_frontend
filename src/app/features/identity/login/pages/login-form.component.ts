@@ -5,11 +5,11 @@ import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { User } from '../../users/models/User';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  selector: 'app-login-form',
+  templateUrl: './login-form.component.html',
+  styleUrls: ['./login-form.component.css'],
 })
-export class LoginComponent {
+export class LoginFormComponent {
   user: User = new User();
 
   constructor(

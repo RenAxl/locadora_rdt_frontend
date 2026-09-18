@@ -4,7 +4,7 @@ import { NgForm } from '@angular/forms';
 
 import { MessageService } from 'primeng/api';
 import { ErrorHandlerService } from 'src/app/core/error/services/error-handler.service';
-import { ActivateAccountService } from '../services/activate-account.service';
+import { ActivateAccountService } from '../../services/activate-account.service';
 
 @Component({
   selector: 'app-activate-account',

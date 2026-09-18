@@ -36,5 +36,14 @@ export const API = {
   ACTIVATE_ACCOUNT: {
     ACTIVATE: `${BASE_URL}/auth/activate`,
   },
+
+  RECOVERY_PASSWORD: {
+    REQUEST_PASSWORD_RESET: `${BASE_URL}/auth/request-password-reset`,
+    PASSWORD_RESET: `${BASE_URL}/auth/password-reset`,
+
+  },
+
   
+
+
 } as const;

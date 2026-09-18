@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ActivateAccountComponent } from './pages/activate-account.component';
+import { ActivateAccountComponent } from './pages/activate-account/activate-account.component';
 
 @NgModule({
   declarations: [ActivateAccountComponent],

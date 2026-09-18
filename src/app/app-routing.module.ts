@@ -40,6 +40,20 @@ const routes: Routes = [
 
   {
     path: '',
+    component: AuthComponent,
+    children: [
+      {
+        path: 'recovery-password',
+        loadChildren: () =>
+          import('./features/identity/recovery-password/recovery-password.module').then(
+            (m) => m.RecoveryPasswordModule,
+          ),
+      },
+    ],
+  },
+
+  {
+    path: '',
     component: MainComponent,
     children: [
       {
