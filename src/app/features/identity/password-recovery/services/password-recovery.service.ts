@@ -6,7 +6,7 @@ import { API } from 'src/app/core/config/api.config';
 @Injectable({
   providedIn: 'root',
 })
-export class RecoveryPasswordService {
+export class PasswordRecoveryService {
   constructor(private http: HttpClient) {}
 
   recoveryPassword(email: string): Observable<void> {

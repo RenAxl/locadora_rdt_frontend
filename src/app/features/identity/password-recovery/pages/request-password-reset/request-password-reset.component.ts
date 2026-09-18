@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RecoveryPasswordService } from '../../services/recovery-password.service';
+import { PasswordRecoveryService } from '../../services/password-recovery.service';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -15,7 +15,7 @@ export class RequestPasswordResetComponent {
   submitted: boolean = false;
 
   constructor(
-    private recoveryPasswordService: RecoveryPasswordService,
+    private passwordRecoveryService: PasswordRecoveryService,
     private router: Router,
     private messageService: MessageService,
   ) {}
@@ -33,7 +33,7 @@ export class RequestPasswordResetComponent {
     this.loading = true;
     this.submitted = false;
 
-    this.recoveryPasswordService.recoveryPassword(this.email).subscribe({
+    this.passwordRecoveryService.recoveryPassword(this.email).subscribe({
       next: () => {
         this.loading = false;
         this.submitted = true;

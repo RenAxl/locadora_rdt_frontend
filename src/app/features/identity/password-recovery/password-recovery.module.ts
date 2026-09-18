@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { RecoveryPasswordRoutingModule } from './recovery-password-routing.module';
+import { PasswordRecoveryRoutingModule } from './password-recovery-routing.module';
 import { RequestPasswordResetComponent } from './pages/request-password-reset/request-password-reset.component';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -21,7 +21,7 @@ import { PasswordResetComponent } from './pages/password-reset/password-reset.co
     ButtonModule,
     SharedModule,
 
-    RecoveryPasswordRoutingModule,
+    PasswordRecoveryRoutingModule,
   ],
 })
 export class RecoveryPasswordModule {}

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { NgForm } from '@angular/forms';
-import { RecoveryPasswordService } from '../../services/recovery-password.service';
+import { PasswordRecoveryService } from '../../services/password-recovery.service';
 
 @Component({
   selector: 'app-password-reset',
@@ -20,7 +20,7 @@ export class PasswordResetComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private recoveryPasswordService: RecoveryPasswordService,
+    private passwordRecoveryService: PasswordRecoveryService,
     private messageService: MessageService
   ) {}
 
@@ -56,7 +56,7 @@ export class PasswordResetComponent implements OnInit {
 
     this.loading = true;
 
-    this.recoveryPasswordService.resetPassword(this.token, this.password).subscribe({
+    this.passwordRecoveryService.resetPassword(this.token, this.password).subscribe({
       next: () => {
         this.loading = false;
 

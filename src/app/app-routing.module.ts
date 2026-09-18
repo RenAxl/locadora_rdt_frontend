@@ -43,9 +43,9 @@ const routes: Routes = [
     component: AuthComponent,
     children: [
       {
-        path: 'recovery-password',
+        path: 'password-recovery',
         loadChildren: () =>
-          import('./features/identity/recovery-password/recovery-password.module').then(
+          import('./features/identity/password-recovery/password-recovery.module').then(
             (m) => m.RecoveryPasswordModule,
           ),
       },

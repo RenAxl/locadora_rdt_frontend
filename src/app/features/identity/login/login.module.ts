@@ -6,7 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { LoginFormComponent } from './pages/login-form.component';
+import { LoginFormComponent } from './pages/login-form/login-form.component';
+
 
 @NgModule({
   declarations: [LoginFormComponent],
