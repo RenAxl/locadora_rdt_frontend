@@ -20,7 +20,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (error instanceof HttpErrorResponse) {
 
           const isUserPhotoEndpoint =
-            req.url.includes('/users/me/photo') ||
+            req.url.includes('/user-profile/me/photo') ||
             /\/users\/\d+\/photo(\?|$)/.test(req.url);
 
           const isNoPhotoStatus = error.status === 404 || error.status === 204;

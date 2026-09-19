@@ -9,6 +9,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 
 import { UsersRoutingModule } from './users-routing.module';
 import { UserListComponent } from './pages/user-list/user-list.component';
+import { UserProfileFormComponent } from './pages/user-profile-form/user-profile-form.component';
 import { UserFormComponent } from './pages/user-form/user-form.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { UserDetailsModalComponent } from './components/user-details-modal/user-details-modal.component';
@@ -19,7 +20,8 @@ import { UserDetailsModalComponent } from './components/user-details-modal/user-
   declarations: [
     UserListComponent,
     UserFormComponent,
-    UserDetailsModalComponent
+    UserProfileFormComponent,
+    UserDetailsModalComponent,
   ],
   imports: [
     CommonModule,

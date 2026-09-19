@@ -1,0 +1,256 @@
+<div class="profile-form-container">
+  <div class="profile-card">
+    <form #profileForm="ngForm" (ngSubmit)="save(profileForm)">
+      <div class="col-12 mb-3">
+        <h1>Meu Perfil</h1>
+      </div>
+
+      <div class="profile-photo-header">
+        <div class="profile-photo-area">
+          <div class="profile-photo-frame">
+            <ng-container *ngIf="photoPreviewUrl; else noPhoto">
+              <img
+                class="profile-photo"
+                [src]="photoPreviewUrl"
+                alt="Foto do perfil"
+              />
+            </ng-container>
+
+            <ng-template #noPhoto>
+              <div class="profile-photo-placeholder" aria-label="Sem foto">
+                <span class="profile-photo-icon">👤</span>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="profile-photo-meta">
+            <div class="profile-photo-title">Foto do Perfil</div>
+            <div class="profile-photo-subtitle">
+              JPG, PNG ou WEBP • até 2MB
+            </div>
+
+            <div class="profile-photo-actions">
+              <label class="upload-btn" for="photo">
+                <span class="upload-btn-icon">⬆️</span>
+                <span>Selecionar foto</span>
+              </label>
+
+              <input
+                id="photo"
+                type="file"
+                name="photo"
+                accept="image/jpeg,image/png,image/webp"
+                (change)="onPhotoSelected(photoInput)"
+                #photoInput
+                class="upload-input"
+              />
+
+              <span class="file-chip" *ngIf="selectedPhotoName">
+                {{ selectedPhotoName }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 profile-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Nome</label>
+          <input
+            pInputText
+            placeholder="Nome"
+            type="text"
+            name="name"
+            [(ngModel)]="user.name"
+            #name="ngModel"
+            required
+            minlength="5"
+            class="form-control"
+          />
+
+          <app-message
+            [control]="name"
+            error="required"
+            text="Informe seu nome completo"
+          ></app-message>
+          <app-message
+            [control]="name"
+            error="minlength"
+            text="Mínimo de {{
+              name.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              name.errors?.['minlength']?.actualLength
+            }}"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">E-mail</label>
+          <input
+            pInputText
+            placeholder="E-mail"
+            type="email"
+            name="email"
+            [(ngModel)]="user.email"
+            #email="ngModel"
+            required
+            class="form-control"
+          />
+
+          <app-message
+            [control]="email"
+            error="required"
+            text="Informe seu e-mail"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Telefone</label>
+          <input
+            pInputText
+            placeholder="Telefone"
+            type="text"
+            name="telephone"
+            [(ngModel)]="user.telephone"
+            #telephone="ngModel"
+            required
+            class="form-control"
+            mask="(00) 00000-0000"
+          />
+
+          <app-message
+            [control]="telephone"
+            error="required"
+            text="Informe seu telefone"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">CEP</label>
+          <input pInputText placeholder="CEP" type="text" name="zipCode" mask="00000-000"
+            [(ngModel)]="user.address.zipCode" #zipCode="ngModel" required class="form-control" />
+          <app-message [control]="zipCode" error="required" text="Informe o CEP"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Rua</label>
+          <input
+            pInputText
+            placeholder="Rua"
+            type="text"
+            name="street"
+            [(ngModel)]="user.address.street"
+            #street="ngModel"
+            required
+            class="form-control"
+          />
+
+          <app-message
+            [control]="street"
+            error="required"
+            text="Informe sua rua"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Número</label>
+          <input pInputText placeholder="Número" type="text" name="number"
+            [(ngModel)]="user.address.number" #number="ngModel" required class="form-control" />
+          <app-message [control]="number" error="required" text="Informe o número"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Complemento</label>
+          <input pInputText placeholder="Complemento" type="text" name="complement"
+            [(ngModel)]="user.address.complement" class="form-control" />
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Bairro</label>
+          <input pInputText placeholder="Bairro" type="text" name="neighborhood"
+            [(ngModel)]="user.address.neighborhood" #neighborhood="ngModel" required class="form-control" />
+          <app-message [control]="neighborhood" error="required" text="Informe o bairro"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Cidade</label>
+          <input pInputText placeholder="Cidade" type="text" name="city"
+            [(ngModel)]="user.address.city" #city="ngModel" required class="form-control" />
+          <app-message [control]="city" error="required" text="Informe a cidade"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">UF</label>
+          <input pInputText placeholder="UF" type="text" name="state" maxlength="2"
+            [(ngModel)]="user.address.state" #state="ngModel" required class="form-control" />
+          <app-message [control]="state" error="required" text="Informe a UF"></app-message>
+        </div>
+
+        <div class="col-12 mt-2">
+          <h5 class="mt-3">Alterar Senha</h5>
+          <small class="field-help">
+            Se não quiser alterar a senha, deixe os campos de nova senha em
+            branco.
+          </small>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Senha atual</label>
+          <input
+            pInputText
+            placeholder="Senha atual"
+            type="password"
+            name="currentPassword"
+            [(ngModel)]="password.currentPassword"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Nova senha</label>
+          <input
+            pInputText
+            placeholder="Nova senha"
+            type="password"
+            name="newPassword"
+            [(ngModel)]="password.newPassword"
+            class="form-control"
+          />
+          <small class="field-help">Mínimo de 6 caracteres.</small>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Confirmar nova senha</label>
+          <input
+            pInputText
+            placeholder="Confirmar nova senha"
+            type="password"
+            name="confirmPassword"
+            [(ngModel)]="password.confirmPassword"
+            class="form-control"
+          />
+          <small class="field-help">Deve ser igual à nova senha.</small>
+        </div>
+      </div>
+
+      <div class="profile-form-buttons mt-4">
+        <button
+          type="submit"
+          [disabled]="profileForm.invalid"
+          class="btn btn-primary profile-form-button"
+        >
+          SALVAR
+        </button>
+
+        <a routerLink="/home">
+          <button
+            type="button"
+            class="btn btn-outline-danger profile-form-button"
+          >
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

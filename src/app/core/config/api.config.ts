@@ -22,6 +22,12 @@ export const API = {
     PHOTO: (id: number) => `${BASE_URL}/users/${id}/photo`,
   },
 
+  USER_PROFILE: {
+    ME: `${BASE_URL}/user-profile/me`,
+    PASSWORD: `${BASE_URL}/user-profile/me/password`,
+    PHOTO: `${BASE_URL}/user-profile/me/photo`,
+  },
+
   ROLES: {
     ROOT: `${BASE_URL}/roles`,
     BY_ID: (id: number | string) => `${BASE_URL}/roles/${id}`,

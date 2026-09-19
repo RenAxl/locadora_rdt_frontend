@@ -1,6 +1,7 @@
 import { UserDetailsDTO } from '../dtos/user-details-dto';
 import { UserDTO } from '../dtos/user-dto';
 import { UserInsertDTO } from '../dtos/user-insert-dto';
+import { UserMeUpdateDTO } from '../dtos/user-me-update-dto';
 import { UserUpdateDTO } from '../dtos/user-update-dto';
 import { Address } from '../models/Address';
 import { User } from '../models/User';
@@ -108,6 +109,18 @@ export class UserMapper {
 
       roleIds: user.roleIds,
 
+    });
+  }
+
+  static toMeUpdateDTO(user: User): UserMeUpdateDTO {
+    return new UserMeUpdateDTO({
+      name: user.name,
+
+      email: user.email,
+
+      telephone: user.telephone,
+
+      address: user.address,
     });
   }
 

@@ -38,6 +38,11 @@
       styleClass="user-overlay user-overlay-small"
     >
       <nav class="overlay-menu" aria-label="Menu do usuário">
+        <a class="overlay-item" routerLink="/users/profile" (click)="userMenu.hide()">
+          <i class="fa fa-user" aria-hidden="true"></i>
+          <span>Meu perfil</span>
+        </a>
+        
         <a
           class="overlay-item logout"
           href="javascript:void(0)"
