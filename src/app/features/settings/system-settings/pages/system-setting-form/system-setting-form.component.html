@@ -1,0 +1,88 @@
+<div class="system-setting-form-container">
+  <div class="system-setting-card">
+    <form #systemSettingForm="ngForm" (ngSubmit)="save(systemSettingForm)">
+      <div class="col-12 mb-3">
+        <h1>Configurações do Sistema</h1>
+      </div>
+
+      <div *ngIf="loading" class="loading">Carregando configurações...</div>
+
+      <div *ngIf="!loading" class="row g-3 system-setting-form-inputs">
+        <div class="col-12">
+          <label class="form-label-custom">Nome da locadora *</label>
+          <input pInputText placeholder="Nome da locadora" type="text" name="companyName"
+            [(ngModel)]="systemSetting.companyName" #companyName="ngModel" required maxlength="120"
+            class="form-control" />
+
+          <app-message [control]="companyName" error="required" text="Informe o nome da locadora"></app-message>
+        </div>
+
+        <div class="col-12">
+          <h4>Endereço da locadora</h4>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">CEP *</label>
+          <input pInputText placeholder="CEP" type="text" name="zipCode" mask="00000-000"
+            [(ngModel)]="systemSetting.address.zipCode" #zipCode="ngModel" required maxlength="10"
+            class="form-control" />
+          <app-message [control]="zipCode" error="required" text="Informe o CEP"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Rua *</label>
+          <input pInputText placeholder="Rua" type="text" name="street" [(ngModel)]="systemSetting.address.street"
+            #street="ngModel" required maxlength="100" class="form-control" />
+          <app-message [control]="street" error="required" text="Informe a rua da locadora"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">Número *</label>
+          <input pInputText placeholder="Número" type="text" name="number" [(ngModel)]="systemSetting.address.number"
+            #number="ngModel" required maxlength="20" class="form-control" />
+          <app-message [control]="number" error="required" text="Informe o número"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Complemento</label>
+          <input pInputText placeholder="Complemento" type="text" name="complement"
+            [(ngModel)]="systemSetting.address.complement" maxlength="100" class="form-control" />
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Bairro *</label>
+          <input pInputText placeholder="Bairro" type="text" name="neighborhood"
+            [(ngModel)]="systemSetting.address.neighborhood" #neighborhood="ngModel" required maxlength="80"
+            class="form-control" />
+          <app-message [control]="neighborhood" error="required" text="Informe o bairro"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Cidade *</label>
+          <input pInputText placeholder="Cidade" type="text" name="city" [(ngModel)]="systemSetting.address.city"
+            #city="ngModel" required maxlength="80" class="form-control" />
+          <app-message [control]="city" error="required" text="Informe a cidade"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">UF *</label>
+          <input pInputText placeholder="UF" type="text" name="state" [(ngModel)]="systemSetting.address.state"
+            #state="ngModel" required minlength="2" maxlength="2" class="form-control" />
+          <app-message [control]="state" error="required" text="Informe a UF"></app-message>
+          <app-message [control]="state" error="minlength" text="UF deve possuir 2 caracteres"></app-message>
+        </div>
+      </div>
+
+      <div class="system-setting-form-buttons mt-4" *ngIf="!loading">
+        <button *ngIf="hasAuthority('SYSTEM_SETTING_WRITE')" type="submit" [disabled]="systemSettingForm.invalid || saving"
+          class="btn btn-primary system-setting-form-button">
+          SALVAR
+        </button>
+
+        <button type="button" routerLink="/home" class="btn btn-outline-danger system-setting-form-button">
+          VOLTAR
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

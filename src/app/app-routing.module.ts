@@ -75,11 +75,20 @@ const routes: Routes = [
             (m) => m.UsersModule,
           ),
       },
+
       {
         path: 'roles',
         loadChildren: () =>
           import('./features/identity/roles/roles.module').then(
             (m) => m.RolesModule,
+          ),
+      },
+
+      {
+        path: 'system-settings',
+        loadChildren: () =>
+          import('./features/settings/system-settings/system-settings.module').then(
+            (m) => m.SystemSettingsModule,
           ),
       },
     ],

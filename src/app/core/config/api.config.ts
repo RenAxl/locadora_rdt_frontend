@@ -28,6 +28,10 @@ export const API = {
     PHOTO: `${BASE_URL}/user-profile/me/photo`,
   },
 
+  SYSTEM_SETTINGS: {
+    ROOT: `${BASE_URL}/system-settings`,
+  },
+
   ROLES: {
     ROOT: `${BASE_URL}/roles`,
     BY_ID: (id: number | string) => `${BASE_URL}/roles/${id}`,

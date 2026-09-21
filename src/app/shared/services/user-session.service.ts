@@ -79,13 +79,13 @@ export class UserSessionService {
     });
   }
 
+  getMe(): Observable<User> {
+    return this.http.get<User>(API.USER_PROFILE.ME);
+  }
+
   getMyPhoto(): Observable<Blob> {
     return this.http.get(API.USER_PROFILE.PHOTO, {
       responseType: 'blob',
     });
-  }
-
-  getMe(): Observable<User> {
-    return this.http.get<User>(API.USER_PROFILE.ME);
   }
 }

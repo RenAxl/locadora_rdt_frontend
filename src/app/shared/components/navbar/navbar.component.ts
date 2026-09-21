@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 export class NavbarComponent implements OnInit, OnDestroy {
   photoPreviewUrl?: SafeUrl;
   user: User = new User();
+  canAccessSystemSettings = false;
 
   private objectUrl?: string;
   private profileSubscription?: Subscription;
@@ -29,6 +30,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.canAccessSystemSettings = this.authService.hasAuthority('SYSTEM_SETTING_READ');
+
     this.userSessionService.loadSession();
     this.subscribeToProfile();
     this.subscribeToPhoto();
