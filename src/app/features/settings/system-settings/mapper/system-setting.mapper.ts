@@ -9,6 +9,7 @@ export class SystemSettingMapper {
       id: dto.id,
 
       companyName: dto.companyName || '',
+      icon: dto.icon || 'fa-gamepad',
 
       address: new Address({
         street: dto.address?.street || '',
@@ -25,6 +26,7 @@ export class SystemSettingMapper {
   static toUpdateDTO(systemSetting: SystemSetting): SystemSettingUpdateDTO {
     return new SystemSettingUpdateDTO({
       companyName: systemSetting.companyName,
+      icon: systemSetting.icon,
 
       address: systemSetting.address,
     });

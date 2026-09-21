@@ -9,12 +9,34 @@
 
       <div *ngIf="!loading" class="row g-3 system-setting-form-inputs">
         <div class="col-12">
-          <label class="form-label-custom">Nome da locadora *</label>
-          <input pInputText placeholder="Nome da locadora" type="text" name="companyName"
+          <label class="form-label-custom">Nome da empresa *</label>
+          <input pInputText placeholder="Nome da empresa" type="text" name="companyName"
             [(ngModel)]="systemSetting.companyName" #companyName="ngModel" required maxlength="120"
             class="form-control" />
 
           <app-message [control]="companyName" error="required" text="Informe o nome da locadora"></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom" for="systemIcon">Ícone da empresa *</label>
+          <div class="d-flex align-items-center gap-3">
+            <i class="fs-3" [ngClass]="systemSetting.icon"
+              [class.fa-brands]="systemSetting.icon === 'fa-playstation' || systemSetting.icon === 'fa-xbox'"
+              [class.fa-solid]="systemSetting.icon !== 'fa-playstation' && systemSetting.icon !== 'fa-xbox'" aria-hidden="true"></i>
+            <p-dropdown inputId="systemIcon" name="icon" [(ngModel)]="systemSetting.icon" #icon="ngModel"
+              [options]="icons" optionLabel="label" optionValue="value" [filter]="true" filterBy="label"
+              filterPlaceholder="Pesquisar ícone" ariaFilterLabel="Pesquisar ícone"
+              emptyFilterMessage="Nenhum ícone encontrado" placeholder="Selecione um ícone"
+              [required]="true" class="w-100" [style]="{ width: '100%' }">
+              <ng-template pTemplate="item" let-item>
+                <i class="me-2" [ngClass]="item.value"
+                  [class.fa-brands]="item.value === 'fa-playstation' || item.value === 'fa-xbox'"
+                  [class.fa-solid]="item.value !== 'fa-playstation' && item.value !== 'fa-xbox'" aria-hidden="true"></i>
+                <span>{{ item.label }}</span>
+              </ng-template>
+            </p-dropdown>
+          </div>
+          <app-message [control]="icon" error="required" text="Selecione o ícone da empresa"></app-message>
         </div>
 
         <div class="col-12">

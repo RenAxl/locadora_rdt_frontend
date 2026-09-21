@@ -3,10 +3,12 @@
   <div class="sidebar-header">
     <div class="d-flex align-items-center w-100">
       <div class="system-icon me-2">
-        <i class="fa-solid fa-gamepad"></i>
+        <i [ngClass]="systemSettingService.systemIcon"
+          [class.fa-brands]="systemSettingService.systemIcon === 'fa-playstation' || systemSettingService.systemIcon === 'fa-xbox'"
+          [class.fa-solid]="systemSettingService.systemIcon !== 'fa-playstation' && systemSettingService.systemIcon !== 'fa-xbox'" aria-hidden="true"></i>
       </div>
 
-      <div class="system-name" id="sidebarOffcanvasLabel">RDT Games</div>
+      <div class="system-name" id="sidebarOffcanvasLabel">{{ systemSettingService.systemName }}</div>
     </div>
   </div>
 

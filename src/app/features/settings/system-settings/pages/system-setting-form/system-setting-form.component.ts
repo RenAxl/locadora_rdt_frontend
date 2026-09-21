@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { SystemSettingService } from '../../services/system-setting.service';
 import { SystemSettingMapper } from '../../mapper/system-setting.mapper';
 import { SystemSetting } from '../../models/SystemSetting';
+import { SYSTEM_SETTING_ICONS } from '../../constants/system-setting-icons';
 
 @Component({
   selector: 'app-system-setting-form',
@@ -16,6 +17,7 @@ import { SystemSetting } from '../../models/SystemSetting';
 export class SystemSettingFormComponent implements OnInit {
   systemSetting: SystemSetting = new SystemSetting();
 
+  icons = SYSTEM_SETTING_ICONS;
   loading: boolean = false;
   saving: boolean = false;
 
@@ -37,6 +39,8 @@ export class SystemSettingFormComponent implements OnInit {
       next: (data) => {
         const systemSettingFound = SystemSettingMapper.toModel(data);
         this.systemSetting = systemSettingFound;
+        this.systemSettingService.updateSystemName(this.systemSetting.companyName);
+        this.systemSettingService.updateSystemIcon(this.systemSetting.icon);
         this.loading = false;
       },
       error: () => {
@@ -63,6 +67,8 @@ export class SystemSettingFormComponent implements OnInit {
     this.systemSettingService.update(systemSettingToUpdate).subscribe({
       next: (data) => {
         this.systemSetting = SystemSettingMapper.toModel(data);
+        this.systemSettingService.updateSystemName(this.systemSetting.companyName);
+        this.systemSettingService.updateSystemIcon(this.systemSetting.icon);
         this.saving = false;
 
         this.router.navigate(['/home']);
