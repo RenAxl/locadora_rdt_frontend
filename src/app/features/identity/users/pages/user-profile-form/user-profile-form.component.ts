@@ -5,6 +5,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { PhotoPreview } from 'src/app/core/utils/photo-preview.util';
+import { UserSessionService } from 'src/app/shared/services/user-session.service';
 import { ChangePasswordMapper } from '../../mapper/change-password.mapper';
 import { UserMapper } from '../../mapper/user.mapper';
 import { ChangePassword } from '../../models/ChangePassword';
@@ -29,6 +30,7 @@ export class UserProfileFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private userProfileService: UserProfileService,
+    private userSessionService: UserSessionService,
     private messageService: MessageService,
     private router: Router,
     sanitizer: DomSanitizer,
@@ -136,6 +138,7 @@ export class UserProfileFormComponent implements OnInit, OnDestroy {
 
     this.userProfileService.updateMe(userToUpdate).subscribe((data) => {
       this.user = UserMapper.toModel(data);
+      this.userSessionService.updateProfile(this.user);
 
       if (this.password.newPassword.trim() !== '') {
         this.changePassword();
@@ -168,8 +171,11 @@ export class UserProfileFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.userProfileService.updateMyPhoto(this.selectedPhoto).subscribe({
+    const photo = this.selectedPhoto;
+
+    this.userProfileService.updateMyPhoto(photo).subscribe({
       next: () => {
+        this.userSessionService.updatePhoto(photo);
         this.finish();
       },
       error: () => {
