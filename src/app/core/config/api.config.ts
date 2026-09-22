@@ -22,6 +22,20 @@ export const API = {
     PHOTO: (id: number) => `${BASE_URL}/users/${id}/photo`,
   },
 
+  CUSTOMERS: {
+    ROOT: `${BASE_URL}/customers`,
+    BY_ID: (id: number | string) => `${BASE_URL}/customers/${id}`,
+    DELETE_ALL: `${BASE_URL}/customers/all`,
+    CHANGE_ACTIVE: (id: number | string) => `${BASE_URL}/customers/${id}/active`,
+    PHOTO: (id: number) => `${BASE_URL}/customers/${id}/photo`,
+    FILES: {
+      ROOT: (customerId: number) => `${BASE_URL}/customers/${customerId}/files`,
+      BY_ID: (customerId: number, fileId: number) => `${BASE_URL}/customers/${customerId}/files/${fileId}`,
+      VIEW: (customerId: number, fileId: number) => `${BASE_URL}/customers/${customerId}/files/${fileId}/view`,
+      DOWNLOAD: (customerId: number, fileId: number) => `${BASE_URL}/customers/${customerId}/files/${fileId}/download`,
+    },
+  },
+
   USER_PROFILE: {
     ME: `${BASE_URL}/user-profile/me`,
     PASSWORD: `${BASE_URL}/user-profile/me/password`,

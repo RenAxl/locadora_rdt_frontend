@@ -24,6 +24,8 @@ export class DataTableComponent {
   @Input() selectedRecords: any[] = [];
   @Input() totalRecords: number = 0;
   @Input() rows: number = 5;
+  @Input() showSelection: boolean = true;
+  @Input() paginator: boolean = true;
   @Input() loading: boolean = false;
   @Input() dataKey: string = 'id';
   @Input() emptyMessage: string = 'Nenhum registro encontrado.';

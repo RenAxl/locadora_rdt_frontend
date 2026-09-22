@@ -26,6 +26,13 @@
       </li>
 
       <li class="treeview">
+        <a routerLink="/customers" routerLinkActive="active" class="d-flex align-items-center nav-link px-3">
+          <i class="fa-solid fa-id-card me-2"></i>
+          <span>Clientes</span>
+        </a>
+      </li>
+
+      <li class="treeview">
         <a class="d-flex align-items-center justify-content-between nav-link px-3 collapsed" data-bs-toggle="collapse"
           data-bs-target="#submenuAdministracaoDesktop">
           <span class="d-flex align-items-center">
@@ -50,6 +57,32 @@
             <a routerLink="/roles" routerLinkActive="active" class="d-flex align-items-center nav-link px-4">
               <i class="fa-solid fa-user-shield me-2"></i>
               <span>Perfis</span>
+            </a>
+          </li>
+        </ul>
+
+        
+      </li>
+
+            <li class="treeview">
+        <a class="d-flex align-items-center justify-content-between nav-link px-3 collapsed" data-bs-toggle="collapse"
+          data-bs-target="#submenuOrganizationDesktop">
+          <span class="d-flex align-items-center">
+            <i class="fa-solid fa-user-shield me-2"></i>
+            <span>Organização</span>
+          </span>
+
+          <span>
+            <i class="fa-solid fa-caret-right submenu-toggle-icon closed"></i>
+            <i class="fa-solid fa-caret-down submenu-toggle-icon open"></i>
+          </span>
+        </a>
+
+        <ul class="treeview-menu collapse list-unstyled mb-0" id="submenuOrganizationDesktop">
+          <li>
+            <a routerLink="/customers" routerLinkActive="active" class="d-flex align-items-center nav-link px-4">
+              <i class="fa-solid fa-user-shield me-2"></i>
+              <span>Clientes</span>
             </a>
           </li>
         </ul>

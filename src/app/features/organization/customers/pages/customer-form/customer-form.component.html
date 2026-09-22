@@ -1,0 +1,299 @@
+<div class="customer-form-container">
+  <div class="customer-card">
+    <form #customerForm="ngForm" (ngSubmit)="save(customerForm)">
+      <div class="col-12 mb-3">
+        <h1>Dados do Cliente</h1>
+      </div>
+
+      <div class="customer-photo-header">
+        <div class="customer-photo-area">
+          <div class="customer-photo-frame">
+            <ng-container *ngIf="photoPreviewUrl; else noPhoto">
+              <img
+                class="customer-photo"
+                [src]="photoPreviewUrl"
+                alt="Foto do cliente"
+              />
+            </ng-container>
+
+            <ng-template #noPhoto>
+              <div class="customer-photo-placeholder" aria-label="Sem foto">
+                <span class="customer-photo-icon">👤</span>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="customer-photo-meta">
+            <div class="customer-photo-title">Foto do Cliente</div>
+            <div class="customer-photo-subtitle">
+              JPG, PNG ou WEBP • até 2MB
+            </div>
+
+            <div class="customer-photo-actions">
+              <label class="upload-btn" for="photo">
+                <span class="upload-btn-icon">⬆️</span>
+                <span>Selecionar foto</span>
+              </label>
+
+              <input
+                id="photo"
+                type="file"
+                name="photo"
+                accept="image/jpeg,image/png,image/webp"
+                (change)="onPhotoSelected(photoInput)"
+                #photoInput
+                class="upload-input"
+              />
+
+              <span class="file-chip" *ngIf="selectedPhotoName">
+                {{ selectedPhotoName }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 customer-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Nome *</label>
+          <input
+            pInputText
+            placeholder="Nome"
+            type="text"
+            name="name"
+            [(ngModel)]="customer.name"
+            #name="ngModel"
+            required
+            minlength="5"
+            class="form-control"
+          />
+
+          <app-message
+            [control]="name"
+            error="required"
+            text="Informe o nome completo do cliente"
+          ></app-message>
+
+          <app-message
+            [control]="name"
+            error="minlength"
+            text="Mínimo de {{
+              name.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              name.errors?.['minlength']?.actualLength
+            }}"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">E-mail *</label>
+          <input
+            pInputText
+            placeholder="E-mail"
+            type="email"
+            name="email"
+            [(ngModel)]="customer.email"
+            #email="ngModel"
+            required
+            class="form-control"
+          />
+
+          <app-message
+            [control]="email"
+            error="required"
+            text="Informe o e-mail do cliente"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Telefone *</label>
+          <input
+            pInputText
+            placeholder="Telefone"
+            type="text"
+            name="phone"
+            [(ngModel)]="customer.phone"
+            #phone="ngModel"
+            required
+            class="form-control"
+            mask="(00) 00000-0000"
+          />
+
+          <app-message
+            [control]="phone"
+            error="required"
+            text="Informe o telefone do cliente"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">CPF *</label>
+          <input
+            pInputText
+            placeholder="CPF"
+            type="text"
+            name="cpf"
+            [(ngModel)]="customer.cpf"
+            #cpf="ngModel"
+            required
+            class="form-control"
+          />
+
+          <app-message
+            [control]="cpf"
+            error="required"
+            text="Informe o CPF do cliente"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">CEP *</label>
+          <input
+            pInputText
+            placeholder="CEP"
+            type="text"
+            name="zipCode"
+            mask="00000-000"
+            [(ngModel)]="customer.address.zipCode"
+            #zipCode="ngModel"
+            required
+            class="form-control"
+          />
+          <app-message
+            [control]="zipCode"
+            error="required"
+            text="Informe o CEP"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Rua *</label>
+          <input
+            pInputText
+            placeholder="Rua"
+            type="text"
+            name="street"
+            [(ngModel)]="customer.address.street"
+            #street="ngModel"
+            required
+            class="form-control"
+          />
+
+          <app-message
+            [control]="street"
+            error="required"
+            text="Informe a rua do cliente"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">Número *</label>
+          <input
+            pInputText
+            placeholder="Número"
+            type="text"
+            name="number"
+            [(ngModel)]="customer.address.number"
+            #number="ngModel"
+            required
+            class="form-control"
+          />
+          <app-message
+            [control]="number"
+            error="required"
+            text="Informe o número"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Complemento</label>
+          <input
+            pInputText
+            placeholder="Complemento"
+            type="text"
+            name="complement"
+            [(ngModel)]="customer.address.complement"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Bairro *</label>
+          <input
+            pInputText
+            placeholder="Bairro"
+            type="text"
+            name="neighborhood"
+            [(ngModel)]="customer.address.neighborhood"
+            #neighborhood="ngModel"
+            required
+            class="form-control"
+          />
+          <app-message
+            [control]="neighborhood"
+            error="required"
+            text="Informe o bairro"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Cidade *</label>
+          <input
+            pInputText
+            placeholder="Cidade"
+            type="text"
+            name="city"
+            [(ngModel)]="customer.address.city"
+            #city="ngModel"
+            required
+            class="form-control"
+          />
+          <app-message
+            [control]="city"
+            error="required"
+            text="Informe a cidade"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">UF *</label>
+          <input
+            pInputText
+            placeholder="UF"
+            type="text"
+            name="state"
+            maxlength="2"
+            [(ngModel)]="customer.address.state"
+            #state="ngModel"
+            required
+            class="form-control"
+          />
+          <app-message
+            [control]="state"
+            error="required"
+            text="Informe a UF"
+          ></app-message>
+        </div>
+      </div>
+
+      <div class="customer-form-buttons mt-4">
+        <button
+          type="submit"
+          [disabled]="customerForm.invalid"
+          class="btn btn-primary customer-form-button"
+        >
+          SALVAR
+        </button>
+
+        <a routerLink="/customers/">
+          <button
+            type="button"
+            class="btn btn-outline-danger customer-form-button"
+          >
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

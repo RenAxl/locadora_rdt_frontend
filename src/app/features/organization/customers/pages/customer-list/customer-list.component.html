@@ -1,0 +1,169 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">ORGANIZAÇÃO</span>
+    <h1>Clientes</h1>
+    <p>Consulte e gerencie os clientes cadastrados.</p>
+  </div>
+  <div class="module-page-header-icon"><i class="fa-solid fa-id-card"></i></div>
+</header>
+
+<div class="customer-filter-container">
+  <div class="customer-actions-group">
+    <a
+      routerLink="/customers/create"
+      class="action-link"
+      *ngIf="hasAuthority('CUSTOMER_WRITE')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVO CLIENTE
+      </button>
+    </a>
+
+    <button
+      *ngIf="selectedCustomerIds.length > 0 && hasAuthority('CUSTOMER_DELETE')"
+      class="btn btn-danger text-white btn-crud-action"
+      type="button"
+      (click)="deleteSelectedCustomers()"
+    >
+      EXCLUIR CLIENTES
+    </button>
+  </div>
+
+  <app-name-filter
+    text="Digite o nome do cliente"
+    (search)="searchCustomer($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #photoTemplate let-customer>
+  <ng-container *ngIf="photoMap[customer.id!]; else noPhoto">
+    <img
+      class="customer-photo"
+      [src]="photoMap[customer.id!]"
+      alt="Foto do cliente"
+    />
+  </ng-container>
+
+  <ng-template #noPhoto>
+    <div class="profile-photo-placeholder">
+      <span class="profile-photo-icon">👤</span>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #activeTemplate let-customer>
+  {{ customer.active ? "Sim" : "Não" }}
+</ng-template>
+
+<ng-template #actionsTemplate let-customer>
+  <div class="actions-wrap">
+    <a
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-pencil"
+      pTooltip="Editar cliente"
+      tooltipPosition="top"
+      [routerLink]="['/customers/', customer.id, 'edit']"
+      *ngIf="hasAuthority('CUSTOMER_WRITE')"
+    ></a>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-danger"
+      icon="pi pi-trash"
+      pTooltip="Excluir cliente"
+      tooltipPosition="top"
+      (click)="delete(customer)"
+      *ngIf="hasAuthority('CUSTOMER_DELETE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-warning"
+      [icon]="customer.active ? 'pi pi-ban' : 'pi pi-check'"
+      pTooltip="Ativar / Desativar Cliente"
+      tooltipPosition="top"
+      (click)="toggleActive(customer)"
+      *ngIf="hasAuthority('CUSTOMER_WRITE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-eye"
+      pTooltip="Detalhamento do cliente"
+      tooltipPosition="top"
+      (click)="openDetails(customer)"
+      *ngIf="hasAuthority('CUSTOMER_READ')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-folder-open"
+      pTooltip="Arquivos do Cliente"
+      tooltipPosition="top"
+      (click)="openFilesModal(customer)"
+      *ngIf="hasAuthority('CUSTOMER_READ')"
+    ></button>
+  </div>
+</ng-template>
+
+<ng-template #createdAtTemplate let-customer>
+  {{ customer.createdAt ? (customer.createdAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #updatedAtTemplate let-customer>
+  {{ customer.updatedAt ? (customer.updatedAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<app-data-table
+  #customerTable
+  [records]="customers"
+  [columns]="visibleTableColumns"
+  [selectedRecords]="selectedCustomers"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [showSelection]="hasAuthority('CUSTOMER_DELETE')"
+  [columnTemplates]="{
+    active: activeTemplate,
+    photo: photoTemplate,
+    createdAt: createdAtTemplate,
+    updatedAt: updatedAtTemplate
+  }"
+  [actionsTemplate]="actionsTemplate"
+  [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Clientes"
+  exportFileName="clientes"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadCustomersForExport"
+  emptyMessage="Nenhum cliente encontrado."
+  (lazyLoad)="changePage($event)"
+  (selectedRecordsChange)="onSelectionChange($event)"
+  (columnsButtonClick)="openFieldCustomization()"
+></app-data-table>
+
+<app-customer-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [title]="'Detalhamento do Cliente'"
+  [customer]="customerDetails"
+></app-customer-details-modal>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="clientes"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>
+
+<app-customer-files-modal
+  [visible]="filesVisible"
+  (visibleChange)="filesVisible = $event"
+  [customerId]="selectedCustomerId"
+  [customerName]="selectedCustomerName"
+></app-customer-files-modal>

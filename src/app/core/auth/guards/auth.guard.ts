@@ -6,6 +6,8 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 
+import { MessageService } from 'primeng/api';
+
 import { AuthService } from '../services/auth.service';
 
 @Injectable({
@@ -14,13 +16,14 @@ import { AuthService } from '../services/auth.service';
 export class AuthGuard implements CanActivate {
   constructor(
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService,
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
 
     if (this.auth.isAccessTokenInvalid()) {
-      this.router.navigate(['/auth/login'], {
+      this.router.navigate(['/login'], {
         queryParams: { returnUrl: state.url },
       });
       return false;
@@ -35,7 +38,11 @@ export class AuthGuard implements CanActivate {
     const allowed = this.auth.hasAnyAuthority(authorities);
 
     if (!allowed) {
-      this.router.navigate(['/not-authorized']);
+      this.messageService.add({
+        severity: 'warn',
+        detail: 'Você não tem permissão para acessar esta página.',
+      });
+      this.router.navigate(['/home']);
       return false;
     }
 

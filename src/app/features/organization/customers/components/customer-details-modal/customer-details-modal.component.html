@@ -1,0 +1,98 @@
+<p-dialog
+  [header]="title"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '720px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <div class="details-grid" *ngIf="customer; else loading">
+    <div class="wide">
+      <span>Nome</span><strong>{{ customer.name || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Telefone</span><strong>{{ customer.phone || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Ativo</span><strong>{{ getActiveLabel(customer.active) }}</strong>
+    </div>
+
+    <div class="wide">
+      <span>Email</span><strong>{{ customer.email || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Data cadastro</span
+      ><strong>{{
+        customer.createdAt ? (customer.createdAt | date: "dd/MM/yyyy") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Data atualização</span
+      ><strong>{{
+        customer.updatedAt ? (customer.updatedAt | date: "dd/MM/yyyy") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Criado por</span><strong>{{ customer.createdBy ?? "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Atualizado por</span><strong>{{ customer.updatedBy ?? "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Rua</span><strong>{{ customer.address.street || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Número</span><strong>{{ customer.address.number || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Complemento</span
+      ><strong>{{ customer.address.complement || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Bairro</span><strong>{{ customer.address.neighborhood || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Cidade</span><strong>{{ customer.address.city || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>UF</span><strong>{{ customer.address.state || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>CEP</span><strong>{{ customer.address.zipCode || "-" }}</strong>
+    </div>
+
+    <div class="wide photo">
+      <span>Foto</span>
+      <strong>
+        <ng-container *ngIf="photoPreviewUrl; else noPhoto">
+          <img
+            [src]="photoPreviewUrl"
+            alt="Foto do cliente"
+            (error)="onImgError()"
+          />
+        </ng-container>
+        <ng-template #noPhoto>
+          <span class="photo-placeholder">Sem foto</span>
+        </ng-template>
+      </strong>
+    </div>
+
+  </div>
+
+  <ng-template #loading>
+    <div class="empty">Carregando...</div>
+  </ng-template>
+
+</p-dialog>

@@ -30,7 +30,7 @@
     (selectionChange)="changeSelection($event)"
     [dataKey]="dataKey"
     [loading]="loading"
-    [paginator]="true"
+    [paginator]="paginator"
     [rows]="rows"
     [lazy]="true"
     [totalRecords]="totalRecords"
@@ -42,7 +42,7 @@
   >
     <ng-template pTemplate="header">
       <tr>
-        <th class="selection-column">
+        <th *ngIf="showSelection" class="selection-column">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
 
@@ -63,7 +63,7 @@
 
     <ng-template pTemplate="body" let-record>
       <tr [ngClass]="{ 'row-inactive': record.active === false }">
-        <td class="selection-column">
+        <td *ngIf="showSelection" class="selection-column">
           <p-tableCheckbox [value]="record"></p-tableCheckbox>
         </td>
 
@@ -95,7 +95,7 @@
       <tr>
         <td
           class="empty-message"
-          [attr.colspan]="columns.length + (actionsTemplate ? 2 : 1)"
+          [attr.colspan]="columns.length + (actionsTemplate ? 1 : 0) + (showSelection ? 1 : 0)"
         >
           {{ emptyMessage }}
         </td>
