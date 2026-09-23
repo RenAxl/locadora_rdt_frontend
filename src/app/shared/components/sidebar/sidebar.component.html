@@ -1,14 +1,29 @@
-<aside id="sidebarOffcanvas" class="sidebar offcanvas-md offcanvas-start d-flex flex-column" tabindex="-1"
-  aria-labelledby="sidebarOffcanvasLabel">
+<aside
+  id="sidebarOffcanvas"
+  class="sidebar offcanvas-md offcanvas-start d-flex flex-column"
+  tabindex="-1"
+  aria-labelledby="sidebarOffcanvasLabel"
+>
   <div class="sidebar-header">
     <div class="d-flex align-items-center w-100">
       <div class="system-icon me-2">
-        <i [ngClass]="systemSettingService.systemIcon"
-          [class.fa-brands]="systemSettingService.systemIcon === 'fa-playstation' || systemSettingService.systemIcon === 'fa-xbox'"
-          [class.fa-solid]="systemSettingService.systemIcon !== 'fa-playstation' && systemSettingService.systemIcon !== 'fa-xbox'" aria-hidden="true"></i>
+        <i
+          [ngClass]="systemSettingService.systemIcon"
+          [class.fa-brands]="
+            systemSettingService.systemIcon === 'fa-playstation' ||
+            systemSettingService.systemIcon === 'fa-xbox'
+          "
+          [class.fa-solid]="
+            systemSettingService.systemIcon !== 'fa-playstation' &&
+            systemSettingService.systemIcon !== 'fa-xbox'
+          "
+          aria-hidden="true"
+        ></i>
       </div>
 
-      <div class="system-name" id="sidebarOffcanvasLabel">{{ systemSettingService.systemName }}</div>
+      <div class="system-name" id="sidebarOffcanvasLabel">
+        {{ systemSettingService.systemName }}
+      </div>
     </div>
   </div>
 
@@ -19,22 +34,23 @@
       </li>
 
       <li class="treeview">
-        <a routerLink="/home" routerLinkActive="active" class="d-flex align-items-center nav-link px-3">
+        <a
+          routerLink="/home"
+          routerLinkActive="active"
+          class="d-flex align-items-center nav-link px-3"
+        >
           <i class="fa-solid fa-house me-2"></i>
           <span>Home</span>
         </a>
       </li>
 
       <li class="treeview">
-        <a routerLink="/customers" routerLinkActive="active" class="d-flex align-items-center nav-link px-3">
-          <i class="fa-solid fa-id-card me-2"></i>
-          <span>Clientes</span>
-        </a>
-      </li>
-
-      <li class="treeview">
-        <a class="d-flex align-items-center justify-content-between nav-link px-3 collapsed" data-bs-toggle="collapse"
-          data-bs-target="#submenuAdministracaoDesktop">
+        <a
+          class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
+          data-bs-toggle="collapse"
+          data-bs-target="#submenuAdministracaoDesktop"
+          *ngIf="hasAuthority('USER_READ') || hasAuthority('ROLE_READ')"
+        >
           <span class="d-flex align-items-center">
             <i class="fa-solid fa-user-shield me-2"></i>
             <span>Administração</span>
@@ -46,27 +62,41 @@
           </span>
         </a>
 
-        <ul class="treeview-menu collapse list-unstyled mb-0" id="submenuAdministracaoDesktop">
+        <ul
+          class="treeview-menu collapse list-unstyled mb-0"
+          id="submenuAdministracaoDesktop"
+        >
           <li>
-            <a routerLink="/users" routerLinkActive="active" class="d-flex align-items-center nav-link px-4">
+            <a
+              routerLink="/users"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+            >
               <i class="fa-solid fa-user me-2"></i>
               <span>Usuários</span>
             </a>
           </li>
           <li>
-            <a routerLink="/roles" routerLinkActive="active" class="d-flex align-items-center nav-link px-4">
+            <a
+              routerLink="/roles"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('ROLE_READ')"
+            >
               <i class="fa-solid fa-user-shield me-2"></i>
               <span>Perfis</span>
             </a>
           </li>
         </ul>
-
-        
       </li>
 
-            <li class="treeview">
-        <a class="d-flex align-items-center justify-content-between nav-link px-3 collapsed" data-bs-toggle="collapse"
-          data-bs-target="#submenuOrganizationDesktop">
+      <li class="treeview">
+        <a
+          class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
+          data-bs-toggle="collapse"
+          data-bs-target="#submenuOrganizationDesktop"
+          *ngIf="hasAuthority('CUSTOMER_READ')"
+        >
           <span class="d-flex align-items-center">
             <i class="fa-solid fa-user-shield me-2"></i>
             <span>Organização</span>
@@ -78,16 +108,22 @@
           </span>
         </a>
 
-        <ul class="treeview-menu collapse list-unstyled mb-0" id="submenuOrganizationDesktop">
+        <ul
+          class="treeview-menu collapse list-unstyled mb-0"
+          id="submenuOrganizationDesktop"
+        >
           <li>
-            <a routerLink="/customers" routerLinkActive="active" class="d-flex align-items-center nav-link px-4">
+            <a
+              routerLink="/customers"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('CUSTOMER_READ')"
+            >
               <i class="fa-solid fa-user-shield me-2"></i>
               <span>Clientes</span>
             </a>
           </li>
         </ul>
-
-        
       </li>
     </ul>
   </nav>

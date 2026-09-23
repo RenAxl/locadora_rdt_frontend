@@ -11,6 +11,7 @@ import { ErrorInterceptor } from './http/interceptors/error.interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
 import { tokenGetter } from './auth/utils/token-getter';
 import { API } from './config/api.config';
+import { NotAuthorizedComponent } from './pages/not-authorized/not-authorized.component';
 
 @NgModule({
   imports: [
@@ -22,14 +23,22 @@ import { API } from './config/api.config';
       config: {
         tokenGetter,
         allowedDomains: ['localhost:8080'],
-        disallowedRoutes: [API.AUTH.TOKEN],
+        disallowedRoutes: [
+          API.AUTH.TOKEN,
+          API.CUSTOMER_ACCOUNT.REGISTER,
+          API.CUSTOMER_ACCOUNT.CREATE_PASSWORD,
+          API.CUSTOMER_ACCOUNT.RESEND_ACTIVATION,
+        ],
       },
     }),
   ],
 
   exports: [ToastModule, ConfirmDialogModule],
 
-  declarations: [PageNotFoundComponent],
+  declarations: [
+    PageNotFoundComponent,
+    NotAuthorizedComponent
+  ],
 
   providers: [
     MessageService,

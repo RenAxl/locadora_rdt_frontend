@@ -16,7 +16,7 @@
     </a>
 
     <button
-      *ngIf="selectedUserIds.length > 0"
+      *ngIf="canDeleteUsers && selectedUserIds.length > 0"
       class="btn btn-danger text-white btn-crud-action"
       type="button"
       (click)="deleteSelectedUsers()"
@@ -64,6 +64,7 @@
       icon="pi pi-trash"
       pTooltip="Excluir usuário"
       tooltipPosition="top"
+      [disabled]="!canDelete(user)"
       (click)="delete(user)"
     ></button>
 
@@ -90,6 +91,8 @@
 <app-data-table
   #userTable
   [records]="users"
+  [showSelection]="canDeleteUsers"
+  [rowSelectable]="isUserSelectable"
   [columns]="visibleTableColumns"
   [selectedRecords]="selectedUsers"
   [totalRecords]="totalElements"

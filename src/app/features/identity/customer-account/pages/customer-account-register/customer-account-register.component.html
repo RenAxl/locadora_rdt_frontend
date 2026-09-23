@@ -1,0 +1,330 @@
+<div class="login-page">
+  <div class="login-card registration-card">
+    <div class="login-header">
+      <h1>Cadastro de cliente</h1>
+      <p class="login-subtitle">Preencha seus dados para criar sua conta.</p>
+    </div>
+
+    <form class="login-form" #registerForm="ngForm" (ngSubmit)="save(registerForm)">
+
+      <div class="form-fields registration-fields">
+        <div class="field field-full">
+          <label for="name">Nome completo *</label>
+          <span class="p-input-icon-left w-100">
+            <i class="pi pi-user" aria-hidden="true"></i>
+            <input
+              pInputText
+              id="name"
+              placeholder="Nome completo"
+              type="text"
+              name="name"
+              [(ngModel)]="registration.name"
+              #name="ngModel"
+              required
+              maxlength="100"
+              class="form-control w-100"
+              [disabled]="loading"
+            />
+          </span>
+
+          <app-message
+            [control]="name"
+            error="required"
+            text="Informe o nome completo"
+          ></app-message>
+
+          <app-message
+            [control]="name"
+            error="maxlength"
+            text="O nome deve ter no máximo 100 caracteres"
+          ></app-message>
+        </div>
+
+        <div class="field">
+          <label for="cpf">CPF *</label>
+          <span class="p-input-icon-left w-100">
+            <i class="pi pi-id-card" aria-hidden="true"></i>
+            <input
+              pInputText
+              id="cpf"
+              placeholder="CPF"
+              type="text"
+              name="cpf"
+              [(ngModel)]="registration.cpf"
+              #cpf="ngModel"
+              required
+              minlength="11"
+              maxlength="11"
+              pattern="[0-9]{11}"
+              inputmode="numeric"
+              class="form-control w-100"
+              [disabled]="loading"
+            />
+          </span>
+
+          <app-message
+            [control]="cpf"
+            error="required"
+            text="Informe o CPF"
+          ></app-message>
+
+          <app-message
+            [control]="cpf"
+            error="pattern"
+            text="O CPF deve conter 11 dígitos"
+          ></app-message>
+        </div>
+
+        <div class="field">
+          <label for="phone">Telefone *</label>
+          <span class="p-input-icon-left w-100">
+            <i class="pi pi-phone" aria-hidden="true"></i>
+            <input
+              pInputText
+              id="phone"
+              placeholder="Telefone"
+              type="text"
+              name="phone"
+              [(ngModel)]="registration.phone"
+              #phone="ngModel"
+              required
+              class="form-control w-100"
+              [disabled]="loading"
+            />
+          </span>
+
+          <app-message
+            [control]="phone"
+            error="required"
+            text="Informe o telefone"
+          ></app-message>
+        </div>
+
+        <div class="field field-full">
+          <label for="email">E-mail *</label>
+          <span class="p-input-icon-left w-100">
+            <i class="pi pi-envelope" aria-hidden="true"></i>
+            <input
+              pInputText
+              id="email"
+              placeholder="E-mail"
+              type="email"
+              name="email"
+              [(ngModel)]="registration.email"
+              #email="ngModel"
+              required
+              email
+              class="form-control w-100"
+              [disabled]="loading"
+            />
+          </span>
+
+          <app-message
+            [control]="email"
+            error="required"
+            text="Informe o e-mail"
+          ></app-message>
+
+          <app-message
+            [control]="email"
+            error="email"
+            text="Informe um e-mail válido"
+          ></app-message>
+        </div>
+
+        <div class="field">
+          <label for="street">Rua *</label>
+          <span class="p-input-icon-left w-100">
+            <i class="pi pi-map-marker" aria-hidden="true"></i>
+            <input
+              pInputText
+              id="street"
+              placeholder="Rua"
+              type="text"
+              name="street"
+              [(ngModel)]="registration.street"
+              #street="ngModel"
+              required
+              class="form-control w-100"
+              [disabled]="loading"
+            />
+          </span>
+
+          <app-message
+            [control]="street"
+            error="required"
+            text="Informe a rua"
+          ></app-message>
+        </div>
+
+        <div class="field">
+          <label for="number">Número *</label>
+          <span class="p-input-icon-left w-100">
+            <i class="pi pi-home" aria-hidden="true"></i>
+            <input
+              pInputText
+              id="number"
+              placeholder="Número"
+              type="text"
+              name="number"
+              [(ngModel)]="registration.number"
+              #number="ngModel"
+              required
+              class="form-control w-100"
+              [disabled]="loading"
+            />
+          </span>
+
+          <app-message
+            [control]="number"
+            error="required"
+            text="Informe o número"
+          ></app-message>
+        </div>
+
+        <div class="field field-full">
+          <label for="complement">Complemento</label>
+          <span class="p-input-icon-left w-100">
+            <i class="pi pi-home" aria-hidden="true"></i>
+            <input
+              pInputText
+              id="complement"
+              placeholder="Complemento"
+              type="text"
+              name="complement"
+              [(ngModel)]="registration.complement"
+              #complement="ngModel"
+              class="form-control w-100"
+              [disabled]="loading"
+            />
+          </span>
+        </div>
+
+        <div class="field">
+          <label for="neighborhood">Bairro *</label>
+          <span class="p-input-icon-left w-100">
+            <i class="pi pi-map-marker" aria-hidden="true"></i>
+            <input
+              pInputText
+              id="neighborhood"
+              placeholder="Bairro"
+              type="text"
+              name="neighborhood"
+              [(ngModel)]="registration.neighborhood"
+              #neighborhood="ngModel"
+              required
+              class="form-control w-100"
+              [disabled]="loading"
+            />
+          </span>
+
+          <app-message
+            [control]="neighborhood"
+            error="required"
+            text="Informe o bairro"
+          ></app-message>
+        </div>
+
+        <div class="field">
+          <label for="city">Cidade *</label>
+          <span class="p-input-icon-left w-100">
+            <i class="pi pi-map-marker" aria-hidden="true"></i>
+            <input
+              pInputText
+              id="city"
+              placeholder="Cidade"
+              type="text"
+              name="city"
+              [(ngModel)]="registration.city"
+              #city="ngModel"
+              required
+              class="form-control w-100"
+              [disabled]="loading"
+            />
+          </span>
+
+          <app-message
+            [control]="city"
+            error="required"
+            text="Informe a cidade"
+          ></app-message>
+        </div>
+
+        <div class="field">
+          <label for="state">UF *</label>
+          <span class="p-input-icon-left w-100">
+            <i class="pi pi-map" aria-hidden="true"></i>
+            <input
+              pInputText
+              id="state"
+              placeholder="UF"
+              type="text"
+              name="state"
+              [(ngModel)]="registration.state"
+              #state="ngModel"
+              required
+              minlength="2"
+              maxlength="2"
+              class="form-control w-100"
+              [disabled]="loading"
+            />
+          </span>
+
+          <app-message
+            [control]="state"
+            error="required"
+            text="Informe a UF"
+          ></app-message>
+
+          <app-message
+            [control]="state"
+            error="minlength"
+            text="A UF deve ter 2 caracteres"
+          ></app-message>
+        </div>
+
+        <div class="field">
+          <label for="zipCode">CEP *</label>
+          <span class="p-input-icon-left w-100">
+            <i class="pi pi-map-marker" aria-hidden="true"></i>
+            <input
+              pInputText
+              id="zipCode"
+              placeholder="CEP"
+              type="text"
+              name="zipCode"
+              [(ngModel)]="registration.zipCode"
+              #zipCode="ngModel"
+              required
+              class="form-control w-100"
+              [disabled]="loading"
+            />
+          </span>
+
+          <app-message
+            [control]="zipCode"
+            error="required"
+            text="Informe o CEP"
+          ></app-message>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="submit"
+          [disabled]="registerForm.invalid || loading"
+          class="btn btn-primary login-form-button"
+        >
+          {{ loading ? "CADASTRANDO..." : "Cadastrar" }}
+        </button>
+
+        <a
+          routerLink="/login"
+          class="btn btn-outline-danger cancel-button"
+        >
+          Voltar para o login
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

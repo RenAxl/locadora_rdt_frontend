@@ -1,6 +1,7 @@
 import { AddressDTO } from "./address-dto";
 
 export class UserDTO {
+  roles?: string[];
   id?: number;
 
   name?: string;
@@ -14,6 +15,7 @@ export class UserDTO {
 
   constructor(user?: Partial<UserDTO>) {
     if (user != null) {
+      this.roles = user.roles;
       this.id = user.id;
       this.name = user.name;
       this.email = user.email;

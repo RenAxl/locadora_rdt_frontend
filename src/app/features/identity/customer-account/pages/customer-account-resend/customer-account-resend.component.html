@@ -1,0 +1,61 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>Reenviar ativação</h1>
+      <p class="login-subtitle">Caso não tenha recebido, informe seu e-mail para receber um novo link de ativação da sua conta.</p>
+    </div>
+
+    <form class="login-form" #resendForm="ngForm" (ngSubmit)="save(resendForm)">
+
+      <div class="form-fields">
+        <div class="field">
+          <label for="email">E-mail *</label>
+          <span class="p-input-icon-left w-100">
+            <i class="pi pi-envelope" aria-hidden="true"></i>
+            <input
+              pInputText
+              id="email"
+              placeholder="E-mail"
+              type="email"
+              name="email"
+              [(ngModel)]="account.email"
+              #email="ngModel"
+              required
+              email
+              class="form-control w-100"
+              [disabled]="loading"
+            />
+          </span>
+
+          <app-message
+            [control]="email"
+            error="required"
+            text="Informe o e-mail"
+          ></app-message>
+          <app-message
+            [control]="email"
+            error="email"
+            text="Informe um e-mail válido"
+          ></app-message>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="submit"
+          [disabled]="resendForm.invalid || loading"
+          class="btn btn-primary login-form-button"
+        >
+          {{ loading ? "ENVIANDO..." : "Reenviar link" }}
+        </button>
+
+        <a
+          routerLink="/login"
+          class="btn btn-outline-danger cancel-button"
+        >
+          Voltar para o login
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

@@ -19,6 +19,7 @@ import { Pagination } from 'src/app/core/models/Pagination';
   styleUrls: ['./data-table.component.css'],
 })
 export class DataTableComponent {
+  @Input() rowSelectable: (event: { data: any }) => boolean = () => true;
   @Input() records: any[] = [];
   @Input() columns: DataTableColumn[] = [];
   @Input() selectedRecords: any[] = [];

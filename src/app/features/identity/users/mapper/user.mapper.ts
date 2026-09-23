@@ -33,7 +33,7 @@ export class UserMapper {
 
       roleIds: [],
 
-      roles: [],
+      roles: dto.roles || [],
 
     });
   }

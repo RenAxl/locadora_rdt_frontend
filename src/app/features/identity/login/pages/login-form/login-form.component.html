@@ -14,7 +14,7 @@
             pInputText
             type="email"
             class="form-control w-100"
-            placeholder="ex: renan@email.com"
+            placeholder="ex: teste@email.com"
             name="email"
             [(ngModel)]="user.email"
             #email="ngModel"
@@ -55,6 +55,10 @@
 
       <div class="forgot-password">
         <a routerLink="/password-recovery">Esqueceu a senha?</a>
+      </div>
+
+      <div class="forgot-password">
+        <a routerLink="/customer-account/register">Ainda não é um cliente?</a>
       </div>
 
       <button

@@ -32,4 +32,8 @@ export class SidebarComponent implements OnInit {
       },
     });
   }
+
+    hasAuthority(role: string) {
+    return this.authService.hasAuthority(role);
+  }
 }

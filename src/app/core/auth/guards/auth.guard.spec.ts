@@ -1,4 +1,4 @@
-import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../services/auth.service';
 import { AuthGuard } from './auth.guard';
@@ -13,7 +13,7 @@ describe('AuthGuard', () => {
 
   beforeEach(() => {
     auth = jasmine.createSpyObj('AuthService', ['isAccessTokenInvalid', 'hasAnyAuthority']);
-    router = jasmine.createSpyObj('Router', ['navigate']);
+    router = jasmine.createSpyObj('Router', ['createUrlTree']);
     messages = jasmine.createSpyObj('MessageService', ['add']);
     guard = new AuthGuard(auth, router, messages);
     route = new ActivatedRouteSnapshot();
@@ -25,18 +25,24 @@ describe('AuthGuard', () => {
   it('redirects an expired session to login and preserves the destination', () => {
     auth.isAccessTokenInvalid.and.returnValue(true);
 
-    expect(guard.canActivate(route, state)).toBeFalse();
-    expect(router.navigate).toHaveBeenCalledWith(['/login'], {
+    const redirect = new UrlTree();
+    router.createUrlTree.and.returnValue(redirect);
+
+    expect(guard.canActivate(route, state)).toBe(redirect);
+    expect(router.createUrlTree).toHaveBeenCalledWith(['/login'], {
       queryParams: { returnUrl: '/customers' },
     });
     expect(auth.hasAnyAuthority).not.toHaveBeenCalled();
   });
 
-  it('denies access with a message and redirects to the existing home route', () => {
+  it('redirects an authenticated user without permission to not-authorized', () => {
     auth.hasAnyAuthority.and.returnValue(false);
 
-    expect(guard.canActivate(route, state)).toBeFalse();
-    expect(router.navigate).toHaveBeenCalledWith(['/home']);
+    const redirect = new UrlTree();
+    router.createUrlTree.and.returnValue(redirect);
+
+    expect(guard.canActivate(route, state)).toBe(redirect);
+    expect(router.createUrlTree).toHaveBeenCalledWith(['/not-authorized']);
     expect(messages.add).toHaveBeenCalledWith({
       severity: 'warn',
       detail: 'Você não tem permissão para acessar esta página.',
@@ -48,13 +54,13 @@ describe('AuthGuard', () => {
 
     expect(guard.canActivate(route, state)).toBeTrue();
     expect(auth.hasAnyAuthority).toHaveBeenCalledWith(['CUSTOMER_READ']);
-    expect(router.navigate).not.toHaveBeenCalled();
+    expect(router.createUrlTree).not.toHaveBeenCalled();
   });
 
   it('allows an authenticated session when no permission is required', () => {
     route.data = {};
 
     expect(guard.canActivate(route, state)).toBeTrue();
-    expect(router.navigate).not.toHaveBeenCalled();
+    expect(router.createUrlTree).not.toHaveBeenCalled();
   });
 });

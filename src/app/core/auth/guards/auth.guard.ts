@@ -4,6 +4,7 @@ import {
   CanActivate,
   Router,
   RouterStateSnapshot,
+  UrlTree,
 } from '@angular/router';
 
 import { MessageService } from 'primeng/api';
@@ -20,13 +21,12 @@ export class AuthGuard implements CanActivate {
     private messageService: MessageService,
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree {
 
     if (this.auth.isAccessTokenInvalid()) {
-      this.router.navigate(['/login'], {
+      return this.router.createUrlTree(['/login'], {
         queryParams: { returnUrl: state.url },
       });
-      return false;
     }
 
     const authorities = route.data['authorities'] as string[] | undefined;
@@ -42,8 +42,7 @@ export class AuthGuard implements CanActivate {
         severity: 'warn',
         detail: 'Você não tem permissão para acessar esta página.',
       });
-      this.router.navigate(['/home']);
-      return false;
+      return this.router.createUrlTree(['/not-authorized']);
     }
 
     return true;

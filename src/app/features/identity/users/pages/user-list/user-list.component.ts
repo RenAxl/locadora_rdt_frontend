@@ -1,4 +1,5 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 import { Pagination } from 'src/app/core/models/Pagination';
@@ -82,6 +83,7 @@ export class UserListComponent implements OnDestroy {
 
   constructor(
     private userService: UserService,
+    private authService: AuthService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private sanitizer: DomSanitizer,
@@ -156,8 +158,18 @@ export class UserListComponent implements OnDestroy {
     this.list();
   }
 
+  get canDeleteUsers(): boolean {
+    return this.authService.hasAnyAuthority(['ROLE_ADMINISTRADOR', 'USER_DELETE']);
+  }
+
+  canDelete(user: User): boolean {
+    return this.canDeleteUsers && !user.roles.includes('ROLE_ADMINISTRADOR');
+  }
+
+  isUserSelectable = (event: { data: User }): boolean => this.canDelete(event.data);
+
   delete(user: User): void {
-    if (!user.id) {
+    if (!user.id || !this.canDelete(user)) {
       return;
     }
 
@@ -176,6 +188,7 @@ export class UserListComponent implements OnDestroy {
   }
 
   onSelectionChange(users: User[]): void {
+    users = users.filter(user => this.canDelete(user));
     this.selectedUsers = users;
 
     this.users.forEach((user) => {
@@ -196,7 +209,7 @@ export class UserListComponent implements OnDestroy {
   }
 
   deleteSelectedUsers(): void {
-    if (!this.selectedUserIds || this.selectedUserIds.length === 0) {
+    if (!this.canDeleteUsers || !this.selectedUserIds || this.selectedUserIds.length === 0) {
       return;
     }
 

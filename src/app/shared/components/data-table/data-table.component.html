@@ -26,6 +26,7 @@
     #table
     styleClass="global-table"
     [value]="records"
+    [rowSelectable]="rowSelectable"
     [selection]="selectedRecords"
     (selectionChange)="changeSelection($event)"
     [dataKey]="dataKey"
@@ -64,7 +65,7 @@
     <ng-template pTemplate="body" let-record>
       <tr [ngClass]="{ 'row-inactive': record.active === false }">
         <td *ngIf="showSelection" class="selection-column">
-          <p-tableCheckbox [value]="record"></p-tableCheckbox>
+          <p-tableCheckbox [value]="record" [disabled]="!rowSelectable({ data: record })"></p-tableCheckbox>
         </td>
 
         <td *ngFor="let column of columns">

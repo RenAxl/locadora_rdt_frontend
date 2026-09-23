@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './shell/main/main.component';
 import { AuthComponent } from './shell/auth/auth.component';
+import { NotAuthorizedComponent } from './core/pages/not-authorized/not-authorized.component';
+import { PageNotFoundComponent } from './core/pages/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   {
@@ -14,6 +16,14 @@ const routes: Routes = [
     path: '',
     component: AuthComponent,
     children: [
+      {
+        path: 'customer-account',
+        loadChildren: () =>
+          import('./features/identity/customer-account/customer-account.module').then(
+            (m) => m.CustomerAccountModule,
+          ),
+      },
+
       {
         path: 'login',
         loadChildren: () =>
@@ -101,6 +111,17 @@ const routes: Routes = [
       },
     ],
   },
+
+  {
+    path: 'not-authorized',
+    component: NotAuthorizedComponent,
+  },
+  {
+    path: 'page-not-found',
+    component: PageNotFoundComponent,
+  },
+
+  { path: '**', redirectTo: 'page-not-found' },
 ];
 
 @NgModule({

@@ -22,6 +22,12 @@ export const API = {
     PHOTO: (id: number) => `${BASE_URL}/users/${id}/photo`,
   },
 
+  CUSTOMER_ACCOUNT: {
+    REGISTER: `${BASE_URL}/customer-accounts`,
+    CREATE_PASSWORD: `${BASE_URL}/customer-accounts/create-password`,
+    RESEND_ACTIVATION: `${BASE_URL}/customer-accounts/resend-activation`,
+  },
+
   CUSTOMERS: {
     ROOT: `${BASE_URL}/customers`,
     BY_ID: (id: number | string) => `${BASE_URL}/customers/${id}`,
