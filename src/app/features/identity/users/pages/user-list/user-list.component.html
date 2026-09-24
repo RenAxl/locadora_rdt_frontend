@@ -47,6 +47,14 @@
   {{ user.active ? "Sim" : "Não" }}
 </ng-template>
 
+<ng-template #createdAtTemplate let-user>
+  {{ user.createdAt ? (user.createdAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #updatedAtTemplate let-user>
+  {{ user.updatedAt ? (user.updatedAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
 <ng-template #actionsTemplate let-user>
   <div class="actions-wrap">
     <a
@@ -98,7 +106,12 @@
   [totalRecords]="totalElements"
   [rows]="pagination.linesPerPage"
   [loading]="loading"
-  [columnTemplates]="{ active: activeTemplate, photo: photoTemplate }"
+  [columnTemplates]="{
+    active: activeTemplate,
+    photo: photoTemplate,
+    createdAt: createdAtTemplate,
+    updatedAt: updatedAtTemplate
+  }"
   [actionsTemplate]="actionsTemplate"
   [showColumnsButton]="true"
   [showExportButton]="true"

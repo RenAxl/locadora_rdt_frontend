@@ -54,7 +54,7 @@ export class CustomerFormComponent implements OnInit, OnDestroy {
 
   loadCustomer(id: number | string): void {
     this.customerService.findById(id).subscribe((data) => {
-      const customerFound = CustomerMapper.toDetailsModel(data);
+      const customerFound = CustomerMapper.toModel(data);
       this.customer = customerFound;
       this.loadCustomerPhoto();
     });

@@ -7,7 +7,6 @@ import { PageResponse } from 'src/app/core/models/page-response';
 import { buildPaginationParams } from 'src/app/core/utils/pagination-params.util';
 
 import { DepartmentDTO } from '../dtos/department-dto';
-import { DepartmentDetailsDTO } from '../dtos/department-details-dto';
 import { DepartmentInsertDTO } from '../dtos/department-insert-dto';
 import { DepartmentUpdateDTO } from '../dtos/department-update-dto';
 
@@ -30,8 +29,8 @@ export class DepartmentService {
     return this.http.post<DepartmentDTO>(API.DEPARTMENTS.ROOT, department);
   }
 
-  findById(id: number | string): Observable<DepartmentDetailsDTO> {
-    return this.http.get<DepartmentDetailsDTO>(API.DEPARTMENTS.BY_ID(id));
+  findById(id: number | string): Observable<DepartmentDTO> {
+    return this.http.get<DepartmentDTO>(API.DEPARTMENTS.BY_ID(id));
   }
 
   update(id: number, dto: DepartmentUpdateDTO): Observable<DepartmentDTO> {

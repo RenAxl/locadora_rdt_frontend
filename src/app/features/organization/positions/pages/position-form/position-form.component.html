@@ -1,0 +1,61 @@
+<div class="position-form-container">
+  <div class="position-card">
+    <form #positionForm="ngForm" (ngSubmit)="save(positionForm)">
+      <div class="col-12 mb-3">
+        <h1>Dados do Cargo</h1>
+      </div>
+
+      <div class="row g-3 position-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Nome do Cargo *</label>
+          <input
+            pInputText
+            placeholder="Nome do Cargo"
+            type="text"
+            name="name"
+            [(ngModel)]="position.name"
+            #name="ngModel"
+            required
+            minlength="3"
+            class="form-control"
+          />
+
+          <app-message
+            [control]="name"
+            error="required"
+            text="Informe o nome do cargo"
+          ></app-message>
+
+          <app-message
+            [control]="name"
+            error="minlength"
+            text="Mínimo de {{
+              name.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              name.errors?.['minlength']?.actualLength
+            }}"
+          ></app-message>
+        </div>
+      </div>
+
+      <div class="position-form-buttons mt-4">
+        <button
+          type="submit"
+          [disabled]="positionForm.invalid"
+          class="btn btn-primary position-form-button"
+        >
+          SALVAR
+        </button>
+
+        <a routerLink="/positions/">
+          <button
+            type="button"
+            class="btn btn-outline-danger position-form-button"
+          >
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

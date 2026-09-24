@@ -136,6 +136,17 @@
               <span>Departamentos</span>
             </a>
           </li>
+          <li>
+            <a
+              routerLink="/positions"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('POSITION_READ')"
+            >
+              <i class="fa-solid fa-building-user me-2"></i>
+              <span>Cargos</span>
+            </a>
+          </li>
         </ul>
       </li>
     </ul>

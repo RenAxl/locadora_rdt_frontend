@@ -1,7 +1,6 @@
 import { AddressDTO } from "./address-dto";
 
 export class UserDTO {
-  roles?: string[];
   id?: number;
 
   name?: string;
@@ -10,19 +9,47 @@ export class UserDTO {
   active?: boolean;
 
   telephone?: string;
-  photoContentType?: string;
   address?: AddressDTO;
+
+  roles: string[] = [];
+  roleIds: number[] = [];
+
+  photoContentType?: string;
+
+  createdAt?: Date;
+  updatedAt?: Date;
+
+  createdBy?: string;
+  updatedBy?: string;
 
   constructor(user?: Partial<UserDTO>) {
     if (user != null) {
-      this.roles = user.roles;
       this.id = user.id;
       this.name = user.name;
       this.email = user.email;
       this.active = user.active;
       this.telephone = user.telephone;
-      this.photoContentType = user.photoContentType;
       this.address = user.address;
+
+      if (user.roles != null) {
+        this.roles = user.roles;
+      }
+
+      if (user.roleIds != null) {
+        this.roleIds = user.roleIds;
+      }
+
+      this.photoContentType = user.photoContentType;
+      this.createdBy = user.createdBy;
+      this.updatedBy = user.updatedBy;
+
+      if (user.createdAt != null) {
+        this.createdAt = new Date(user.createdAt);
+      }
+
+      if (user.updatedAt != null) {
+        this.updatedAt = new Date(user.updatedAt);
+      }
     }
   }
 }

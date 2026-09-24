@@ -37,11 +37,11 @@
     </div>
 
     <div>
-      <span>Criado por</span><strong>{{ user.createdBy ?? "-" }}</strong>
+      <span>Criado por</span><strong>{{ user.createdBy || "-" }}</strong>
     </div>
 
     <div>
-      <span>Atualizado por</span><strong>{{ user.updatedBy ?? "-" }}</strong>
+      <span>Atualizado por</span><strong>{{ user.updatedBy || "-" }}</strong>
     </div>
 
     <div>

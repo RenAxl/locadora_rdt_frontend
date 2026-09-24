@@ -1,4 +1,3 @@
-import { CustomerDetailsDTO } from '../dtos/customer-details-dto';
 import { CustomerDTO } from '../dtos/customer-dto';
 import { CustomerInsertDTO } from '../dtos/customer-insert-dto';
 import { CustomerUpdateDTO } from '../dtos/customer-update-dto';
@@ -7,34 +6,6 @@ import { Customer } from '../models/Customer';
 
 export class CustomerMapper {
   static toModel(dto: CustomerDTO): Customer {
-    return new Customer({
-      id: dto.id,
-
-      name: dto.name || '',
-
-      cpf: dto.cpf || '',
-
-      email: dto.email || '',
-
-      active: dto.active ?? true,
-
-      phone: dto.phone || '',
-
-      address: new Address({
-        street: dto.address?.street || '',
-        number: dto.address?.number || '',
-        complement: dto.address?.complement,
-        neighborhood: dto.address?.neighborhood || '',
-        city: dto.address?.city || '',
-        state: dto.address?.state || '',
-        zipCode: dto.address?.zipCode || '',
-      }),
-
-      photoContentType: dto.photoContentType,
-    });
-  }
-
-  static toDetailsModel(dto: CustomerDetailsDTO): Customer {
     return new Customer({
       id: dto.id,
 

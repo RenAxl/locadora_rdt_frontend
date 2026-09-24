@@ -8,7 +8,6 @@ import { PageResponse } from 'src/app/core/models/page-response';
 
 import { buildPaginationParams } from 'src/app/core/utils/pagination-params.util';
 import { CustomerDTO } from '../dtos/customer-dto';
-import { CustomerDetailsDTO } from '../dtos/customer-details-dto';
 import { CustomerUpdateDTO } from '../dtos/customer-update-dto';
 import { CustomerInsertDTO } from '../dtos/customer-insert-dto';
 
@@ -31,8 +30,8 @@ export class CustomerService {
     return this.http.post<CustomerDTO>(API.CUSTOMERS.ROOT, customer);
   }
 
-  findById(id: number | string): Observable<CustomerDetailsDTO> {
-    return this.http.get<CustomerDetailsDTO>(API.CUSTOMERS.BY_ID(id));
+  findById(id: number | string): Observable<CustomerDTO> {
+    return this.http.get<CustomerDTO>(API.CUSTOMERS.BY_ID(id));
   }
 
   update(dto: CustomerUpdateDTO): Observable<CustomerDTO> {

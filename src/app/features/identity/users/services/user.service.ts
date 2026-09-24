@@ -8,7 +8,6 @@ import { PageResponse } from 'src/app/core/models/page-response';
 
 import { buildPaginationParams } from 'src/app/core/utils/pagination-params.util';
 import { UserDTO } from '../dtos/user-dto';
-import { UserDetailsDTO } from '../dtos/user-details-dto';
 import { UserUpdateDTO } from '../dtos/user-update-dto';
 import { UserInsertDTO } from '../dtos/user-insert-dto';
 
@@ -31,8 +30,8 @@ export class UserService {
     return this.http.post<UserDTO>(API.USERS.ROOT, user);
   }
 
-  findById(id: number | string): Observable<UserDetailsDTO> {
-    return this.http.get<UserDetailsDTO>(API.USERS.BY_ID(id));
+  findById(id: number | string): Observable<UserDTO> {
+    return this.http.get<UserDTO>(API.USERS.BY_ID(id));
   }
 
   update(dto: UserUpdateDTO): Observable<UserDTO> {

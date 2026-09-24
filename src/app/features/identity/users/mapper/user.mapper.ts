@@ -1,4 +1,3 @@
-import { UserDetailsDTO } from '../dtos/user-details-dto';
 import { UserDTO } from '../dtos/user-dto';
 import { UserInsertDTO } from '../dtos/user-insert-dto';
 import { UserMeUpdateDTO } from '../dtos/user-me-update-dto';
@@ -8,37 +7,6 @@ import { User } from '../models/User';
 
 export class UserMapper {
   static toModel(dto: UserDTO): User {
-    return new User({
-      id: dto.id,
-
-      name: dto.name || '',
-
-      email: dto.email || '',
-
-      active: dto.active ?? true,
-
-      telephone: dto.telephone || '',
-
-      address: new Address({
-        street: dto.address?.street || '',
-        number: dto.address?.number || '',
-        complement: dto.address?.complement,
-        neighborhood: dto.address?.neighborhood || '',
-        city: dto.address?.city || '',
-        state: dto.address?.state || '',
-        zipCode: dto.address?.zipCode || '',
-      }),
-
-      photoContentType: dto.photoContentType,
-
-      roleIds: [],
-
-      roles: dto.roles || [],
-
-    });
-  }
-
-  static toDetailsModel(dto: UserDetailsDTO): User {
     return new User({
       id: dto.id,
 

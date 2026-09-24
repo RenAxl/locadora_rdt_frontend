@@ -208,7 +208,7 @@ export class DepartmentListComponent {
 
     this.departmentService.findById(id).subscribe({
       next: (details) => {
-        this.departmentDetails = DepartmentMapper.toDetailsModel(details);
+        this.departmentDetails = DepartmentMapper.toModel(details);
       },
       error: () => {
         this.detailsVisible = false;

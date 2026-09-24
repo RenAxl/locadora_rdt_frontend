@@ -15,7 +15,6 @@ import { User } from '../../models/User';
 import { UserService } from '../../services/user.service';
 import { UserDTO } from '../../dtos/user-dto';
 import { UserMapper } from '../../mapper/user.mapper';
-import { UserDetailsDTO } from '../../dtos/user-details-dto';
 import { catchError, EMPTY } from 'rxjs';
 import { DataTableColumn } from 'src/app/shared/components/data-table/models/data-table-column';
 import { Observable } from 'rxjs';
@@ -58,6 +57,10 @@ export class UserListComponent implements OnDestroy {
     { field: 'address.state', label: 'UF' },
     { field: 'address.zipCode', label: 'CEP' },
     { field: 'photo', label: 'Foto' },
+    { field: 'createdAt', label: 'Data cadastro' },
+    { field: 'updatedAt', label: 'Data atualização' },
+    { field: 'createdBy', label: 'Criado por' },
+    { field: 'updatedBy', label: 'Atualizado por' },
   ];
 
   get visibleTableColumns(): DataTableColumn[] {
@@ -244,8 +247,8 @@ export class UserListComponent implements OnDestroy {
     this.userDetails = null;
 
     this.userService.findById(id).subscribe({
-      next: (details: UserDetailsDTO) => {
-        this.userDetails = UserMapper.toDetailsModel(details);
+      next: (details: UserDTO) => {
+        this.userDetails = UserMapper.toModel(details);
       },
     });
   }

@@ -28,6 +28,11 @@ export const API = {
     RESEND_ACTIVATION: `${BASE_URL}/customer-accounts/resend-activation`,
   },
 
+  POSITIONS: {
+    ROOT: `${BASE_URL}/positions`,
+    BY_ID: (id: number | string) => `${BASE_URL}/positions/${id}`,
+  },
+
   DEPARTMENTS: {
     ROOT: `${BASE_URL}/departments`,
     BY_ID: (id: number | string) => `${BASE_URL}/departments/${id}`,

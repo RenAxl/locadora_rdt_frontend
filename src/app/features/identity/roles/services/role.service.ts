@@ -7,8 +7,7 @@ import { API } from 'src/app/core/config/api.config';
 import { PageResponse } from 'src/app/core/models/page-response';
 
 import { buildPaginationParams } from 'src/app/core/utils/pagination-params.util';
-import { RoleDTO } from '../dtos/role.dto';
-import { RoleDetailsDTO } from '../dtos/role-details-dto';
+import { RoleDTO } from '../dtos/role-dto';
 import { RoleInsertDTO } from '../dtos/role-insert-dto';
 import { RolePermissionsUpdateDTO } from '../dtos/role-permissions-update-dto';
 
@@ -31,8 +30,8 @@ export class RoleService {
     return this.http.post<RoleDTO>(API.ROLES.ROOT, role);
   }
 
-  findById(id: number | string): Observable<RoleDetailsDTO> {
-    return this.http.get<RoleDetailsDTO>(API.ROLES.BY_ID(id));
+  findById(id: number | string): Observable<RoleDTO> {
+    return this.http.get<RoleDTO>(API.ROLES.BY_ID(id));
   }
 
   updatePermissions(

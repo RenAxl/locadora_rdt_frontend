@@ -7,7 +7,7 @@ import { DataTableColumn } from 'src/app/shared/components/data-table/models/dat
 
 import { Role } from '../../models/Role';
 import { RoleService } from '../../services/role.service';
-import { RoleDTO } from '../../dtos/role.dto';
+import { RoleDTO } from '../../dtos/role-dto';
 import { RoleMapper } from '../../mapper/role.mapper';
 
 @Component({

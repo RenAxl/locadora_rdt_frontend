@@ -15,7 +15,6 @@ import { Customer } from '../../models/Customer';
 import { CustomerService } from '../../services/customer.service';
 import { CustomerDTO } from '../../dtos/customer-dto';
 import { CustomerMapper } from '../../mapper/customer.mapper';
-import { CustomerDetailsDTO } from '../../dtos/customer-details-dto';
 import { catchError, EMPTY } from 'rxjs';
 import { DataTableColumn } from 'src/app/shared/components/data-table/models/data-table-column';
 import { Observable } from 'rxjs';
@@ -52,6 +51,8 @@ export class CustomerListComponent implements OnDestroy {
     { field: 'active', label: 'Ativo' },
     { field: 'createdAt', label: 'Data cadastro' },
     { field: 'updatedAt', label: 'Data atualização' },
+    { field: 'createdBy', label: 'Criado por' },
+    { field: 'updatedBy', label: 'Atualizado por' },
     { field: 'address.street', label: 'Rua' },
     { field: 'address.number', label: 'Número' },
     { field: 'address.complement', label: 'Complemento' },
@@ -246,8 +247,8 @@ export class CustomerListComponent implements OnDestroy {
     this.customerDetails = null;
 
     this.customerService.findById(id).subscribe({
-      next: (details: CustomerDetailsDTO) => {
-        this.customerDetails = CustomerMapper.toDetailsModel(details);
+      next: (details: CustomerDTO) => {
+        this.customerDetails = CustomerMapper.toModel(details);
       },
     });
   }

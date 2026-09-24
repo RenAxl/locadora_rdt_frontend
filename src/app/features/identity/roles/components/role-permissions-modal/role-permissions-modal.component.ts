@@ -64,7 +64,7 @@ export class RolePermissionsModalComponent implements OnChanges {
 
     this.roleService.findById(roleId).subscribe({
       next: (data) => {
-        const role = RoleMapper.toDetailsModel(data);
+        const role = RoleMapper.toModel(data);
 
         role.permissions.forEach((permission) => {
           if (permission.id != null) {

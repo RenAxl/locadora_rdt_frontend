@@ -7,7 +7,7 @@ import { UserService } from '../../services/user.service';
 import { UserMapper } from '../../mapper/user.mapper';
 import { User } from '../../models/User';
 import { Role } from '../../../roles/models/Role';
-import { RoleDTO } from '../../../roles/dtos/role.dto';
+import { RoleDTO } from '../../../roles/dtos/role-dto';
 import { RoleMapper } from '../../../roles/mapper/role.mapper';
 import { RoleService } from '../../../roles/services/role.service';
 import { Pagination } from 'src/app/core/models/Pagination';
@@ -55,7 +55,7 @@ export class UserFormComponent implements OnInit {
 
   loadUser(id: number | string): void {
     this.userService.findById(id).subscribe((data) => {
-      const userFound = UserMapper.toDetailsModel(data);
+      const userFound = UserMapper.toModel(data);
       this.user = userFound;
     });
   }

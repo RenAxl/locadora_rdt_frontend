@@ -1,4 +1,3 @@
-import { DepartmentDetailsDTO } from '../dtos/department-details-dto';
 import { DepartmentDTO } from '../dtos/department-dto';
 import { DepartmentInsertDTO } from '../dtos/department-insert-dto';
 import { DepartmentUpdateDTO } from '../dtos/department-update-dto';
@@ -6,24 +5,6 @@ import { Department } from '../models/Department';
 
 export class DepartmentMapper {
   static toModel(dto: DepartmentDTO): Department {
-    return new Department({
-      id: dto.id,
-
-      name: dto.name || '',
-
-      description: dto.description || '',
-
-      createdAt: dto.createdAt,
-
-      updatedAt: dto.updatedAt,
-
-      createdBy: dto.createdBy,
-
-      updatedBy: dto.updatedBy,
-    });
-  }
-
-  static toDetailsModel(dto: DepartmentDetailsDTO): Department {
     return new Department({
       id: dto.id,
 

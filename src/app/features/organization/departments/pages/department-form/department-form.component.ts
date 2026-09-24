@@ -32,7 +32,7 @@ export class DepartmentFormComponent implements OnInit {
 
   loadDepartment(id: number | string): void {
     this.departmentService.findById(id).subscribe((data) => {
-      const departmentFound = DepartmentMapper.toDetailsModel(data);
+      const departmentFound = DepartmentMapper.toModel(data);
       this.department = departmentFound;
     });
   }

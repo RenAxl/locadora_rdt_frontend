@@ -1,0 +1,111 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">ORGANIZAÇÃO</span>
+    <h1>Cargos</h1>
+    <p>Consulte e gerencie os cargos cadastrados.</p>
+  </div>
+  <div class="module-page-header-icon"><i class="fa-solid fa-briefcase"></i></div>
+</header>
+
+<div class="position-filter-container">
+  <div class="position-actions-group">
+    <a
+      routerLink="/positions/create"
+      class="action-link"
+      *ngIf="hasAuthority('POSITION_WRITE')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVO CARGO
+      </button>
+    </a>
+
+  </div>
+
+  <app-name-filter
+    text="Digite o nome do cargo"
+    (search)="searchPosition($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #actionsTemplate let-position>
+  <div class="actions-wrap">
+    <a
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-pencil"
+      pTooltip="Editar cargo"
+      tooltipPosition="top"
+      [routerLink]="['/positions/', position.id, 'edit']"
+      *ngIf="hasAuthority('POSITION_WRITE')"
+    ></a>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-danger"
+      icon="pi pi-trash"
+      pTooltip="Excluir cargo"
+      tooltipPosition="top"
+      (click)="delete(position)"
+      *ngIf="hasAuthority('POSITION_DELETE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-eye"
+      pTooltip="Detalhamento do cargo"
+      tooltipPosition="top"
+      (click)="openDetails(position)"
+      *ngIf="hasAuthority('POSITION_READ')"
+    ></button>
+
+  </div>
+</ng-template>
+
+<ng-template #createdAtTemplate let-position>
+  {{ position.createdAt ? (position.createdAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #updatedAtTemplate let-position>
+  {{ position.updatedAt ? (position.updatedAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<app-data-table
+  #positionTable
+  [records]="positions"
+  [columns]="visibleTableColumns"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [showSelection]="false"
+  [columnTemplates]="{
+    createdAt: createdAtTemplate,
+    updatedAt: updatedAtTemplate
+  }"
+  [actionsTemplate]="actionsTemplate"
+  [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Cargos"
+  exportFileName="cargos"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadPositionsForExport"
+  emptyMessage="Nenhum cargo encontrado."
+  (lazyLoad)="changePage($event)"
+  (columnsButtonClick)="openFieldCustomization()"
+></app-data-table>
+
+<app-position-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [title]="'Detalhamento do Cargo'"
+  [position]="positionDetails"
+></app-position-details-modal>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="cargos"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>
