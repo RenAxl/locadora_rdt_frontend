@@ -1,0 +1,39 @@
+<p-dialog
+  [header]="title"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '720px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <div class="details-grid" *ngIf="department; else loading">
+    <div class="wide">
+      <span>Nome</span><strong>{{ department.name || "-" }}</strong>
+    </div>
+
+    <div class="wide">
+      <span>Descrição</span><strong>{{ department.description || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Data cadastro</span>
+      <strong>{{ department.createdAt ? (department.createdAt | date: "dd/MM/yyyy") : "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Data atualização</span>
+      <strong>{{ department.updatedAt ? (department.updatedAt | date: "dd/MM/yyyy") : "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Criado por</span><strong>{{ department.createdBy || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Atualizado por</span><strong>{{ department.updatedBy || "-" }}</strong>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <div class="empty">Carregando...</div>
+  </ng-template>
+</p-dialog>

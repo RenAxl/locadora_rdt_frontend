@@ -1,0 +1,123 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">ORGANIZAÇÃO</span>
+    <h1>Departamentos</h1>
+    <p>Consulte e gerencie os departamentos cadastrados.</p>
+  </div>
+  <div class="module-page-header-icon">
+    <i class="fa-solid fa-building-user"></i>
+  </div>
+</header>
+
+<div class="department-filter-container">
+  <div class="department-actions-group">
+    <a
+      *ngIf="hasAuthority('DEPARTMENT_WRITE')"
+      routerLink="/departments/create"
+      class="action-link"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVO SETOR
+      </button>
+    </a>
+
+    <button
+      *ngIf="hasAuthority('DEPARTMENT_DELETE') && selectedDepartments.length > 0"
+      class="btn btn-danger text-white btn-crud-action"
+      type="button"
+      [disabled]="deleting"
+      (click)="deleteSelectedDepartments()"
+    >
+      EXCLUIR DEPARTAMENTOS
+    </button>
+  </div>
+
+  <app-name-filter
+    text="Digite o nome do setor"
+    (search)="searchDepartment($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #createdAtTemplate let-department>
+  {{ department.createdAt ? (department.createdAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #updatedAtTemplate let-department>
+  {{ department.updatedAt ? (department.updatedAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #actionsTemplate let-department>
+  <div class="actions-wrap">
+    <a
+      *ngIf="hasAuthority('DEPARTMENT_WRITE')"
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-pencil"
+      pTooltip="Atualizar setor"
+      tooltipPosition="top"
+      [routerLink]="['/departments/', department.id, 'edit']"
+    ></a>
+
+    <button
+      *ngIf="hasAuthority('DEPARTMENT_DELETE')"
+      pButton
+      class="p-button-rounded p-button-text p-button-danger"
+      icon="pi pi-trash"
+      pTooltip="Excluir setor"
+      tooltipPosition="top"
+      [disabled]="deleting"
+      (click)="delete(department)"
+    ></button>
+
+    <button
+      *ngIf="hasAuthority('DEPARTMENT_READ')"
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-eye"
+      pTooltip="Detalhamento do departamento"
+      tooltipPosition="top"
+      (click)="openDetails(department)"
+    ></button>
+  </div>
+</ng-template>
+
+<app-data-table
+  #departmentTable
+  [records]="departments"
+  [showSelection]="hasAuthority('DEPARTMENT_DELETE')"
+  [selectedRecords]="selectedDepartments"
+  (selectedRecordsChange)="onSelectionChange($event)"
+  [columns]="visibleTableColumns"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading || deleting"
+  [columnTemplates]="{
+    createdAt: createdAtTemplate,
+    updatedAt: updatedAtTemplate
+  }"
+  [actionsTemplate]="actionsTemplate"
+  [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Setores"
+  exportFileName="setores"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadDepartmentsForExport"
+  emptyMessage="Nenhum setor encontrado."
+  (lazyLoad)="changePage($event)"
+  (columnsButtonClick)="openFieldCustomization()"
+></app-data-table>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="setores"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>
+
+<app-department-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [department]="departmentDetails"
+></app-department-details-modal>

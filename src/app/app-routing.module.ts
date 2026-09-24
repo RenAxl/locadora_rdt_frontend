@@ -87,6 +87,14 @@ const routes: Routes = [
       },
 
       {
+        path: 'departments',
+        loadChildren: () =>
+          import('./features/organization/departments/departments.module').then(
+            (m) => m.DepartmentsModule,
+          ),
+      },
+
+      {
         path: 'customers',
         loadChildren: () =>
           import('./features/organization/customers/customers.module').then(

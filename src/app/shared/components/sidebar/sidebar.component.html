@@ -95,7 +95,9 @@
           class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
           data-bs-toggle="collapse"
           data-bs-target="#submenuOrganizationDesktop"
-          *ngIf="hasAuthority('CUSTOMER_READ')"
+          *ngIf="
+            hasAuthority('CUSTOMER_READ') || hasAuthority('DEPARTMENT_READ')
+          "
         >
           <span class="d-flex align-items-center">
             <i class="fa-solid fa-user-shield me-2"></i>
@@ -121,6 +123,17 @@
             >
               <i class="fa-solid fa-user-shield me-2"></i>
               <span>Clientes</span>
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/departments"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('DEPARTMENT_READ')"
+            >
+              <i class="fa-solid fa-building-user me-2"></i>
+              <span>Departamentos</span>
             </a>
           </li>
         </ul>

@@ -1,0 +1,92 @@
+<div class="department-form-container">
+  <div class="department-card">
+    <form #departmentForm="ngForm" (ngSubmit)="save(departmentForm)">
+      <div class="col-12 mb-3">
+        <h1>Dados do Setor</h1>
+      </div>
+
+      <div class="row g-3 department-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Nome do Setor</label>
+          <input
+            pInputText
+            placeholder="Nome do Setor"
+            type="text"
+            name="name"
+            [(ngModel)]="department.name"
+            #name="ngModel"
+            required
+            minlength="3"
+            class="form-control"
+          />
+
+          <app-message
+            [control]="name"
+            error="required"
+            text="Informe o nome do setor"
+          ></app-message>
+
+          <app-message
+            [control]="name"
+            error="minlength"
+            text="Mínimo de {{
+              name.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              name.errors?.['minlength']?.actualLength
+            }}"
+          ></app-message>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label-custom">Descrição</label>
+          <textarea
+            pInputTextarea
+            placeholder="Descrição do Setor"
+            name="description"
+            [(ngModel)]="department.description"
+            #description="ngModel"
+            required
+            minlength="3"
+            rows="6"
+            class="form-control textarea-description"
+          ></textarea>
+
+          <app-message
+            [control]="description"
+            error="required"
+            text="Informe a descrição do setor"
+          ></app-message>
+
+          <app-message
+            [control]="description"
+            error="minlength"
+            text="Mínimo de {{
+              description.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              description.errors?.['minlength']?.actualLength
+            }}"
+          ></app-message>
+        </div>
+      </div>
+
+      <div class="department-form-buttons mt-4">
+        <button
+          type="submit"
+          [disabled]="departmentForm.invalid"
+          class="btn btn-primary department-form-button"
+        >
+          SALVAR
+        </button>
+
+        <a routerLink="/departments">
+          <button
+            type="button"
+            class="btn btn-outline-danger department-form-button"
+          >
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
