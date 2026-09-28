@@ -111,6 +111,14 @@ const routes: Routes = [
       },
 
       {
+        path: 'suppliers',
+        loadChildren: () =>
+          import('./features/organization/suppliers/suppliers.module').then(
+            (m) => m.SuppliersModule,
+          ),
+      },
+
+      {
         path: 'roles',
         loadChildren: () =>
           import('./features/identity/roles/roles.module').then(

@@ -1,0 +1,107 @@
+<p-dialog
+  [header]="title"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '720px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <div class="details-grid" *ngIf="supplier; else loading">
+    <div class="wide">
+      <span>Nome</span><strong>{{ supplier.name || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Nome fantasia</span><strong>{{ supplier.tradeName || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Razão social</span
+      ><strong>{{ supplier.companyName || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>CNPJ</span><strong>{{ supplier.cnpj || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Telefone</span><strong>{{ supplier.phoneNumber || "-" }}</strong>
+    </div>
+
+    <div class="wide">
+      <span>Email</span><strong>{{ supplier.email || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Data cadastro</span
+      ><strong>{{
+        supplier.createdAt ? (supplier.createdAt | date: "dd/MM/yyyy") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Data atualização</span
+      ><strong>{{
+        supplier.updatedAt ? (supplier.updatedAt | date: "dd/MM/yyyy") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Criado por</span><strong>{{ supplier.createdBy || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Atualizado por</span
+      ><strong>{{ supplier.updatedBy || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Rua</span><strong>{{ supplier.address.street || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Número</span><strong>{{ supplier.address.number || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Complemento</span
+      ><strong>{{ supplier.address.complement || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Bairro</span
+      ><strong>{{ supplier.address.neighborhood || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Cidade</span><strong>{{ supplier.address.city || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>UF</span><strong>{{ supplier.address.state || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>CEP</span><strong>{{ supplier.address.zipCode || "-" }}</strong>
+    </div>
+
+    <div class="wide photo">
+      <span>Imagem</span>
+      <strong>
+        <ng-container *ngIf="imagePreviewUrl; else noPhoto">
+          <img
+            [src]="imagePreviewUrl"
+            alt="Imagem do fornecedor"
+            (error)="onImgError()"
+          />
+        </ng-container>
+        <ng-template #noPhoto>
+          <span class="photo-placeholder">Sem imagem</span>
+        </ng-template>
+      </strong>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <div class="empty">Carregando...</div>
+  </ng-template>
+</p-dialog>

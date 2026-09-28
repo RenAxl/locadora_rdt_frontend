@@ -52,6 +52,18 @@ export const API = {
     },
   },
 
+  SUPPLIERS: {
+    ROOT: `${BASE_URL}/suppliers`,
+    BY_ID: (id: number | string) => `${BASE_URL}/suppliers/${id}`,
+    IMAGE: (id: number) => `${BASE_URL}/suppliers/${id}/image`,
+    FILES: {
+      ROOT: (supplierId: number) => `${BASE_URL}/suppliers/${supplierId}/files`,
+      BY_ID: (supplierId: number, fileId: number) => `${BASE_URL}/suppliers/${supplierId}/files/${fileId}`,
+      VIEW: (supplierId: number, fileId: number) => `${BASE_URL}/suppliers/${supplierId}/files/${fileId}/view`,
+      DOWNLOAD: (supplierId: number, fileId: number) => `${BASE_URL}/suppliers/${supplierId}/files/${fileId}/download`,
+    },
+  },
+
   USER_PROFILE: {
     ME: `${BASE_URL}/user-profile/me`,
     PASSWORD: `${BASE_URL}/user-profile/me/password`,

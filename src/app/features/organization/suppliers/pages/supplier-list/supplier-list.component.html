@@ -1,0 +1,145 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">ORGANIZAÇÃO</span>
+    <h1>Fornecedores</h1>
+    <p>Consulte e gerencie os fornecedores cadastrados.</p>
+  </div>
+  <div class="module-page-header-icon">
+    <i class="fa-solid fa-truck-field"></i>
+  </div>
+</header>
+
+<div class="supplier-filter-container">
+  <div class="supplier-actions-group">
+    <a
+      routerLink="/suppliers/create"
+      class="action-link"
+      *ngIf="hasAuthority('SUPPLIER_WRITE')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVO FORNECEDOR
+      </button>
+    </a>
+  </div>
+
+  <app-name-filter
+    text="Digite o nome do fornecedor"
+    (search)="searchSupplier($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #imageTemplate let-supplier>
+  <ng-container *ngIf="imageMap[supplier.id!]; else noPhoto">
+    <img
+      class="supplier-photo"
+      [src]="imageMap[supplier.id!]"
+      alt="Imagem do fornecedor"
+    />
+  </ng-container>
+
+  <ng-template #noPhoto>
+    <div class="profile-photo-placeholder">
+      <span class="profile-photo-icon">👤</span>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #actionsTemplate let-supplier>
+  <div class="actions-wrap">
+    <a
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-pencil"
+      pTooltip="Editar fornecedor"
+      tooltipPosition="top"
+      [routerLink]="['/suppliers/', supplier.id, 'edit']"
+      *ngIf="hasAuthority('SUPPLIER_WRITE')"
+    ></a>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-danger"
+      icon="pi pi-trash"
+      pTooltip="Excluir fornecedor"
+      tooltipPosition="top"
+      (click)="delete(supplier)"
+      *ngIf="hasAuthority('SUPPLIER_DELETE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-eye"
+      pTooltip="Detalhamento do fornecedor"
+      tooltipPosition="top"
+      (click)="openDetails(supplier)"
+      *ngIf="hasAuthority('SUPPLIER_READ')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-folder-open"
+      pTooltip="Arquivos do Fornecedor"
+      tooltipPosition="top"
+      (click)="openFilesModal(supplier)"
+      *ngIf="hasAuthority('SUPPLIER_READ')"
+    ></button>
+  </div>
+</ng-template>
+
+<ng-template #createdAtTemplate let-supplier>
+  {{ supplier.createdAt ? (supplier.createdAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #updatedAtTemplate let-supplier>
+  {{ supplier.updatedAt ? (supplier.updatedAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<app-data-table
+  #supplierTable
+  [records]="suppliers"
+  [columns]="visibleTableColumns"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [showSelection]="false"
+  [columnTemplates]="{
+    image: imageTemplate,
+    createdAt: createdAtTemplate,
+    updatedAt: updatedAtTemplate
+  }"
+  [actionsTemplate]="actionsTemplate"
+  [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Fornecedores"
+  exportFileName="fornecedores"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadSuppliersForExport"
+  emptyMessage="Nenhum fornecedor encontrado."
+  (lazyLoad)="changePage($event)"
+  (columnsButtonClick)="openFieldCustomization()"
+></app-data-table>
+
+<app-supplier-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [title]="'Detalhamento do Fornecedor'"
+  [supplier]="supplierDetails"
+></app-supplier-details-modal>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="fornecedores"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>
+
+<app-supplier-files-modal
+  [visible]="filesVisible"
+  (visibleChange)="filesVisible = $event"
+  [supplierId]="selectedSupplierId"
+  [supplierName]="selectedSupplierName"
+></app-supplier-files-modal>

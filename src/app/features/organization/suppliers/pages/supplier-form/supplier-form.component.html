@@ -1,0 +1,340 @@
+<div class="supplier-form-container">
+  <div class="supplier-card">
+    <form #supplierForm="ngForm" (ngSubmit)="save(supplierForm)">
+      <div class="col-12 mb-3">
+        <h1>Dados do Fornecedor</h1>
+      </div>
+
+      <div class="supplier-photo-header">
+        <div class="supplier-photo-area">
+          <div class="supplier-photo-frame">
+            <ng-container *ngIf="imagePreviewUrl; else noPhoto">
+              <img
+                class="supplier-photo"
+                [src]="imagePreviewUrl"
+                alt="Imagem do fornecedor"
+              />
+            </ng-container>
+
+            <ng-template #noPhoto>
+              <div class="supplier-photo-placeholder" aria-label="Sem imagem">
+                <span class="supplier-photo-icon">👤</span>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="supplier-photo-meta">
+            <div class="supplier-photo-title">Imagem do Fornecedor</div>
+            <div class="supplier-photo-subtitle">
+              JPG, PNG ou WEBP • até 2MB
+            </div>
+
+            <div class="supplier-photo-actions">
+              <label class="upload-btn" for="photo">
+                <span class="upload-btn-icon">⬆️</span>
+                <span>Selecionar foto</span>
+              </label>
+
+              <input
+                id="photo"
+                type="file"
+                name="photo"
+                accept="image/jpeg,image/png,image/webp"
+                (change)="onImageSelected(photoInput)"
+                #photoInput
+                class="upload-input"
+              />
+
+              <span class="file-chip" *ngIf="selectedImageName">
+                {{ selectedImageName }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 supplier-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Nome *</label>
+          <input
+            pInputText
+            placeholder="Nome"
+            type="text"
+            name="name"
+            [(ngModel)]="supplier.name"
+            #name="ngModel"
+            required
+            minlength="3"
+            class="form-control"
+          />
+
+          <app-message
+            [control]="name"
+            error="required"
+            text="Informe o nome do fornecedor"
+          ></app-message>
+
+          <app-message
+            [control]="name"
+            error="minlength"
+            text="Mínimo de {{
+              name.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              name.errors?.['minlength']?.actualLength
+            }}"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Nome fantasia *</label>
+          <input
+            pInputText
+            placeholder="Nome fantasia"
+            type="text"
+            name="tradeName"
+            [(ngModel)]="supplier.tradeName"
+            #tradeName="ngModel"
+            required
+            class="form-control"
+          />
+
+          <app-message
+            [control]="tradeName"
+            error="required"
+            text="Informe o nome fantasia"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Razão social *</label>
+          <input
+            pInputText
+            placeholder="Razão social"
+            type="text"
+            name="companyName"
+            [(ngModel)]="supplier.companyName"
+            #companyName="ngModel"
+            required
+            class="form-control"
+          />
+
+          <app-message
+            [control]="companyName"
+            error="required"
+            text="Informe a razão social"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">E-mail *</label>
+          <input
+            pInputText
+            placeholder="E-mail"
+            type="email"
+            name="email"
+            [(ngModel)]="supplier.email"
+            #email="ngModel"
+            required
+            class="form-control"
+          />
+
+          <app-message
+            [control]="email"
+            error="required"
+            text="Informe o e-mail do fornecedor"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Telefone *</label>
+          <input
+            pInputText
+            placeholder="Telefone"
+            type="text"
+            name="phoneNumber"
+            [(ngModel)]="supplier.phoneNumber"
+            #phoneNumber="ngModel"
+            required
+            class="form-control"
+            mask="(00) 0000-0000||(00) 00000-0000"
+          />
+
+          <app-message
+            [control]="phoneNumber"
+            error="required"
+            text="Informe o telefone do fornecedor"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">CNPJ *</label>
+          <input
+            pInputText
+            placeholder="CNPJ"
+            type="text"
+            name="cnpj"
+            mask="00.000.000/0000-00"
+            [(ngModel)]="supplier.cnpj"
+            #cnpj="ngModel"
+            required
+            class="form-control"
+          />
+
+          <app-message
+            [control]="cnpj"
+            error="required"
+            text="Informe o CNPJ do fornecedor"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">CEP *</label>
+          <input
+            pInputText
+            placeholder="CEP"
+            type="text"
+            name="zipCode"
+            mask="00000-000"
+            [(ngModel)]="supplier.address.zipCode"
+            #zipCode="ngModel"
+            required
+            class="form-control"
+          />
+          <app-message
+            [control]="zipCode"
+            error="required"
+            text="Informe o CEP"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Rua *</label>
+          <input
+            pInputText
+            placeholder="Rua"
+            type="text"
+            name="street"
+            [(ngModel)]="supplier.address.street"
+            #street="ngModel"
+            required
+            class="form-control"
+          />
+
+          <app-message
+            [control]="street"
+            error="required"
+            text="Informe a rua do fornecedor"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">Número *</label>
+          <input
+            pInputText
+            placeholder="Número"
+            type="text"
+            name="number"
+            [(ngModel)]="supplier.address.number"
+            #number="ngModel"
+            required
+            class="form-control"
+          />
+          <app-message
+            [control]="number"
+            error="required"
+            text="Informe o número"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Complemento</label>
+          <input
+            pInputText
+            placeholder="Complemento"
+            type="text"
+            name="complement"
+            [(ngModel)]="supplier.address.complement"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Bairro *</label>
+          <input
+            pInputText
+            placeholder="Bairro"
+            type="text"
+            name="neighborhood"
+            [(ngModel)]="supplier.address.neighborhood"
+            #neighborhood="ngModel"
+            required
+            class="form-control"
+          />
+          <app-message
+            [control]="neighborhood"
+            error="required"
+            text="Informe o bairro"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Cidade *</label>
+          <input
+            pInputText
+            placeholder="Cidade"
+            type="text"
+            name="city"
+            [(ngModel)]="supplier.address.city"
+            #city="ngModel"
+            required
+            class="form-control"
+          />
+          <app-message
+            [control]="city"
+            error="required"
+            text="Informe a cidade"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">UF *</label>
+          <input
+            pInputText
+            placeholder="UF"
+            type="text"
+            name="state"
+            maxlength="2"
+            [(ngModel)]="supplier.address.state"
+            #state="ngModel"
+            required
+            class="form-control"
+          />
+          <app-message
+            [control]="state"
+            error="required"
+            text="Informe a UF"
+          ></app-message>
+        </div>
+      </div>
+
+      <div class="supplier-form-buttons mt-4">
+        <button
+          type="submit"
+          [disabled]="supplierForm.invalid"
+          class="btn btn-primary supplier-form-button"
+        >
+          SALVAR
+        </button>
+
+        <a routerLink="/suppliers/">
+          <button
+            type="button"
+            class="btn btn-outline-danger supplier-form-button"
+          >
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

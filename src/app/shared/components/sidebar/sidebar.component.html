@@ -100,7 +100,7 @@
           "
         >
           <span class="d-flex align-items-center">
-            <i class="fa-solid fa-user-shield me-2"></i>
+            <i class="fa-solid fa-building me-2"></i>
             <span>Organização</span>
           </span>
 
@@ -143,8 +143,19 @@
               class="d-flex align-items-center nav-link px-4"
               *ngIf="hasAuthority('POSITION_READ')"
             >
-              <i class="fa-solid fa-building-user me-2"></i>
+              <i class="fa-solid fa-id-badge me-2"></i>
               <span>Cargos</span>
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/suppliers"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('SUPPLIER_READ')"
+            >
+              <i class="fa-solid fa-truck-field me-2"></i>
+              <span>Fornecedores</span>
             </a>
           </li>
         </ul>
