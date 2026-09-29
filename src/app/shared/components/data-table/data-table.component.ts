@@ -42,7 +42,8 @@ export class DataTableComponent {
   ) => Observable<PageResponse<any>>;
 
   @Output() selectedRecordsChange = new EventEmitter<any[]>();
-  @Output() lazyLoad = new EventEmitter<LazyLoadEvent>();
+  // O carregamento inicial do p-table ocorre durante a verificação da view.
+  @Output() lazyLoad = new EventEmitter<LazyLoadEvent>(true);
   @Output() rowSelect = new EventEmitter<any>();
   @Output() rowUnselect = new EventEmitter<any>();
   @Output() columnsButtonClick = new EventEmitter<void>();

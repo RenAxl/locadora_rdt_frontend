@@ -1,0 +1,115 @@
+<p-dialog
+  [header]="title"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '720px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <div class="details-grid" *ngIf="employee; else loading">
+    <div class="wide">
+      <span>Nome</span><strong>{{ employee.name || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Telefone</span><strong>{{ employee.phone || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Ativo</span><strong>{{ getActiveLabel(employee.active) }}</strong>
+    </div>
+
+    <div class="wide">
+      <span>Email</span><strong>{{ employee.email || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Data cadastro</span
+      ><strong>{{
+        employee.createdAt ? (employee.createdAt | date: "dd/MM/yyyy") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Data atualização</span
+      ><strong>{{
+        employee.updatedAt ? (employee.updatedAt | date: "dd/MM/yyyy") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Criado por</span><strong>{{ employee.createdBy || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Atualizado por</span><strong>{{ employee.updatedBy || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Matrícula</span>
+      <strong>{{ employee.employeeCode || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Endereço</span>
+      <strong>{{ employee.address || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Salário</span>
+      <strong>{{
+        employee.salary != null ? (employee.salary | currency: "BRL":"symbol":"1.2-2":"pt-BR") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Tipo de contratação</span>
+      <strong>{{ employee.employmentType || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Data de admissão</span>
+      <strong>{{
+        employee.hireDate ? (employee.hireDate | date: "dd/MM/yyyy") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Data de desligamento</span>
+      <strong>{{
+        employee.terminationDate ? (employee.terminationDate | date: "dd/MM/yyyy") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Cargo</span>
+      <strong>{{ employee.position?.name || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Departamento</span>
+      <strong>{{ employee.department?.name || "-" }}</strong>
+    </div>
+
+    <div class="wide photo">
+      <span>Foto</span>
+      <strong>
+        <ng-container *ngIf="photoPreviewUrl; else noPhoto">
+          <img
+            [src]="photoPreviewUrl"
+            alt="Foto do funcionário"
+            (error)="onImgError()"
+          />
+        </ng-container>
+        <ng-template #noPhoto>
+          <span class="photo-placeholder">Sem foto</span>
+        </ng-template>
+      </strong>
+    </div>
+
+  </div>
+
+  <ng-template #loading>
+    <div class="empty">Carregando...</div>
+  </ng-template>
+
+</p-dialog>

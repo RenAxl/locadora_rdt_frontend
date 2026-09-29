@@ -1,0 +1,295 @@
+<div class="employee-form-container">
+  <div class="employee-card">
+    <form #employeeForm="ngForm" (ngSubmit)="save(employeeForm)">
+      <div class="col-12 mb-3">
+        <h1>Dados do Funcionário</h1>
+      </div>
+
+      <div class="employee-photo-header">
+        <div class="employee-photo-area">
+          <div class="employee-photo-frame">
+            <ng-container *ngIf="photoPreviewUrl; else noPhoto">
+              <img
+                class="employee-photo"
+                [src]="photoPreviewUrl"
+                alt="Foto do funcionário"
+              />
+            </ng-container>
+
+            <ng-template #noPhoto>
+              <div class="employee-photo-placeholder" aria-label="Sem foto">
+                <span class="employee-photo-icon">👤</span>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="employee-photo-meta">
+            <div class="employee-photo-title">Foto do Funcionário</div>
+            <div class="employee-photo-subtitle">
+              JPG, PNG ou WEBP • até 2MB
+            </div>
+
+            <div class="employee-photo-actions">
+              <label class="upload-btn" for="photo">
+                <span class="upload-btn-icon">⬆️</span>
+                <span>Selecionar foto</span>
+              </label>
+
+              <input
+                id="photo"
+                type="file"
+                name="photo"
+                accept="image/jpeg,image/png,image/webp"
+                (change)="onPhotoSelected(photoInput)"
+                #photoInput
+                class="upload-input"
+              />
+
+              <span class="file-chip" *ngIf="selectedPhotoName">
+                {{ selectedPhotoName }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 employee-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Nome *</label>
+          <input
+            pInputText
+            placeholder="Nome"
+            type="text"
+            name="name"
+            [(ngModel)]="employee.name"
+            #name="ngModel"
+            required
+            minlength="3"
+            class="form-control"
+          />
+
+          <app-message
+            [control]="name"
+            error="required"
+            text="Informe o nome do funcionário"
+          ></app-message>
+
+          <app-message
+            [control]="name"
+            error="minlength"
+            text="Mínimo de {{
+              name.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              name.errors?.['minlength']?.actualLength
+            }}"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Matrícula *</label>
+          <input
+            pInputText
+            placeholder="Matrícula"
+            type="text"
+            name="employeeCode"
+            [(ngModel)]="employee.employeeCode"
+            #employeeCode="ngModel"
+            required
+            minlength="3"
+            class="form-control"
+          />
+
+          <app-message
+            [control]="employeeCode"
+            error="required"
+            text="Informe a matrícula do funcionário"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">E-mail</label>
+          <input
+            pInputText
+            placeholder="E-mail"
+            type="email"
+            name="email"
+            [(ngModel)]="employee.email"
+            #email="ngModel"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Telefone</label>
+          <input
+            pInputText
+            placeholder="Telefone"
+            type="text"
+            name="phone"
+            [(ngModel)]="employee.phone"
+            #phone="ngModel"
+            class="form-control"
+            mask="(00) 00000-0000"
+          />
+        </div>
+
+        <div class="col-12">
+          <label class="form-label-custom">Endereço</label>
+          <input
+            pInputText
+            placeholder="Endereço"
+            type="text"
+            name="address"
+            [(ngModel)]="employee.address"
+            #address="ngModel"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Salário</label>
+          <p-inputNumber
+            class="salary-input-host"
+            [(ngModel)]="employee.salary"
+            name="salary"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+            placeholder="Salário"
+          ></p-inputNumber>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Contratação *</label>
+          <input
+            id="employmentType"
+            pInputText
+            type="text"
+            name="employmentType"
+            [(ngModel)]="employee.employmentType"
+            #employmentType="ngModel"
+            required
+            maxlength="30"
+            class="form-control"
+            placeholder="Informe o tipo de contratação"
+          />
+
+          <app-message
+            [control]="employmentType"
+            error="required"
+            text="Informe o tipo de contratação"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Cargo *</label>
+          <select
+            id="position"
+            name="position"
+            [(ngModel)]="employee.position"
+            [compareWith]="compareById"
+            #position="ngModel"
+            required
+            class="form-control form-select"
+          >
+            <option [ngValue]="undefined">Selecione um cargo</option>
+
+            <option *ngFor="let position of positions" [ngValue]="position">
+              {{ position.name }}
+            </option>
+          </select>
+
+          <app-message
+            [control]="position"
+            error="required"
+            text="Informe o cargo do funcionário"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Departamento *</label>
+          <select
+            id="department"
+            name="department"
+            [(ngModel)]="employee.department"
+            [compareWith]="compareById"
+            #department="ngModel"
+            required
+            class="form-control form-select"
+          >
+            <option [ngValue]="undefined">Selecione um departamento</option>
+
+            <option
+              *ngFor="let department of departments"
+              [ngValue]="department"
+            >
+              {{ department.name }}
+            </option>
+          </select>
+
+          <app-message
+            [control]="department"
+            error="required"
+            text="Informe o departamento do funcionário"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label for="hireDate" class="form-label-custom">
+            Data de admissão *
+          </label>
+          <input
+            id="hireDate"
+            type="date"
+            name="hireDate"
+            [(ngModel)]="employee.hireDate"
+            #hireDate="ngModel"
+            required
+            class="form-control"
+          />
+
+          <app-message
+            [control]="hireDate"
+            error="required"
+            text="Informe a data de admissão"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label for="terminationDate" class="form-label-custom">
+            Data de desligamento
+          </label>
+          <input
+            id="terminationDate"
+            type="date"
+            name="terminationDate"
+            [(ngModel)]="employee.terminationDate"
+            #terminationDate="ngModel"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="employee-form-buttons mt-4">
+        <button
+          type="submit"
+          [disabled]="employeeForm.invalid"
+          class="btn btn-primary employee-form-button"
+        >
+          SALVAR
+        </button>
+
+        <a routerLink="/employees/">
+          <button
+            type="button"
+            class="btn btn-outline-danger employee-form-button"
+          >
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

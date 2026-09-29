@@ -96,7 +96,9 @@
           data-bs-toggle="collapse"
           data-bs-target="#submenuOrganizationDesktop"
           *ngIf="
-            hasAuthority('CUSTOMER_READ') || hasAuthority('DEPARTMENT_READ')
+            hasAuthority('CUSTOMER_READ') ||
+            hasAuthority('DEPARTMENT_READ') ||
+            hasAuthority('EMPLOYEE_READ')
           "
         >
           <span class="d-flex align-items-center">
@@ -123,6 +125,17 @@
             >
               <i class="fa-solid fa-user-shield me-2"></i>
               <span>Clientes</span>
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/employees"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('EMPLOYEE_READ')"
+            >
+              <i class="fa-solid fa-user-group me-2"></i>
+              <span>Funcionários</span>
             </a>
           </li>
           <li>

@@ -30,12 +30,6 @@
   color: #233247;
 }
 
-@media (min-width: 992px) {
-  .file-form-buttons {
-    justify-content: flex-end;
-  }
-}
-
 .upload-btn {
   display: inline-flex;
   align-items: center;
@@ -69,6 +63,7 @@
 
 .file-chip {
   max-width: 280px;
+  margin-left: 10px;
   padding: 6px 10px;
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.06);
@@ -112,4 +107,10 @@
   width: 100%;
   min-height: 75vh;
   border: 0;
+}
+
+@media (min-width: 992px) {
+  .file-form-buttons {
+    justify-content: flex-end;
+  }
 }

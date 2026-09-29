@@ -1,0 +1,184 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">ORGANIZAÇÃO</span>
+    <h1>Funcionários</h1>
+    <p>Consulte e gerencie os funcionários cadastrados.</p>
+  </div>
+  <div class="module-page-header-icon"><i class="fa-solid fa-user-group"></i></div>
+</header>
+
+<div class="employee-filter-container">
+  <div class="employee-actions-group">
+    <a
+      routerLink="/employees/create"
+      class="action-link"
+      *ngIf="hasAuthority('EMPLOYEE_WRITE')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVO FUNCIONÁRIO
+      </button>
+    </a>
+
+    <button
+      *ngIf="selectedEmployeeIds.length > 0 && hasAuthority('EMPLOYEE_DELETE')"
+      class="btn btn-danger text-white btn-crud-action"
+      type="button"
+      (click)="deleteSelectedEmployees()"
+    >
+      EXCLUIR FUNCIONÁRIOS
+    </button>
+  </div>
+
+  <app-name-filter
+    text="Digite o nome do funcionário"
+    (search)="searchEmployee($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #photoTemplate let-employee>
+  <ng-container *ngIf="photoMap[employee.id!]; else noPhoto">
+    <img
+      class="employee-photo"
+      [src]="photoMap[employee.id!]"
+      alt="Foto do funcionário"
+    />
+  </ng-container>
+
+  <ng-template #noPhoto>
+    <div class="profile-photo-placeholder">
+      <span class="profile-photo-icon">👤</span>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #activeTemplate let-employee>
+  {{ employee.active ? "Ativo" : "Inativo" }}
+</ng-template>
+
+<ng-template #actionsTemplate let-employee>
+  <div class="actions-wrap">
+    <a
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-pencil"
+      pTooltip="Editar funcionário"
+      tooltipPosition="top"
+      [routerLink]="['/employees/', employee.id, 'edit']"
+      *ngIf="hasAuthority('EMPLOYEE_WRITE')"
+    ></a>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-danger"
+      icon="pi pi-trash"
+      pTooltip="Excluir funcionário"
+      tooltipPosition="top"
+      (click)="delete(employee)"
+      *ngIf="hasAuthority('EMPLOYEE_DELETE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-warning"
+      [icon]="employee.active ? 'pi pi-ban' : 'pi pi-check'"
+      pTooltip="Ativar / Desativar Funcionário"
+      tooltipPosition="top"
+      (click)="toggleActive(employee)"
+      *ngIf="hasAuthority('EMPLOYEE_WRITE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-eye"
+      pTooltip="Detalhamento do funcionário"
+      tooltipPosition="top"
+      (click)="openDetails(employee)"
+      *ngIf="hasAuthority('EMPLOYEE_READ')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-folder-open"
+      pTooltip="Arquivos do Funcionário"
+      tooltipPosition="top"
+      (click)="openFilesModal(employee)"
+      *ngIf="hasAuthority('EMPLOYEE_READ')"
+    ></button>
+  </div>
+</ng-template>
+
+<ng-template #createdAtTemplate let-employee>
+  {{ employee.createdAt ? (employee.createdAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #updatedAtTemplate let-employee>
+  {{ employee.updatedAt ? (employee.updatedAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #hireDateTemplate let-employee>
+  {{ employee.hireDate ? (employee.hireDate | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #terminationDateTemplate let-employee>
+  {{ employee.terminationDate ? (employee.terminationDate | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #salaryTemplate let-employee>
+  {{ employee.salary != null ? (employee.salary | currency: "BRL":"symbol":"1.2-2":"pt-BR") : "-" }}
+</ng-template>
+
+<app-data-table
+  #employeeTable
+  [records]="employees"
+  [columns]="visibleTableColumns"
+  [selectedRecords]="selectedEmployees"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [showSelection]="hasAuthority('EMPLOYEE_DELETE')"
+  [columnTemplates]="{
+    hireDate: hireDateTemplate,
+    terminationDate: terminationDateTemplate,
+    salary: salaryTemplate,
+    active: activeTemplate,
+    photo: photoTemplate,
+    createdAt: createdAtTemplate,
+    updatedAt: updatedAtTemplate
+  }"
+  [actionsTemplate]="actionsTemplate"
+  [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Funcionários"
+  exportFileName="funcionarios"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadEmployeesForExport"
+  emptyMessage="Nenhum funcionário encontrado."
+  (lazyLoad)="changePage($event)"
+  (selectedRecordsChange)="onSelectionChange($event)"
+  (columnsButtonClick)="openFieldCustomization()"
+></app-data-table>
+
+<app-employee-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [title]="'Detalhamento do Funcionário'"
+  [employee]="employeeDetails"
+></app-employee-details-modal>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="funcionários"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>
+
+<app-employee-files-modal
+  [visible]="filesVisible"
+  (visibleChange)="filesVisible = $event"
+  [employeeId]="selectedEmployeeId"
+  [employeeName]="selectedEmployeeName"
+></app-employee-files-modal>
