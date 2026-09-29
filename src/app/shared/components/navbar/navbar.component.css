@@ -7,6 +7,7 @@
   right: 0;
   z-index: 1060;
   padding: 0 0.75rem;
+  transition: left 0.3s ease-in-out;
 }
 
 .main-navbar::before {
@@ -201,7 +202,6 @@
 @media (max-width: 767.98px) {
   .main-navbar {
     left: 0;
-    width: 100%;
   }
 
   .main-navbar::before {
@@ -218,5 +218,11 @@
 
   .user-details {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-navbar {
+    transition: none;
   }
 }

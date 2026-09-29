@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
 import { SystemSettingService } from 'src/app/features/settings/system-settings/services/system-setting.service';
 
@@ -8,6 +8,8 @@ import { SystemSettingService } from 'src/app/features/settings/system-settings/
   styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent implements OnInit {
+  @Input() collapsed = false;
+
   constructor(
     public systemSettingService: SystemSettingService,
     private authService: AuthService,

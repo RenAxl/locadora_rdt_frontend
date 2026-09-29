@@ -6,6 +6,7 @@
 .layout app-sidebar {
   width: 220px;
   flex-shrink: 0;
+  transition: width 0.3s ease-in-out;
 }
 
 .main-area {
@@ -21,7 +22,13 @@
 
 @media (min-width: 768px) {
   .layout.sidebar-collapsed app-sidebar {
-    display: none;
+    width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layout app-sidebar {
+    transition: none;
   }
 }
 
