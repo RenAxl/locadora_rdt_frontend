@@ -120,4 +120,35 @@
   :host ::ng-deep .global-table .p-datatable-tbody > tr {
     padding: 10px;
   }
+
+  :host ::ng-deep .global-table .p-datatable-tbody > tr > td:not(.selection-column):not(.empty-message) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 12px 6px;
+    text-align: left;
+    line-height: 1.5;
+  }
+
+  :host ::ng-deep .global-table .p-column-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #596579;
+    overflow-wrap: normal;
+  }
+
+  :host ::ng-deep .global-table .p-datatable-tbody > tr > td > span:not(.p-column-title) {
+    max-width: 100%;
+    min-width: 0;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+  }
+
+  :host ::ng-deep .global-table .actions-cell .actions-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    max-width: 100%;
+    gap: 8px;
+  }
 }

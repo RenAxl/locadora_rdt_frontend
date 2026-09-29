@@ -7,25 +7,53 @@
 >
   <h5>{{ customerName || "Cliente #" + customerId }}</h5>
 
-  <form #fileForm="ngForm" (ngSubmit)="upload()" *ngIf="hasAuthority('CUSTOMER_WRITE')">
+  <form
+    #fileForm="ngForm"
+    (ngSubmit)="upload()"
+    *ngIf="hasAuthority('CUSTOMER_WRITE')"
+  >
     <div class="row g-3 file-form-inputs">
       <div class="col-12">
         <label class="form-label-custom">Nome do arquivo *</label>
-        <input pInputText placeholder="Ex.: Contrato assinado" type="text" name="fileName"
-          [(ngModel)]="fileName" #name="ngModel" required class="form-control" />
-        <app-message [control]="name" error="required" text="Informe o nome do arquivo"></app-message>
+        <input
+          pInputText
+          placeholder="Ex.: Contrato assinado"
+          type="text"
+          name="fileName"
+          [(ngModel)]="fileName"
+          #name="ngModel"
+          required
+          class="form-control"
+        />
+        <app-message
+          [control]="name"
+          error="required"
+          text="Informe o nome do arquivo"
+        ></app-message>
       </div>
 
       <div class="col-12">
         <label class="upload-btn" for="fileInput">
           <span>Selecionar arquivo</span>
         </label>
-        <input id="fileInput" type="file" name="file" #fileInput
-          (change)="onFileSelected(fileInput)" class="upload-input" />
-        <span class="file-chip" *ngIf="selectedFileName">{{ selectedFileName }}</span>
+        <input
+          id="fileInput"
+          type="file"
+          name="file"
+          #fileInput
+          (change)="onFileSelected(fileInput)"
+          class="upload-input"
+        />
+        <span class="file-chip" *ngIf="selectedFileName">{{
+          selectedFileName
+        }}</span>
 
         <div class="file-preview" *ngIf="selectedFile">
-          <img *ngIf="previewUrl; else genericFile" [src]="previewUrl" alt="Pré-visualização" />
+          <img
+            *ngIf="previewUrl; else genericFile"
+            [src]="previewUrl"
+            alt="Pré-visualização"
+          />
           <ng-template #genericFile>
             <i class="pi pi-file"></i>
           </ng-template>
@@ -34,17 +62,36 @@
     </div>
 
     <div class="file-form-buttons mt-4 mb-4">
-      <button type="submit" class="btn btn-primary file-form-button">ENVIAR</button>
-      <button type="button" class="btn btn-outline-danger file-form-button" (click)="clearForm()">LIMPAR</button>
+      <button type="submit" class="btn btn-primary file-form-button">
+        ENVIAR
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-danger file-form-button"
+        (click)="clearForm()"
+      >
+        LIMPAR
+      </button>
     </div>
   </form>
 
   <ng-template #previewTemplate let-file>
-    <button pButton type="button" class="p-button-rounded p-button-text"
-      pTooltip="Visualizar arquivo" tooltipPosition="top" (click)="openFileView(file)"
-      *ngIf="hasAuthority('CUSTOMER_READ')">
-      <img *ngIf="photoMap[file.id!]; else fileIcon" [src]="photoMap[file.id!]"
-        [alt]="file.name" class="file-photo" (error)="onImgError(file)" />
+    <button
+      pButton
+      type="button"
+      class="p-button-rounded p-button-text"
+      pTooltip="Visualizar arquivo"
+      tooltipPosition="top"
+      (click)="openFileView(file)"
+      *ngIf="hasAuthority('CUSTOMER_READ')"
+    >
+      <img
+        *ngIf="photoMap[file.id!]; else fileIcon"
+        [src]="photoMap[file.id!]"
+        [alt]="file.name"
+        class="file-photo"
+        (error)="onImgError(file)"
+      />
       <ng-template #fileIcon>
         <i [class]="getFileIcon(file)"></i>
       </ng-template>
@@ -57,12 +104,26 @@
 
   <ng-template #actionsTemplate let-file>
     <div class="actions-wrap">
-      <button pButton type="button" class="p-button-rounded p-button-text" icon="pi pi-download"
-        pTooltip="Download" tooltipPosition="top" (click)="download(file)"
-        *ngIf="hasAuthority('CUSTOMER_READ')"></button>
-      <button pButton type="button" class="p-button-rounded p-button-text p-button-danger" icon="pi pi-trash"
-        pTooltip="Excluir arquivo" tooltipPosition="top" (click)="delete(file)"
-        *ngIf="hasAuthority('CUSTOMER_DELETE')"></button>
+      <button
+        pButton
+        type="button"
+        class="p-button-rounded p-button-text"
+        icon="pi pi-download"
+        pTooltip="Download"
+        tooltipPosition="top"
+        (click)="download(file)"
+        *ngIf="hasAuthority('CUSTOMER_READ')"
+      ></button>
+      <button
+        pButton
+        type="button"
+        class="p-button-rounded p-button-text p-button-danger"
+        icon="pi pi-trash"
+        pTooltip="Excluir arquivo"
+        tooltipPosition="top"
+        (click)="delete(file)"
+        *ngIf="hasAuthority('CUSTOMER_DELETE')"
+      ></button>
     </div>
   </ng-template>
 
@@ -72,7 +133,10 @@
     [loading]="loading"
     [showSelection]="false"
     [paginator]="false"
-    [columnTemplates]="{ preview: previewTemplate, createdAt: createdAtTemplate }"
+    [columnTemplates]="{
+      preview: previewTemplate,
+      createdAt: createdAtTemplate
+    }"
     [actionsTemplate]="actionsTemplate"
     emptyMessage="Nenhum arquivo cadastrado para este cliente."
   ></app-data-table>
@@ -87,6 +151,10 @@
 >
   <div class="file-view" *ngIf="fileViewUrl">
     <img *ngIf="fileViewIsImage" [src]="fileViewUrl" [alt]="fileViewName" />
-    <iframe *ngIf="!fileViewIsImage" [src]="fileViewUrl" [title]="fileViewName"></iframe>
+    <iframe
+      *ngIf="!fileViewIsImage"
+      [src]="fileViewUrl"
+      [title]="fileViewName"
+    ></iframe>
   </div>
 </p-dialog>

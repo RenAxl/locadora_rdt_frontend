@@ -109,6 +109,15 @@
   border: 0;
 }
 
+@media (max-width: 576px) {
+  .file-chip {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 8px 0 0;
+  }
+}
+
 @media (min-width: 992px) {
   .file-form-buttons {
     justify-content: flex-end;
