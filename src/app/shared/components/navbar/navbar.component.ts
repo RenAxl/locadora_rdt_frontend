@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/core/auth/services/auth.service';
@@ -13,6 +13,9 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
+  @Input() sidebarCollapsed = false;
+  @Output() sidebarToggle = new EventEmitter<void>();
+
   photoPreviewUrl?: SafeUrl;
   user: User = new User();
   canAccessSystemSettings = false;

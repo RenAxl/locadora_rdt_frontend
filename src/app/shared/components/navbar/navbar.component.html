@@ -1,4 +1,4 @@
-<nav class="navbar main-navbar shadow">
+<nav class="navbar main-navbar shadow" [class.sidebar-collapsed]="sidebarCollapsed">
   <div class="container-fluid h-100 d-flex align-items-center">
     <button
       class="btn navbar-hamburger"
@@ -9,6 +9,17 @@
       aria-controls="sidebarOffcanvas"
     >
       <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <button
+      class="btn navbar-hamburger navbar-hamburger-desktop"
+      type="button"
+      [attr.aria-label]="sidebarCollapsed ? 'Abrir menu' : 'Fechar menu'"
+      [attr.aria-expanded]="!sidebarCollapsed"
+      aria-controls="sidebarOffcanvas"
+      (click)="sidebarToggle.emit()"
+    >
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
     </button>
 
     <a
