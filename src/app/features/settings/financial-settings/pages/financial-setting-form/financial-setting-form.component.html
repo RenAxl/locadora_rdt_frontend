@@ -1,0 +1,81 @@
+<div class="financial-setting-form-container">
+  <div class="financial-setting-card">
+    <form
+      #financialSettingForm="ngForm"
+      (ngSubmit)="save(financialSettingForm)"
+    >
+      <div class="col-12 mb-3">
+        <h1>Configurações Financeiras</h1>
+      </div>
+
+      <div *ngIf="loading" class="financial-setting-loading" aria-live="polite">
+        Carregando configurações...
+      </div>
+
+      <div *ngIf="!loading" class="row g-3 financial-setting-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Multa por atraso *</label>
+          <p-inputNumber
+            class="percent-input-host"
+            placeholder="Multa por atraso"
+            name="defaultLateFeePercent"
+            [(ngModel)]="financialSetting.defaultLateFeePercent"
+            #defaultLateFeePercent="ngModel"
+            suffix="%"
+            locale="pt-BR"
+            [min]="0"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+            [required]="true"
+            inputStyleClass="form-control"
+          ></p-inputNumber>
+
+          <app-message
+            [control]="defaultLateFeePercent"
+            error="required"
+            text="Informe o percentual padrão de multa por atraso"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Juros por atraso *</label>
+          <p-inputNumber
+            class="percent-input-host"
+            placeholder="Juros por atraso"
+            name="defaultLateInterestPercent"
+            [(ngModel)]="financialSetting.defaultLateInterestPercent"
+            #defaultLateInterestPercent="ngModel"
+            suffix="%"
+            locale="pt-BR"
+            [min]="0"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+            [required]="true"
+            inputStyleClass="form-control"
+          ></p-inputNumber>
+
+          <app-message
+            [control]="defaultLateInterestPercent"
+            error="required"
+            text="Informe o percentual padrão de juros por atraso"
+          ></app-message>
+        </div>
+      </div>
+
+      <div
+        class="financial-setting-form-buttons mt-4"
+        *ngIf="!loading && hasAuthority('FINANCIAL_SETTINGS_WRITE')"
+      >
+        <button
+          type="submit"
+          [disabled]="
+            financialSettingForm.invalid || hasNegativeValue() || saving
+          "
+          class="btn btn-primary financial-setting-form-button"
+        >
+          SALVAR
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -94,6 +94,10 @@ export const API = {
     ROOT: `${BASE_URL}/system-settings`,
   },
 
+  FINANCIAL_SETTINGS: {
+    ROOT: `${BASE_URL}/financial-settings`,
+  },
+
   ROLES: {
     ROOT: `${BASE_URL}/roles`,
     BY_ID: (id: number | string) => `${BASE_URL}/roles/${id}`,

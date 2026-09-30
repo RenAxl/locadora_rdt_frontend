@@ -149,6 +149,14 @@ const routes: Routes = [
             (m) => m.SystemSettingsModule,
           ),
       },
+
+      {
+        path: 'financial-settings',
+        loadChildren: () =>
+          import('./features/settings/financial-settings/financial-settings.module').then(
+            (m) => m.FinancialSettingsModule,
+          ),
+      },
     ],
   },
 

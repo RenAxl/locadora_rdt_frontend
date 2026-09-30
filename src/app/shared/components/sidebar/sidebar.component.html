@@ -181,7 +181,10 @@
           class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
           data-bs-toggle="collapse"
           data-bs-target="#submenuFinancialDesktop"
-          *ngIf="hasAuthority('FREQUENCY_READ')"
+          *ngIf="
+            hasAuthority('FREQUENCY_READ') ||
+            hasAuthority('FINANCIAL_SETTINGS_READ')
+          "
         >
           <span class="d-flex align-items-center">
             <i class="fa-solid fa-coins me-2"></i>
@@ -207,6 +210,17 @@
             >
               <i class="fa-solid fa-calendar-days me-2"></i>
               <span>Frequências de pagamento</span>
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/financial-settings"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('FINANCIAL_SETTINGS_READ')"
+            >
+              <i class="fa-solid fa-sliders me-2"></i>
+              <span>Configurações financeiras</span>
             </a>
           </li>
         </ul>
