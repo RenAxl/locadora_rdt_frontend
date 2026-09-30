@@ -1,0 +1,85 @@
+<div class="payment-frequency-form-container">
+  <div class="payment-frequency-card">
+    <form
+      #paymentFrequencyForm="ngForm"
+      (ngSubmit)="save(paymentFrequencyForm)"
+    >
+      <div class="col-12 mb-3">
+        <h1>Dados da Frequência de Pagamento</h1>
+      </div>
+
+      <div class="row g-3 payment-frequency-form-inputs">
+        <div class="col-12 col-lg-8">
+          <label class="form-label-custom">Frequência *</label>
+          <input
+            pInputText
+            placeholder="Frequência"
+            type="text"
+            name="frequency"
+            [(ngModel)]="paymentFrequency.frequency"
+            #frequency="ngModel"
+            required
+            minlength="3"
+            maxlength="60"
+            class="form-control"
+          />
+
+          <app-message
+            [control]="frequency"
+            error="required"
+            text="Informe a frequência de pagamento"
+          ></app-message>
+
+          <app-message
+            [control]="frequency"
+            error="minlength"
+            text="Mínimo de {{
+              frequency.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              frequency.errors?.['minlength']?.actualLength
+            }}"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <label class="form-label-custom">Dias *</label>
+          <p-inputNumber
+            class="days-input-host"
+            [(ngModel)]="paymentFrequency.days"
+            name="days"
+            #days="ngModel"
+            [min]="0"
+            [useGrouping]="false"
+            placeholder="Dias"
+            [required]="true"
+          ></p-inputNumber>
+
+          <app-message
+            [control]="days"
+            error="required"
+            text="Informe a quantidade de dias"
+          ></app-message>
+        </div>
+      </div>
+
+      <div class="payment-frequency-form-buttons mt-4">
+        <button
+          type="submit"
+          [disabled]="paymentFrequencyForm.invalid"
+          class="btn btn-primary payment-frequency-form-button"
+        >
+          SALVAR
+        </button>
+
+        <a routerLink="/payment-frequencies/">
+          <button
+            type="button"
+            class="btn btn-outline-danger payment-frequency-form-button"
+          >
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

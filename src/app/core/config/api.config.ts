@@ -52,6 +52,12 @@ export const API = {
     },
   },
 
+  PAYMENT_FREQUENCIES: {
+    ROOT: `${BASE_URL}/payment-frequencies`,
+    BY_ID: (id: number | string) => `${BASE_URL}/payment-frequencies/${id}`,
+    DELETE_ALL: `${BASE_URL}/payment-frequencies/all`,
+  },
+
   EMPLOYEES: {
     ROOT: `${BASE_URL}/employees`,
     BY_ID: (id: number | string) => `${BASE_URL}/employees/${id}`,

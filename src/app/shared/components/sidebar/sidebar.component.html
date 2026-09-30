@@ -99,7 +99,9 @@
           *ngIf="
             hasAuthority('CUSTOMER_READ') ||
             hasAuthority('DEPARTMENT_READ') ||
-            hasAuthority('EMPLOYEE_READ')
+            hasAuthority('EMPLOYEE_READ') ||
+            hasAuthority('POSITION_READ') ||
+            hasAuthority('SUPPLIER_READ')
           "
         >
           <span class="d-flex align-items-center">
@@ -170,6 +172,41 @@
             >
               <i class="fa-solid fa-truck-field me-2"></i>
               <span>Fornecedores</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="treeview">
+        <a
+          class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
+          data-bs-toggle="collapse"
+          data-bs-target="#submenuFinancialDesktop"
+          *ngIf="hasAuthority('FREQUENCY_READ')"
+        >
+          <span class="d-flex align-items-center">
+            <i class="fa-solid fa-coins me-2"></i>
+            <span>Financeiro</span>
+          </span>
+
+          <span>
+            <i class="fa-solid fa-caret-right submenu-toggle-icon closed"></i>
+            <i class="fa-solid fa-caret-down submenu-toggle-icon open"></i>
+          </span>
+        </a>
+
+        <ul
+          class="treeview-menu collapse list-unstyled mb-0"
+          id="submenuFinancialDesktop"
+        >
+          <li>
+            <a
+              routerLink="/payment-frequencies"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('FREQUENCY_READ')"
+            >
+              <i class="fa-solid fa-calendar-days me-2"></i>
+              <span>Frequências de pagamento</span>
             </a>
           </li>
         </ul>

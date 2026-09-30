@@ -1,0 +1,128 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">FINANCEIRO</span>
+    <h1>Frequências de pagamento</h1>
+    <p>Consulte e gerencie as frequências de pagamento cadastradas.</p>
+  </div>
+  <div class="module-page-header-icon"><i class="fa-solid fa-calendar-days"></i></div>
+</header>
+
+<div class="payment-frequency-filter-container">
+  <div class="payment-frequency-actions-group">
+    <a
+      routerLink="/payment-frequencies/create"
+      class="action-link"
+      *ngIf="hasAuthority('FREQUENCY_WRITE')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVA FREQUÊNCIA
+      </button>
+    </a>
+
+    <button
+      *ngIf="selectedPaymentFrequencyIds.length > 0 && hasAuthority('FREQUENCY_DELETE')"
+      class="btn btn-danger text-white btn-crud-action"
+      type="button"
+      (click)="deleteSelectedPaymentFrequencies()"
+    >
+      EXCLUIR FREQUÊNCIAS
+    </button>
+  </div>
+
+  <app-name-filter
+    text="Digite a frequência de pagamento"
+    (search)="searchPaymentFrequency($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #actionsTemplate let-paymentFrequency>
+  <div class="actions-wrap">
+    <a
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-pencil"
+      pTooltip="Editar frequência de pagamento"
+      tooltipPosition="top"
+      [routerLink]="['/payment-frequencies/', paymentFrequency.id, 'edit']"
+      *ngIf="hasAuthority('FREQUENCY_WRITE')"
+    ></a>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-danger"
+      icon="pi pi-trash"
+      pTooltip="Excluir frequência de pagamento"
+      tooltipPosition="top"
+      (click)="delete(paymentFrequency)"
+      *ngIf="hasAuthority('FREQUENCY_DELETE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-eye"
+      pTooltip="Detalhamento da frequência de pagamento"
+      tooltipPosition="top"
+      (click)="openDetails(paymentFrequency)"
+      *ngIf="hasAuthority('FREQUENCY_READ')"
+    ></button>
+  </div>
+</ng-template>
+
+<ng-template #createdAtTemplate let-paymentFrequency>
+  {{
+    paymentFrequency.createdAt
+      ? (paymentFrequency.createdAt | date: "dd/MM/yyyy")
+      : "-"
+  }}
+</ng-template>
+
+<ng-template #updatedAtTemplate let-paymentFrequency>
+  {{
+    paymentFrequency.updatedAt
+      ? (paymentFrequency.updatedAt | date: "dd/MM/yyyy")
+      : "-"
+  }}
+</ng-template>
+
+<app-data-table
+  #paymentFrequencyTable
+  [records]="paymentFrequencies"
+  [columns]="visibleTableColumns"
+  [selectedRecords]="selectedPaymentFrequencies"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [showSelection]="hasAuthority('FREQUENCY_DELETE')"
+  [columnTemplates]="{
+    createdAt: createdAtTemplate,
+    updatedAt: updatedAtTemplate
+  }"
+  [actionsTemplate]="actionsTemplate"
+  [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Frequências de pagamento"
+  exportFileName="frequencias-de-pagamento"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadPaymentFrequenciesForExport"
+  emptyMessage="Nenhuma frequência de pagamento encontrada."
+  (lazyLoad)="changePage($event)"
+  (selectedRecordsChange)="onSelectionChange($event)"
+  (columnsButtonClick)="openFieldCustomization()"
+></app-data-table>
+
+<app-payment-frequency-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [title]="'Detalhamento da Frequência de Pagamento'"
+  [paymentFrequency]="paymentFrequencyDetails"
+></app-payment-frequency-details-modal>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="frequências de pagamento"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>

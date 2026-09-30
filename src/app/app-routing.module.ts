@@ -111,6 +111,14 @@ const routes: Routes = [
       },
 
       {
+        path: 'payment-frequencies',
+        loadChildren: () =>
+          import('./features/financial/payment-frequencies/payment-frequencies.module').then(
+            (m) => m.PaymentFrequenciesModule,
+          ),
+      },
+
+      {
         path: 'employees',
         loadChildren: () =>
           import('./features/organization/employees/employees.module').then(
