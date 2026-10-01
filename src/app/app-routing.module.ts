@@ -111,6 +111,14 @@ const routes: Routes = [
       },
 
       {
+        path: 'payment-methods',
+        loadChildren: () =>
+          import('./features/financial/payment-methods/payment-methods.module').then(
+            (m) => m.PaymentMethodsModule,
+          ),
+      },
+
+      {
         path: 'payment-frequencies',
         loadChildren: () =>
           import('./features/financial/payment-frequencies/payment-frequencies.module').then(

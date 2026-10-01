@@ -1,0 +1,133 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">FINANCEIRO</span>
+    <h1>Formas de Pagamento</h1>
+    <p>Consulte e gerencie as formas de pagamento cadastradas.</p>
+  </div>
+  <div class="module-page-header-icon">
+    <i class="fa-solid fa-credit-card"></i>
+  </div>
+</header>
+
+<div class="payment-method-filter-container">
+  <div class="payment-method-actions-group">
+    <a
+      routerLink="/payment-methods/create"
+      class="action-link"
+      *ngIf="hasAuthority('METHODS_WRITE')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVA FORMA DE PAGAMENTO
+      </button>
+    </a>
+
+    <button
+      *ngIf="
+        selectedPaymentMethodIds.length > 0 && hasAuthority('METHODS_DELETE')
+      "
+      class="btn btn-danger text-white btn-crud-action"
+      type="button"
+      (click)="deleteSelectedPaymentMethods()"
+    >
+      EXCLUIR FORMAS DE PAGAMENTO
+    </button>
+  </div>
+
+  <app-name-filter
+    text="Digite o nome da forma de pagamento"
+    (search)="searchPaymentMethod($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #feeTemplate let-paymentMethod>
+  {{
+    paymentMethod.fee != null
+      ? (paymentMethod.fee | number: "1.2-2") + "%"
+      : "-"
+  }}
+</ng-template>
+
+<ng-template #actionsTemplate let-paymentMethod>
+  <div class="actions-wrap">
+    <a
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-pencil"
+      pTooltip="Editar forma de pagamento"
+      tooltipPosition="top"
+      [routerLink]="['/payment-methods/', paymentMethod.id, 'edit']"
+      *ngIf="hasAuthority('METHODS_WRITE')"
+    ></a>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-danger"
+      icon="pi pi-trash"
+      pTooltip="Excluir forma de pagamento"
+      tooltipPosition="top"
+      (click)="delete(paymentMethod)"
+      *ngIf="hasAuthority('METHODS_DELETE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-eye"
+      pTooltip="Detalhamento da forma de pagamento"
+      tooltipPosition="top"
+      (click)="openDetails(paymentMethod)"
+      *ngIf="hasAuthority('METHODS_READ')"
+    ></button>
+  </div>
+</ng-template>
+
+<ng-template #createdAtTemplate let-paymentMethod>
+  {{ paymentMethod.createdAt ? (paymentMethod.createdAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #updatedAtTemplate let-paymentMethod>
+  {{ paymentMethod.updatedAt ? (paymentMethod.updatedAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<app-data-table
+  #paymentMethodTable
+  [records]="paymentMethods"
+  [columns]="visibleTableColumns"
+  [selectedRecords]="selectedPaymentMethods"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [showSelection]="hasAuthority('METHODS_DELETE')"
+  [columnTemplates]="{
+    fee: feeTemplate,
+    createdAt: createdAtTemplate,
+    updatedAt: updatedAtTemplate
+  }"
+  [actionsTemplate]="actionsTemplate"
+  [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Formas de Pagamento"
+  exportFileName="formas-de-pagamento"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadPaymentMethodsForExport"
+  emptyMessage="Nenhuma forma de pagamento encontrada."
+  (lazyLoad)="changePage($event)"
+  (selectedRecordsChange)="onSelectionChange($event)"
+  (columnsButtonClick)="openFieldCustomization()"
+></app-data-table>
+
+<app-payment-method-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [title]="'Detalhamento da Forma de Pagamento'"
+  [paymentMethod]="paymentMethodDetails"
+></app-payment-method-details-modal>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="formas de pagamento"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>

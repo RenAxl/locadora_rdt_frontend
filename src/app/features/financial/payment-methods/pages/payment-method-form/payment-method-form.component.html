@@ -1,0 +1,78 @@
+<div class="payment-method-form-container">
+  <div class="payment-method-card">
+    <form #paymentMethodForm="ngForm" (ngSubmit)="save(paymentMethodForm)">
+      <div class="col-12 mb-3">
+        <h1>Dados da Forma de Pagamento</h1>
+      </div>
+
+      <div class="row g-3 payment-method-form-inputs">
+        <div class="col-12 col-lg-8">
+          <label class="form-label-custom">Nome *</label>
+          <input
+            pInputText
+            placeholder="Nome"
+            type="text"
+            name="name"
+            [(ngModel)]="paymentMethod.name"
+            #name="ngModel"
+            required
+            minlength="3"
+            maxlength="60"
+            class="form-control"
+          />
+
+          <app-message
+            [control]="name"
+            error="required"
+            text="Informe o nome da forma de pagamento"
+          ></app-message>
+
+          <app-message
+            [control]="name"
+            error="minlength"
+            text="Mínimo de {{
+              name.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              name.errors?.['minlength']?.actualLength
+            }}"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <label class="form-label-custom">Taxa</label>
+          <p-inputNumber
+            class="fee-input-host"
+            placeholder="Taxa"
+            name="fee"
+            [(ngModel)]="paymentMethod.fee"
+            suffix="%"
+            locale="pt-BR"
+            [min]="0"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+            inputStyleClass="form-control"
+          ></p-inputNumber>
+        </div>
+      </div>
+
+      <div class="payment-method-form-buttons mt-4">
+        <button
+          type="submit"
+          [disabled]="paymentMethodForm.invalid"
+          class="btn btn-primary payment-method-form-button"
+        >
+          SALVAR
+        </button>
+
+        <a routerLink="/payment-methods/">
+          <button
+            type="button"
+            class="btn btn-outline-danger payment-method-form-button"
+          >
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

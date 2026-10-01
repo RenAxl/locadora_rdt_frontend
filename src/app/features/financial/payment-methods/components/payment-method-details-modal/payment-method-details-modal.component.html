@@ -1,0 +1,48 @@
+<p-dialog
+  [header]="title"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '720px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <div class="details-grid" *ngIf="paymentMethod; else loading">
+    <div class="wide">
+      <span>Nome</span><strong>{{ paymentMethod.name || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Taxa</span
+      ><strong>{{
+        paymentMethod.fee != null ? (paymentMethod.fee | number: "1.2-2") + "%" : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Data cadastro</span
+      ><strong>{{
+        paymentMethod.createdAt ? (paymentMethod.createdAt | date: "dd/MM/yyyy") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Data atualização</span
+      ><strong>{{
+        paymentMethod.updatedAt ? (paymentMethod.updatedAt | date: "dd/MM/yyyy") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Criado por</span><strong>{{ paymentMethod.createdBy || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Atualizado por</span><strong>{{ paymentMethod.updatedBy || "-" }}</strong>
+    </div>
+
+  </div>
+
+  <ng-template #loading>
+    <div class="empty">Carregando...</div>
+  </ng-template>
+
+</p-dialog>

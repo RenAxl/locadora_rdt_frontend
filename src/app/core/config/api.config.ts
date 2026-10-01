@@ -52,6 +52,12 @@ export const API = {
     },
   },
 
+  PAYMENT_METHODS: {
+    ROOT: `${BASE_URL}/payment-methods`,
+    BY_ID: (id: number | string) => `${BASE_URL}/payment-methods/${id}`,
+    DELETE_ALL: `${BASE_URL}/payment-methods/all`,
+  },
+
   PAYMENT_FREQUENCIES: {
     ROOT: `${BASE_URL}/payment-frequencies`,
     BY_ID: (id: number | string) => `${BASE_URL}/payment-frequencies/${id}`,
