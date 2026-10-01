@@ -1,0 +1,213 @@
+<div class="payable-form-container">
+  <div class="payable-card">
+    <form #payableForm="ngForm" (ngSubmit)="save(payableForm)">
+      <div class="col-12 mb-3">
+        <h1>Dados da Conta a Pagar</h1>
+      </div>
+
+      <div class="row g-3 payable-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Descrição *</label>
+          <input
+            pInputText
+            type="text"
+            name="description"
+            [(ngModel)]="payable.description"
+            #description="ngModel"
+            placeholder="Descrição"
+            required
+            minlength="3"
+            maxlength="120"
+            class="form-control"
+          />
+
+          <app-message
+            [control]="description"
+            error="required"
+            text="Informe a descrição da conta"
+          ></app-message>
+
+          <app-message
+            [control]="description"
+            error="minlength"
+            text="Mínimo de {{
+              description.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              description.errors?.['minlength']?.actualLength
+            }}"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3" *ngIf="payable.parentPayableId">
+          <label class="form-label-custom">Valor original</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="payable.originalAmount | currency: 'BRL'"
+            readonly
+          />
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">{{ payable.parentPayableId ? 'Valor da parcela' : 'Valor' }} *</label>
+          <p-inputNumber
+            [(ngModel)]="payable.amount"
+            name="amount"
+            #amount="ngModel"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            class="payable-amount-control"
+            styleClass="payable-amount-input"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+            [required]="true"
+            [min]="0.01"
+          ></p-inputNumber>
+
+          <app-message
+            [control]="amount"
+            error="required"
+            text="Informe o valor da conta"
+          ></app-message>
+
+          <app-message
+            [control]="amount"
+            error="min"
+            text="O valor deve ser maior que zero"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">Fornecedor</label>
+          <select
+            name="supplierId"
+            [(ngModel)]="payable.supplierId"
+            #supplierId="ngModel"
+            class="form-control"
+          >
+            <option [ngValue]="null">Selecione um fornecedor</option>
+            <option *ngFor="let supplier of suppliers" [ngValue]="supplier.id">
+              {{ supplier.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">Funcionário</label>
+          <select
+            name="employeeId"
+            [(ngModel)]="payable.employeeId"
+            #employeeId="ngModel"
+            class="form-control"
+          >
+            <option [ngValue]="null">Selecione um funcionário</option>
+            <option *ngFor="let employee of employees" [ngValue]="employee.id">
+              {{ employee.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">Vencimento *</label>
+          <input
+            type="date"
+            name="dueDate"
+            [(ngModel)]="payable.dueDate"
+            #dueDate="ngModel"
+            required
+            class="form-control"
+          />
+
+          <app-message
+            [control]="dueDate"
+            error="required"
+            text="Informe o vencimento"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">Pago Em</label>
+          <input
+            type="date"
+            name="paymentDate"
+            [(ngModel)]="payable.paymentDate"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">Forma Pgto</label>
+          <select
+            name="paymentMethodId"
+            [(ngModel)]="payable.paymentMethodId"
+            class="form-control"
+          >
+            <option [ngValue]="null">Selecione uma forma de pagamento</option>
+            <option *ngFor="let method of paymentMethods" [ngValue]="method.id">
+              {{ method.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-12 col-lg-3">
+          <label class="form-label-custom">Frequência</label>
+          <select
+            name="paymentFrequencyId"
+            [(ngModel)]="payable.paymentFrequencyId"
+            class="form-control"
+          >
+            <option [ngValue]="null">Selecione uma frequência</option>
+            <option
+              *ngFor="let frequency of paymentFrequencies"
+              [ngValue]="frequency.id"
+            >
+              {{ frequency.frequency }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Observações</label>
+          <textarea
+            name="note"
+            [(ngModel)]="payable.note"
+            placeholder="Observações"
+            class="form-control"
+            rows="1"
+          ></textarea>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Arquivo</label>
+          <input
+            type="file"
+            name="file"
+            (change)="onFileSelected(fileInput)"
+            #fileInput
+            class="form-control payable-file-input"
+          />
+        </div>
+      </div>
+
+      <div class="payable-form-buttons mt-4">
+        <button
+          type="submit"
+          [disabled]="payableForm.invalid"
+          class="btn btn-primary payable-form-button"
+        >
+          SALVAR
+        </button>
+
+        <a routerLink="/payables/">
+          <button
+            type="button"
+            class="btn btn-outline-danger payable-form-button"
+          >
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<p-dialog
+  [header]="title"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '720px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <div class="details-grid" *ngIf="payable; else loading">
+    <div>
+      <span>Descrição</span><strong>{{ payable.description || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Fornecedor</span><strong>{{ payable.supplierName || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Funcionário</span><strong>{{ payable.employeeName || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Valor original</span><strong>{{ payable.originalAmount | currency: "BRL" }}</strong>
+    </div>
+
+    <div *ngIf="payable.parentPayableId">
+      <span>Valor da parcela</span><strong>{{ payable.amount | currency: "BRL" }}</strong>
+    </div>
+
+    <div>
+      <span>Saldo</span><strong>{{ payable.remainingBalance | currency: "BRL" }}</strong>
+    </div>
+
+    <div>
+      <span>Vencimento</span><strong>{{ payable.dueDate ? (payable.dueDate | date: "dd/MM/yyyy") : "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Pagamento</span><strong>{{ payable.paymentDate ? (payable.paymentDate | date: "dd/MM/yyyy") : "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Forma</span><strong>{{ payable.paymentMethodName || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Frequência</span><strong>{{ payable.paymentFrequency || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Taxa</span><strong>{{ payable.fee | currency: "BRL" }}</strong>
+    </div>
+
+    <div>
+      <span>Juros</span><strong>{{ payable.lateInterest | currency: "BRL" }}</strong>
+    </div>
+
+    <div>
+      <span>Multa</span><strong>{{ payable.lateFee | currency: "BRL" }}</strong>
+    </div>
+
+    <div>
+      <span>Desconto</span><strong>{{ payable.discount | currency: "BRL" }}</strong>
+    </div>
+
+    <div>
+      <span>Criado por</span><strong>{{ payable.createdByName || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Criado em</span><strong>{{ payable.createdAt ? (payable.createdAt | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Atualizado por</span><strong>{{ payable.updatedByName || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Atualizado em</span><strong>{{ payable.updatedAt ? (payable.updatedAt | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Pago por</span><strong>{{ payable.paidByName || "-" }}</strong>
+    </div>
+
+    <div class="wide">
+      <span>Observação</span><strong>{{ payable.note || "-" }}</strong>
+    </div>
+
+  </div>
+
+  <ng-template #loading>
+    <div class="empty">Carregando...</div>
+  </ng-template>
+</p-dialog>

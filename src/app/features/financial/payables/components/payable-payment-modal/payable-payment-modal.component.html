@@ -1,0 +1,158 @@
+<p-dialog
+  header="Baixar conta"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '560px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <form #paymentForm="ngForm" (ngSubmit)="submit(paymentForm)" *ngIf="payable">
+    <div class="row g-3 payable-form-inputs">
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom">Valor original</label>
+        <input
+          class="form-control"
+          type="text"
+          [value]="getOriginalAmount() | currency: 'BRL'"
+          readonly
+        />
+      </div>
+
+      <div class="col-12 col-lg-6" *ngIf="payable.parentPayableId">
+        <label class="form-label-custom">Valor da parcela</label>
+        <input
+          class="form-control"
+          type="text"
+          [value]="payable.amount | currency: 'BRL'"
+          readonly
+        />
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom">Forma de pagamento *</label>
+        <select
+          name="paymentMethodId"
+          class="form-control"
+          [(ngModel)]="paymentMethodId"
+          (ngModelChange)="onPaymentMethodChange()"
+          #method="ngModel"
+          required
+        >
+          <option [ngValue]="null">Selecione</option>
+          <option *ngFor="let method of paymentMethods" [ngValue]="method.id">
+            {{ method.name }}
+          </option>
+        </select>
+        <app-message
+          [control]="method"
+          error="required"
+          text="Informe a forma de pagamento"
+        ></app-message>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom">Data da baixa *</label>
+        <input
+          name="paymentDate"
+          class="form-control"
+          type="date"
+          [(ngModel)]="paymentDate"
+          #date="ngModel"
+          required
+        />
+        <app-message
+          [control]="date"
+          error="required"
+          text="Informe a data da baixa"
+        ></app-message>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom">
+          Multa <i class="pi pi-lock" aria-hidden="true"></i>
+        </label>
+        <input
+          class="form-control payable-readonly-input"
+          type="text"
+          [value]="getLateFee() | currency: 'BRL'"
+          title="Campo somente leitura"
+          readonly
+        />
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom">
+          Juros <i class="pi pi-lock" aria-hidden="true"></i>
+        </label>
+        <input
+          class="form-control payable-readonly-input"
+          type="text"
+          [value]="getLateInterest() | currency: 'BRL'"
+          title="Campo somente leitura"
+          readonly
+        />
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom">
+          Desconto <i class="pi pi-lock" aria-hidden="true"></i>
+        </label>
+        <input
+          class="form-control payable-readonly-input"
+          type="text"
+          [value]="getDiscount() | currency: 'BRL'"
+          title="Campo somente leitura"
+          readonly
+        />
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom">Valor atual</label>
+        <input
+          class="form-control"
+          type="text"
+          [value]="getCurrentAmount() | currency: 'BRL'"
+          readonly
+        />
+      </div>
+
+      <div class="col-12">
+        <label class="form-label-custom">Valor a pagar *</label>
+        <p-inputNumber
+          name="paymentAmount"
+          [(ngModel)]="paymentAmount"
+          #amount="ngModel"
+          mode="currency"
+          currency="BRL"
+          locale="pt-BR"
+          class="payable-amount-control"
+          styleClass="payable-amount-input"
+          [required]="true"
+          [min]="0.01"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="2"
+        ></p-inputNumber>
+        <app-message
+          [control]="amount"
+          error="required"
+          text="Informe o valor a pagar"
+        ></app-message>
+        <small class="text-danger" *ngIf="isPaymentAmountGreaterThanCurrent()">
+          O valor a ser pago é maior que o Valor Atual.
+        </small>
+        <small class="text-danger" *ngIf="isPaymentAmountEmptyOrZero()">
+          Informe um valor a pagar maior que zero.
+        </small>
+      </div>
+    </div>
+
+    <div class="payable-form-buttons mt-4">
+      <button
+        type="submit"
+        class="btn btn-primary payable-form-button"
+        [disabled]="paymentForm.invalid || isPaymentAmountInvalid()"
+      >
+        BAIXAR
+      </button>
+    </div>
+  </form>
+</p-dialog>

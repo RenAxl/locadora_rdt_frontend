@@ -1,0 +1,24 @@
+<div class="quick-period-filter">
+  <span class="quick-period-title">Períodos Rápidos</span>
+
+  <div class="quick-period-options">
+    <button
+      *ngFor="let period of periods"
+      type="button"
+      class="quick-period-chip"
+      [class.selected]="selectedPeriod === period.key"
+      (click)="selectPeriod(period.key)"
+    >
+      {{ period.label }}
+    </button>
+
+    <button
+      type="button"
+      class="quick-period-chip clear"
+      [disabled]="!startDate && !endDate && !selectedPeriod"
+      (click)="clearPeriod()"
+    >
+      Limpar período
+    </button>
+  </div>
+</div>

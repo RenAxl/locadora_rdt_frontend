@@ -52,6 +52,19 @@ export const API = {
     },
   },
 
+  PAYABLES: {
+    ROOT: `${BASE_URL}/payables`,
+    BY_ID: (id: number | string) => `${BASE_URL}/payables/${id}`,
+    PAY: (id: number) => `${BASE_URL}/payables/${id}/payments`,
+    REPORT: `${BASE_URL}/payables/report`,
+    FILES: {
+      ROOT: (payableId: number) => `${BASE_URL}/payables/${payableId}/files`,
+      BY_ID: (payableId: number, fileId: number) => `${BASE_URL}/payables/${payableId}/files/${fileId}`,
+      VIEW: (payableId: number, fileId: number) => `${BASE_URL}/payables/${payableId}/files/${fileId}/view`,
+      DOWNLOAD: (payableId: number, fileId: number) => `${BASE_URL}/payables/${payableId}/files/${fileId}/download`,
+    },
+  },
+
   PAYMENT_METHODS: {
     ROOT: `${BASE_URL}/payment-methods`,
     BY_ID: (id: number | string) => `${BASE_URL}/payment-methods/${id}`,

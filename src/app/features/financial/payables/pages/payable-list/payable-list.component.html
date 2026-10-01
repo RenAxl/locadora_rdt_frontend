@@ -1,0 +1,329 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">FINANCEIRO</span>
+    <h1>Contas a pagar</h1>
+    <p>Consulte e gerencie as contas a pagar.</p>
+  </div>
+  <div class="module-page-header-icon">
+    <i class="fa-solid fa-file-invoice"></i>
+  </div>
+</header>
+
+<div class="payable-filter-container">
+  <div class="payable-actions-group">
+    <a
+      routerLink="/payables/create"
+      class="action-link"
+      *ngIf="hasAuthority('PAYABLE_WRITE')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVA CONTA
+      </button>
+    </a>
+  </div>
+</div>
+
+<app-payable-filters
+  (filter)="applyFilters($event)"
+  (clear)="clearFilters()"
+></app-payable-filters>
+
+<section class="payable-list" aria-label="Contas a pagar" [attr.aria-busy]="loading">
+  <div class="payable-list-toolbar">
+    <span>{{ totalElements }} conta(s) encontrada(s)</span>
+    <div class="payable-list-tools">
+      <button
+        pButton
+        type="button"
+        class="p-button-rounded p-button-text"
+        icon="pi pi-cog"
+        aria-label="Personalizar campos dos cards"
+        pTooltip="Personalizar campos"
+        tooltipPosition="top"
+        (click)="openFieldCustomization()"
+      ></button>
+      <app-excel-export
+        title="Contas a pagar"
+        fileName="contas-a-pagar"
+        [fields]="visibleCardFields"
+        [pagination]="pagination"
+        [totalRecords]="totalElements"
+        [loadRecords]="loadPayablesForExport"
+      ></app-excel-export>
+    </div>
+  </div>
+
+  <p *ngIf="loading" class="payable-list-message" role="status">
+    Carregando contas...
+  </p>
+  <p *ngIf="!loading && payables.length === 0" class="payable-list-message">
+    Nenhuma conta encontrada.
+  </p>
+
+  <div class="payable-cards" *ngIf="!loading && payables.length > 0">
+    <article
+      class="payable-card"
+      *ngFor="let payable of payables"
+      [class.payable-card-paid]="payable.paid && !payable.canceled"
+      [class.payable-card-partial]="isPartiallyPaid(payable)"
+      [class.payable-card-canceled]="payable.canceled"
+    >
+      <div class="payable-main">
+        <header class="payable-card-header">
+          <div class="payable-title">
+            <span class="payable-id">#{{ payable.id }}</span>
+            <h2 *ngIf="visibleFields.includes('description')">
+              {{ payable.description || "Sem descrição" }}
+            </h2>
+          </div>
+          <span
+            *ngIf="visibleFields.includes('status')"
+            class="payable-status"
+            [class.payable-status-paid]="payable.paid && !payable.canceled"
+            [class.payable-status-partial]="isPartiallyPaid(payable)"
+            [class.payable-status-canceled]="payable.canceled"
+          >
+            {{ payable.status }}
+          </span>
+        </header>
+
+        <div class="payable-meta">
+          <span *ngIf="visibleFields.includes('supplierName')">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+            {{ payable.supplierName || "Sem fornecedor" }}
+          </span>
+          <span *ngIf="visibleFields.includes('employeeName')">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+            {{ payable.employeeName || "Sem funcionário" }}
+          </span>
+          <span *ngIf="visibleFields.includes('paymentMethodName')">
+            <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+            {{ payable.paymentMethodName || "Sem forma" }}
+          </span>
+          <span *ngIf="visibleFields.includes('paymentFrequency')">
+            <i class="fa-solid fa-repeat" aria-hidden="true"></i>
+            {{ payable.paymentFrequency || "Sem frequência" }}
+          </span>
+        </div>
+      </div>
+
+      <dl class="payable-card-fields">
+        <div class="amount" *ngIf="visibleFields.includes('originalAmount')">
+          <dt>Valor original</dt>
+          <dd>{{ payable.originalAmount | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="payable.parentPayableId && visibleFields.includes('originalAmount')">
+          <dt>Valor da parcela</dt>
+          <dd>{{ payable.amount | currency: "BRL" }}</dd>
+        </div>
+        <div class="current-amount" *ngIf="visibleFields.includes('currentAmountWithLateCharges')">
+          <dt>Valor atual</dt>
+          <dd>{{ getCurrentAmount(payable) | currency: "BRL" }}</dd>
+        </div>
+        <div class="paid-amount" *ngIf="visibleFields.includes('subtotal')">
+          <dt>Valor pago</dt>
+          <dd>{{ getPaidAmount(payable) | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('remainingBalance')">
+          <dt>Saldo</dt>
+          <dd>{{ getPayableOpenAmount(payable) | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('dueDate')">
+          <dt>Vencimento</dt>
+          <dd>
+            <button
+              *ngIf="isOverdueOpenPayable(payable); else dueDateText"
+              type="button"
+              class="due-date-button"
+              pTooltip="Ver juros e multa"
+              tooltipPosition="top"
+              (click)="openOverdueDetails(payable)"
+            >
+              {{ payable.dueDate | date: "dd/MM/yyyy" }}
+            </button>
+            <ng-template #dueDateText>
+              {{ payable.dueDate ? (payable.dueDate | date: "dd/MM/yyyy") : "-" }}
+            </ng-template>
+          </dd>
+        </div>
+        <div *ngIf="visibleFields.includes('paymentDate')">
+          <dt>Pagamento</dt>
+          <dd>
+            {{ payable.paymentDate ? (payable.paymentDate | date: "dd/MM/yyyy") : "-" }}
+          </dd>
+        </div>
+        <div *ngIf="visibleFields.includes('fee')">
+          <dt>Taxa</dt>
+          <dd>{{ payable.fee | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('lateInterest')">
+          <dt>Juros</dt>
+          <dd>{{ payable.lateInterest | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('lateFee')">
+          <dt>Multa</dt>
+          <dd>{{ payable.lateFee | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('discount')">
+          <dt>Desconto</dt>
+          <dd>{{ payable.discount | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('createdByName')">
+          <dt>Criado por</dt>
+          <dd>{{ payable.createdByName || "-" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('createdAt')">
+          <dt>Data cadastro</dt>
+          <dd>
+            {{ payable.createdAt ? (payable.createdAt | date: "dd/MM/yyyy") : "-" }}
+          </dd>
+        </div>
+        <div *ngIf="visibleFields.includes('updatedByName')">
+          <dt>Atualizado por</dt>
+          <dd>{{ payable.updatedByName || "-" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('updatedAt')">
+          <dt>Data atualização</dt>
+          <dd>
+            {{ payable.updatedAt ? (payable.updatedAt | date: "dd/MM/yyyy") : "-" }}
+          </dd>
+        </div>
+        <div *ngIf="visibleFields.includes('paidByName')">
+          <dt>Pago por</dt>
+          <dd>{{ payable.paidByName || "-" }}</dd>
+        </div>
+        <div class="note" *ngIf="visibleFields.includes('note')">
+          <dt>Observação</dt>
+          <dd>{{ payable.note || "-" }}</dd>
+        </div>
+      </dl>
+
+      <footer class="payable-card-footer">
+        <div class="actions-wrap">
+          <a
+            pButton
+            class="p-button-rounded p-button-text"
+            icon="pi pi-pencil"
+            aria-label="Atualizar conta"
+            pTooltip="Atualizar conta"
+            tooltipPosition="top"
+            [routerLink]="['/payables/', payable.id, 'edit']"
+            *ngIf="
+              hasAuthority('PAYABLE_WRITE') && !payable.paid && !payable.canceled
+            "
+          ></a>
+
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-text p-button-success"
+            icon="pi pi-check-circle"
+            aria-label="Baixar conta total ou parcial"
+            pTooltip="Baixar conta total ou parcial"
+            tooltipPosition="top"
+            (click)="pay(payable)"
+            *ngIf="
+              hasAuthority('PAYABLE_WRITE') && !payable.paid && !payable.canceled
+            "
+          ></button>
+
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-text"
+            icon="pi pi-eye"
+            aria-label="Detalhamento da conta"
+            pTooltip="Detalhamento da Conta"
+            tooltipPosition="top"
+            (click)="openDetails(payable)"
+            *ngIf="hasAuthority('PAYABLE_READ')"
+          ></button>
+
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-text"
+            icon="pi pi-folder-open"
+            aria-label="Arquivos da conta"
+            pTooltip="Arquivos da Conta"
+            tooltipPosition="top"
+            (click)="openFilesModal(payable)"
+            *ngIf="hasAuthority('PAYABLE_READ')"
+          ></button>
+
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-text p-button-danger"
+            icon="pi pi-trash"
+            aria-label="Excluir conta"
+            pTooltip="Excluir conta"
+            tooltipPosition="top"
+            (click)="delete(payable)"
+            *ngIf="hasAuthority('PAYABLE_DELETE')"
+          ></button>
+        </div>
+      </footer>
+    </article>
+  </div>
+
+  <p-paginator
+    [first]="pagination.page * pagination.linesPerPage"
+    [rows]="pagination.linesPerPage"
+    [totalRecords]="totalElements"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    (onPageChange)="changePage($event)"
+  ></p-paginator>
+</section>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="contas a pagar"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>
+
+<app-payable-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [payable]="payableDetails"
+></app-payable-details-modal>
+
+<app-payable-files-modal
+  [visible]="filesVisible"
+  (visibleChange)="filesVisible = $event"
+  [payableId]="selectedPayableId"
+  [payableDescription]="selectedPayableDescription"
+></app-payable-files-modal>
+
+<app-payable-overdue-modal
+  [visible]="overdueVisible"
+  (visibleChange)="overdueVisible = $event"
+  [payable]="overduePayable"
+></app-payable-overdue-modal>
+
+<app-payable-payment-choice-modal
+  [visible]="paymentChoiceVisible"
+  (visibleChange)="paymentChoiceVisible = $event"
+  (editCharges)="editPaymentCharges()"
+  (useDefaultCharges)="useDefaultPaymentCharges()"
+></app-payable-payment-choice-modal>
+
+<app-payable-payment-charges-modal
+  [visible]="paymentEditChargesVisible && paymentPayable != null && isOverdueOpenPayable(paymentPayable)"
+  (visibleChange)="paymentEditChargesVisible = $event"
+  [lateFee]="paymentCharges.lateFee"
+  [lateInterest]="paymentCharges.lateInterest"
+  (confirmCharges)="finishPaymentChargesEdit($event)"
+></app-payable-payment-charges-modal>
+
+<app-payable-payment-modal
+  [visible]="paymentModalVisible"
+  (visibleChange)="paymentModalVisible = $event"
+  [payable]="paymentPayable"
+  [lateFee]="paymentCharges.lateFee"
+  [lateInterest]="paymentCharges.lateInterest"
+  (pay)="submitPayment($event)"
+></app-payable-payment-modal>

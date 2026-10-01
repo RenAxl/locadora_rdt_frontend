@@ -182,6 +182,7 @@
           data-bs-toggle="collapse"
           data-bs-target="#submenuFinancialDesktop"
           *ngIf="
+            hasAuthority('PAYABLE_READ') ||
             hasAuthority('METHODS_READ') ||
             hasAuthority('FREQUENCY_READ') ||
             hasAuthority('FINANCIAL_SETTINGS_READ')
@@ -202,6 +203,17 @@
           class="treeview-menu collapse list-unstyled mb-0"
           id="submenuFinancialDesktop"
         >
+          <li>
+            <a
+              routerLink="/payables"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('PAYABLE_READ')"
+            >
+              <i class="fa-solid fa-file-invoice me-2"></i>
+              <span>Contas a pagar</span>
+            </a>
+          </li>
           <li>
             <a
               routerLink="/payment-methods"
