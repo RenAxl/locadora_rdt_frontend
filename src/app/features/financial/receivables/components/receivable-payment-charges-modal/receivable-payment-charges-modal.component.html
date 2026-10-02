@@ -1,0 +1,52 @@
+<p-dialog
+  header="Editar multa e juros"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '460px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <form #chargesForm="ngForm" (ngSubmit)="confirm(chargesForm)">
+    <div class="row g-3 receivable-form-inputs">
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom">Multa</label>
+        <p-inputNumber
+          name="editedLateFee"
+          [(ngModel)]="editedLateFee"
+          mode="currency"
+          currency="BRL"
+          locale="pt-BR"
+          class="receivable-amount-control"
+          styleClass="receivable-amount-input"
+          [min]="0"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="2"
+        ></p-inputNumber>
+      </div>
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom">Juros</label>
+        <p-inputNumber
+          name="editedLateInterest"
+          [(ngModel)]="editedLateInterest"
+          mode="currency"
+          currency="BRL"
+          locale="pt-BR"
+          class="receivable-amount-control"
+          styleClass="receivable-amount-input"
+          [min]="0"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="2"
+        ></p-inputNumber>
+      </div>
+    </div>
+
+    <div class="receivable-form-buttons mt-4">
+      <button
+        type="submit"
+        class="btn btn-primary receivable-form-button"
+        [disabled]="chargesForm.invalid"
+      >
+        CONTINUAR
+      </button>
+    </div>
+  </form>
+</p-dialog>

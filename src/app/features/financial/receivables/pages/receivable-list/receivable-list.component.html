@@ -1,0 +1,393 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">FINANCEIRO</span>
+    <h1>Contas a receber</h1>
+    <p>Consulte e gerencie as contas a receber.</p>
+  </div>
+  <div class="module-page-header-icon">
+    <i class="fa-solid fa-file-invoice-dollar"></i>
+  </div>
+</header>
+
+<div class="receivable-filter-container">
+  <div class="receivable-actions-group">
+    <a
+      routerLink="/receivables/create"
+      class="action-link"
+      *ngIf="hasAuthority('RECEIVABLE_WRITE')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVA CONTA
+      </button>
+    </a>
+  </div>
+</div>
+
+<app-receivable-filters
+  (filter)="applyFilters($event)"
+  (clear)="clearFilters()"
+></app-receivable-filters>
+
+<section
+  class="receivable-list"
+  aria-label="Contas a receber"
+  [attr.aria-busy]="loading"
+>
+  <div class="receivable-list-toolbar">
+    <span>{{ totalElements }} conta(s) encontrada(s)</span>
+    <div class="receivable-list-tools">
+      <button
+        pButton
+        type="button"
+        class="p-button-rounded p-button-text"
+        icon="pi pi-cog"
+        aria-label="Personalizar campos dos cards"
+        pTooltip="Personalizar campos"
+        tooltipPosition="top"
+        (click)="openFieldCustomization()"
+      ></button>
+      <app-excel-export
+        title="Contas a receber"
+        fileName="contas-a-receber"
+        [fields]="visibleCardFields"
+        [pagination]="pagination"
+        [totalRecords]="totalElements"
+        [loadRecords]="loadReceivablesForExport"
+      ></app-excel-export>
+    </div>
+  </div>
+
+  <p *ngIf="loading" class="receivable-list-message" role="status">
+    Carregando contas...
+  </p>
+  <p
+    *ngIf="!loading && receivables.length === 0"
+    class="receivable-list-message"
+  >
+    Nenhuma conta encontrada.
+  </p>
+
+  <div class="receivable-cards" *ngIf="!loading && receivables.length > 0">
+    <article
+      class="receivable-card"
+      *ngFor="let receivable of receivables"
+      [class.receivable-card-paid]="receivable.paid && !receivable.canceled"
+      [class.receivable-card-partial]="isPartiallyPaid(receivable)"
+      [class.receivable-card-canceled]="receivable.canceled"
+    >
+      <div class="receivable-main">
+        <header class="receivable-card-header">
+          <div class="receivable-title">
+            <span class="receivable-id">#{{ receivable.id }}</span>
+            <h2 *ngIf="visibleFields.includes('description')">
+              {{ receivable.description || receivable.customerName || "-" }}
+            </h2>
+          </div>
+          <span
+            *ngIf="visibleFields.includes('status')"
+            class="receivable-status"
+            [class.receivable-status-paid]="
+              receivable.paid && !receivable.canceled
+            "
+            [class.receivable-status-partial]="isPartiallyPaid(receivable)"
+            [class.receivable-status-canceled]="receivable.canceled"
+          >
+            {{ receivable.status }}
+          </span>
+        </header>
+
+        <div class="receivable-meta">
+          <span *ngIf="visibleFields.includes('customerName')">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+            {{ receivable.customerName || "Sem cliente" }}
+          </span>
+          <span *ngIf="visibleFields.includes('paymentMethodName')">
+            <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+            {{ receivable.paymentMethodName || "Sem forma" }}
+          </span>
+          <span *ngIf="visibleFields.includes('paymentFrequency')">
+            <i class="fa-solid fa-repeat" aria-hidden="true"></i>
+            {{ receivable.paymentFrequency || "Sem frequência" }}
+          </span>
+          <span *ngIf="receivable.residual">
+            Resíduo de #{{ receivable.parentReceivableId }}
+          </span>
+        </div>
+      </div>
+
+      <dl class="receivable-card-fields">
+        <div class="amount" *ngIf="visibleFields.includes('originalAmount')">
+          <dt>Valor original</dt>
+          <dd>{{ receivable.originalAmount | currency: "BRL" }}</dd>
+        </div>
+        <div
+          *ngIf="
+            receivable.parentReceivableId &&
+            visibleFields.includes('originalAmount')
+          "
+        >
+          <dt>Valor da parcela</dt>
+          <dd>{{ receivable.amount | currency: "BRL" }}</dd>
+        </div>
+        <div
+          class="current-amount"
+          *ngIf="visibleFields.includes('currentAmountWithLateCharges')"
+        >
+          <dt>Valor atual</dt>
+          <dd>{{ getCurrentAmount(receivable) | currency: "BRL" }}</dd>
+        </div>
+        <div class="paid-amount" *ngIf="visibleFields.includes('subtotal')">
+          <dt>Valor recebido</dt>
+          <dd>{{ getPaidAmount(receivable) | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('remainingBalance')">
+          <dt>Saldo</dt>
+          <dd>{{ getReceivableOpenAmount(receivable) | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('dueDate')">
+          <dt>Vencimento</dt>
+          <dd>
+            <button
+              *ngIf="isOverdueOpenReceivable(receivable); else dueDateText"
+              type="button"
+              class="due-date-button"
+              pTooltip="Ver juros e multa"
+              tooltipPosition="top"
+              (click)="openOverdueDetails(receivable)"
+            >
+              {{ receivable.dueDate | date: "dd/MM/yyyy" }}
+            </button>
+            <ng-template #dueDateText>
+              {{
+                receivable.dueDate
+                  ? (receivable.dueDate | date: "dd/MM/yyyy")
+                  : "-"
+              }}
+            </ng-template>
+          </dd>
+        </div>
+        <div *ngIf="visibleFields.includes('paymentDate')">
+          <dt>Recebimento</dt>
+          <dd>
+            {{
+              receivable.paymentDate
+                ? (receivable.paymentDate | date: "dd/MM/yyyy")
+                : "-"
+            }}
+          </dd>
+        </div>
+        <div *ngIf="visibleFields.includes('fee')">
+          <dt>Taxa</dt>
+          <dd>{{ receivable.fee | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('lateInterest')">
+          <dt>Juros</dt>
+          <dd>{{ receivable.lateInterest | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('lateFee')">
+          <dt>Multa</dt>
+          <dd>{{ receivable.lateFee | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('discount')">
+          <dt>Desconto</dt>
+          <dd>{{ receivable.discount | currency: "BRL" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('createdByName')">
+          <dt>Criado por</dt>
+          <dd>{{ receivable.createdByName || "-" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('createdAt')">
+          <dt>Data cadastro</dt>
+          <dd>
+            {{
+              receivable.createdAt
+                ? (receivable.createdAt | date: "dd/MM/yyyy")
+                : "-"
+            }}
+          </dd>
+        </div>
+        <div *ngIf="visibleFields.includes('updatedByName')">
+          <dt>Atualizado por</dt>
+          <dd>{{ receivable.updatedByName || "-" }}</dd>
+        </div>
+        <div *ngIf="visibleFields.includes('updatedAt')">
+          <dt>Data atualização</dt>
+          <dd>
+            {{
+              receivable.updatedAt
+                ? (receivable.updatedAt | date: "dd/MM/yyyy")
+                : "-"
+            }}
+          </dd>
+        </div>
+        <div *ngIf="visibleFields.includes('paidByName')">
+          <dt>Recebido por</dt>
+          <dd>{{ receivable.paidByName || "-" }}</dd>
+        </div>
+        <div class="note" *ngIf="visibleFields.includes('note')">
+          <dt>Observação</dt>
+          <dd>{{ receivable.note || "-" }}</dd>
+        </div>
+      </dl>
+
+      <footer class="receivable-card-footer">
+        <div class="actions-wrap">
+          <a
+            pButton
+            class="p-button-rounded p-button-text"
+            icon="pi pi-pencil"
+            aria-label="Atualizar conta"
+            pTooltip="Atualizar conta"
+            tooltipPosition="top"
+            [routerLink]="['/receivables/', receivable.id, 'edit']"
+            *ngIf="
+              hasAuthority('RECEIVABLE_WRITE') &&
+              !receivable.paid &&
+              !receivable.canceled
+            "
+          ></a>
+
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-text p-button-success"
+            icon="pi pi-check-circle"
+            aria-label="Baixar conta total ou parcial"
+            pTooltip="Baixar conta total ou parcial"
+            tooltipPosition="top"
+            (click)="pay(receivable)"
+            *ngIf="
+              hasAuthority('RECEIVABLE_WRITE') &&
+              !receivable.paid &&
+              !receivable.canceled
+            "
+          ></button>
+
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-text"
+            icon="pi pi-eye"
+            aria-label="Detalhamento da conta"
+            pTooltip="Detalhamento da Conta"
+            tooltipPosition="top"
+            (click)="openDetails(receivable)"
+            *ngIf="hasAuthority('RECEIVABLE_READ')"
+          ></button>
+
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-text"
+            icon="pi pi-folder-open"
+            aria-label="Arquivos da conta"
+            pTooltip="Arquivos da Conta"
+            tooltipPosition="top"
+            (click)="openFilesModal(receivable)"
+            *ngIf="hasAuthority('RECEIVABLE_READ')"
+          ></button>
+
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-text"
+            icon="pi pi-file"
+            aria-label="Recibo"
+            pTooltip="Recibo"
+            tooltipPosition="top"
+            (click)="generateReceipt(receivable)"
+            *ngIf="hasAuthority('RECEIVABLE_READ') && receivable.paid"
+          ></button>
+
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-text"
+            icon="pi pi-print"
+            aria-label="Cupom fiscal"
+            pTooltip="Cupom fiscal"
+            tooltipPosition="top"
+            (click)="generateFiscalCoupon(receivable)"
+            *ngIf="hasAuthority('RECEIVABLE_READ') && receivable.paid"
+          ></button>
+
+          <button
+            pButton
+            type="button"
+            class="p-button-rounded p-button-text p-button-danger"
+            icon="pi pi-trash"
+            aria-label="Excluir conta"
+            pTooltip="Excluir conta"
+            tooltipPosition="top"
+            (click)="delete(receivable)"
+            *ngIf="hasAuthority('RECEIVABLE_DELETE')"
+          ></button>
+        </div>
+      </footer>
+    </article>
+  </div>
+
+  <p-paginator
+    [first]="pagination.page * pagination.linesPerPage"
+    [rows]="pagination.linesPerPage"
+    [totalRecords]="totalElements"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    (onPageChange)="changePage($event)"
+  ></p-paginator>
+</section>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="contas a receber"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>
+
+<app-receivable-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [receivable]="receivableDetails"
+></app-receivable-details-modal>
+
+<app-receivable-files-modal
+  [visible]="filesVisible"
+  (visibleChange)="filesVisible = $event"
+  [receivableId]="selectedReceivableId"
+  [receivableDescription]="selectedReceivableDescription"
+></app-receivable-files-modal>
+
+<app-receivable-overdue-modal
+  [visible]="overdueVisible"
+  (visibleChange)="overdueVisible = $event"
+  [receivable]="overdueReceivable"
+></app-receivable-overdue-modal>
+
+<app-receivable-payment-choice-modal
+  [visible]="paymentChoiceVisible"
+  (visibleChange)="paymentChoiceVisible = $event"
+  (editCharges)="editPaymentCharges()"
+  (useDefaultCharges)="useDefaultPaymentCharges()"
+></app-receivable-payment-choice-modal>
+
+<app-receivable-payment-charges-modal
+  [visible]="
+    paymentEditChargesVisible &&
+    paymentReceivable != null &&
+    isOverdueOpenReceivable(paymentReceivable)
+  "
+  (visibleChange)="paymentEditChargesVisible = $event"
+  [lateFee]="paymentCharges.lateFee"
+  [lateInterest]="paymentCharges.lateInterest"
+  (confirmCharges)="finishPaymentChargesEdit($event)"
+></app-receivable-payment-charges-modal>
+
+<app-receivable-payment-modal
+  [visible]="paymentModalVisible"
+  (visibleChange)="paymentModalVisible = $event"
+  [receivable]="paymentReceivable"
+  [lateFee]="paymentCharges.lateFee"
+  [lateInterest]="paymentCharges.lateInterest"
+  (pay)="submitPayment($event)"
+></app-receivable-payment-modal>

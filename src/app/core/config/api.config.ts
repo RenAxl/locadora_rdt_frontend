@@ -65,6 +65,21 @@ export const API = {
     },
   },
 
+  RECEIVABLES: {
+    ROOT: `${BASE_URL}/receivables`,
+    BY_ID: (id: number | string) => `${BASE_URL}/receivables/${id}`,
+    PAY: (id: number) => `${BASE_URL}/receivables/${id}/payments`,
+    REPORT: `${BASE_URL}/receivables/report`,
+    RECEIPT: (id: number) => `${BASE_URL}/receivables/${id}/receipt`,
+    FISCAL_COUPON: (id: number) => `${BASE_URL}/receivables/${id}/fiscal-coupon`,
+    FILES: {
+      ROOT: (receivableId: number) => `${BASE_URL}/receivables/${receivableId}/files`,
+      BY_ID: (receivableId: number, fileId: number) => `${BASE_URL}/receivables/${receivableId}/files/${fileId}`,
+      VIEW: (receivableId: number, fileId: number) => `${BASE_URL}/receivables/${receivableId}/files/${fileId}/view`,
+      DOWNLOAD: (receivableId: number, fileId: number) => `${BASE_URL}/receivables/${receivableId}/files/${fileId}/download`,
+    },
+  },
+
   PAYMENT_METHODS: {
     ROOT: `${BASE_URL}/payment-methods`,
     BY_ID: (id: number | string) => `${BASE_URL}/payment-methods/${id}`,

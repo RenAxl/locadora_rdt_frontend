@@ -1,0 +1,48 @@
+.receivable-form-inputs .form-control {
+  height: 46px;
+}
+
+.receivable-form-inputs app-message {
+  display: block;
+  margin-top: 4px;
+  margin-bottom: -4px;
+}
+
+.receivable-form-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.receivable-form-button {
+  height: 50px;
+  width: 110px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.form-label-custom {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #233247;
+}
+
+@media (min-width: 992px) {
+  .receivable-form-buttons {
+    justify-content: flex-end;
+  }
+}
+
+.receivable-amount-control,
+:host ::ng-deep .receivable-amount-input,
+:host ::ng-deep .receivable-amount-input .p-inputnumber-input {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep .receivable-amount-input .p-inputnumber-input {
+  height: 46px;
+}

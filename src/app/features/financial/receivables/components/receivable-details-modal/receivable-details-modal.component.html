@@ -1,0 +1,90 @@
+<p-dialog
+  [header]="title"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '720px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <div class="details-grid" *ngIf="receivable; else loading">
+    <div>
+      <span>Descrição</span><strong>{{ receivable.description || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Cliente</span><strong>{{ receivable.customerName || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Valor original</span><strong>{{ receivable.originalAmount | currency: "BRL" }}</strong>
+    </div>
+
+    <div *ngIf="receivable.parentReceivableId">
+      <span>Valor da parcela</span><strong>{{ receivable.amount | currency: "BRL" }}</strong>
+    </div>
+
+    <div>
+      <span>Saldo</span><strong>{{ receivable.remainingBalance | currency: "BRL" }}</strong>
+    </div>
+
+    <div>
+      <span>Vencimento</span><strong>{{ receivable.dueDate ? (receivable.dueDate | date: "dd/MM/yyyy") : "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Recebimento</span><strong>{{ receivable.paymentDate ? (receivable.paymentDate | date: "dd/MM/yyyy") : "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Forma</span><strong>{{ receivable.paymentMethodName || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Frequência</span><strong>{{ receivable.paymentFrequency || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Taxa</span><strong>{{ receivable.fee | currency: "BRL" }}</strong>
+    </div>
+
+    <div>
+      <span>Juros</span><strong>{{ receivable.lateInterest | currency: "BRL" }}</strong>
+    </div>
+
+    <div>
+      <span>Multa</span><strong>{{ receivable.lateFee | currency: "BRL" }}</strong>
+    </div>
+
+    <div>
+      <span>Desconto</span><strong>{{ receivable.discount | currency: "BRL" }}</strong>
+    </div>
+
+    <div>
+      <span>Criado por</span><strong>{{ receivable.createdByName || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Criado em</span><strong>{{ receivable.createdAt ? (receivable.createdAt | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Atualizado por</span><strong>{{ receivable.updatedByName || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Atualizado em</span><strong>{{ receivable.updatedAt ? (receivable.updatedAt | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Recebido por</span><strong>{{ receivable.paidByName || "-" }}</strong>
+    </div>
+
+    <div class="wide">
+      <span>Observação</span><strong>{{ receivable.note || "-" }}</strong>
+    </div>
+
+  </div>
+
+  <ng-template #loading>
+    <div class="empty">Carregando...</div>
+  </ng-template>
+</p-dialog>

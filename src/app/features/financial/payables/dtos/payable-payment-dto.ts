@@ -6,7 +6,6 @@ export class PayablePaymentDTO {
   fee?: number | null;
   lateInterest?: number | null;
   lateFee?: number | null;
-  discount?: number | null;
 
   constructor(payable?: Partial<PayablePaymentDTO>) {
     if (payable != null) {
@@ -17,7 +16,6 @@ export class PayablePaymentDTO {
       this.fee = payable.fee;
       this.lateInterest = payable.lateInterest;
       this.lateFee = payable.lateFee;
-      this.discount = payable.discount;
     }
   }
 }

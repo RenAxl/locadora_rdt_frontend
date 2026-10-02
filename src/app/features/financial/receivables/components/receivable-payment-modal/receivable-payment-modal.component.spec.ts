@@ -1,22 +1,22 @@
 import { NgForm } from '@angular/forms';
 import { PaymentMethodDTO } from 'src/app/features/financial/payment-methods/dtos/payment-method-dto';
 import { PaymentMethodService } from 'src/app/features/financial/payment-methods/services/payment-method.service';
-import { PayablePaymentDTO } from '../../dtos/payable-payment-dto';
-import { Payable } from '../../models/Payable';
-import { PayablePaymentModalComponent } from './payable-payment-modal.component';
+import { ReceivablePaymentDTO } from '../../dtos/receivable-payment-dto';
+import { Receivable } from '../../models/Receivable';
+import { ReceivablePaymentModalComponent } from './receivable-payment-modal.component';
 
-describe('PayablePaymentModalComponent', () => {
-  let component: PayablePaymentModalComponent;
+describe('ReceivablePaymentModalComponent', () => {
+  let component: ReceivablePaymentModalComponent;
 
   beforeEach(() => {
     const service = jasmine.createSpyObj<PaymentMethodService>('PaymentMethodService', ['list']);
-    component = new PayablePaymentModalComponent(service);
-    component.payable = new Payable();
-    component.payable.amount = 100;
-    component.payable.dueDate = '2020-01-01';
-    component.payable.paymentDate = '2026-09-29';
-    component.payable.subtotal = 40;
-    component.payable.remainingBalance = 60;
+    component = new ReceivablePaymentModalComponent(service);
+    component.receivable = new Receivable();
+    component.receivable.amount = 100;
+    component.receivable.dueDate = '2020-01-01';
+    component.receivable.paymentDate = '2026-09-29';
+    component.receivable.subtotal = 40;
+    component.receivable.remainingBalance = 60;
     component.paymentMethods = [new PaymentMethodDTO({ id: 1, name: 'Pix' })];
     component.paymentMethodId = 1;
     component.lateFee = 2;
@@ -36,8 +36,8 @@ describe('PayablePaymentModalComponent', () => {
     expect(component.paymentAmount).toBe(65);
   });
 
-  it('ignores late fee and interest for a non-overdue payable without applying a discount', () => {
-    component.payable!.dueDate = '2999-01-01';
+  it('ignores late fee and interest for a non-overdue receivable without applying a discount', () => {
+    component.receivable!.dueDate = '2999-01-01';
 
     expect(component.getLateFee()).toBe(0);
     expect(component.getLateInterest()).toBe(0);
@@ -45,27 +45,27 @@ describe('PayablePaymentModalComponent', () => {
   });
 
   it('does not apply late charges on the due date', () => {
-    component.payable!.dueDate = component.paymentDate;
+    component.receivable!.dueDate = component.paymentDate;
 
     expect(component.isOverdue()).toBeFalse();
     expect(component.getLateFee()).toBe(0);
     expect(component.getLateInterest()).toBe(0);
   });
 
-  it('preserves the original total while calculating the installment payment', () => {
-    component.payable!.parentPayableId = 1;
-    component.payable!.originalAmount = 300;
+  it('preserves the original total while calculating the account payment', () => {
+    component.receivable!.parentReceivableId = 1;
+    component.receivable!.originalAmount = 300;
 
     expect(component.getOriginalAmount()).toBe(300);
     expect(component.getOpenAmount()).toBe(60);
     expect(component.getCurrentAmount()).toBe(65);
   });
 
-  it('emits the installment principal without charging the original total', () => {
-    component.payable!.parentPayableId = 1;
-    component.payable!.originalAmount = 300;
+  it('emits the account principal without charging the original total', () => {
+    component.receivable!.parentReceivableId = 1;
+    component.receivable!.originalAmount = 300;
     component.paymentAmount = 65;
-    let payment: PayablePaymentDTO | undefined;
+    let payment: ReceivablePaymentDTO | undefined;
     component.pay.subscribe((data) => {
       payment = data;
     });
@@ -75,13 +75,13 @@ describe('PayablePaymentModalComponent', () => {
     expect(payment?.subtotal).toBe(100);
     expect(payment?.paymentAmount).toBe(65);
     expect('discount' in payment!).toBeFalse();
-    expect(component.payable!.originalAmount).toBe(300);
+    expect(component.receivable!.originalAmount).toBe(300);
   });
 
   it('emits a partial payment with its date and charges', () => {
     component.paymentAmount = 20;
     component.paymentDate = '2026-09-30';
-    let payment: PayablePaymentDTO | undefined;
+    let payment: ReceivablePaymentDTO | undefined;
     component.pay.subscribe((data) => {
       payment = data;
     });
@@ -105,10 +105,10 @@ describe('PayablePaymentModalComponent', () => {
     expect(component.pay.emit).not.toHaveBeenCalled();
   });
   it('emits the full balance for Pix and boleto without a discount', () => {
-    component.payable!.dueDate = '2999-01-01';
-    component.payable!.paymentDate = null;
-    component.payable!.subtotal = 0;
-    component.payable!.remainingBalance = 100;
+    component.receivable!.dueDate = '2999-01-01';
+    component.receivable!.paymentDate = null;
+    component.receivable!.subtotal = 0;
+    component.receivable!.remainingBalance = 100;
     const emit = spyOn(component.pay, 'emit');
 
     for (const name of ['Pix', 'Boleto Bancário']) {
@@ -139,7 +139,7 @@ describe('PayablePaymentModalComponent', () => {
   });
 
   it('applies the method fee before the due date and recalculates when the method changes', () => {
-    component.payable!.dueDate = '2999-01-01';
+    component.receivable!.dueDate = '2999-01-01';
     component.paymentMethods = [
       new PaymentMethodDTO({ id: 1, name: 'Cartão', fee: 5 }),
       new PaymentMethodDTO({ id: 2, name: 'Dinheiro', fee: null }),
@@ -157,12 +157,12 @@ describe('PayablePaymentModalComponent', () => {
   });
 
   it('rounds the method fee to cents without using the parent account total', () => {
-    component.payable!.originalAmount = 300;
-    component.payable!.amount = 20.1;
-    component.payable!.subtotal = 0;
-    component.payable!.remainingBalance = 20.1;
-    component.payable!.paymentDate = null;
-    component.payable!.dueDate = '2999-01-01';
+    component.receivable!.originalAmount = 300;
+    component.receivable!.amount = 20.1;
+    component.receivable!.subtotal = 0;
+    component.receivable!.remainingBalance = 20.1;
+    component.receivable!.paymentDate = null;
+    component.receivable!.dueDate = '2999-01-01';
     component.paymentMethods[0].fee = 5;
     component.onPaymentMethodChange();
 

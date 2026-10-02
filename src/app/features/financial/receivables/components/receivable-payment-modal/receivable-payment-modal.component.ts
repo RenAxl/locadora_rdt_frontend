@@ -12,21 +12,21 @@ import { Pagination } from 'src/app/core/models/Pagination';
 import { PaymentMethodDTO } from 'src/app/features/financial/payment-methods/dtos/payment-method-dto';
 import { PaymentMethodService } from 'src/app/features/financial/payment-methods/services/payment-method.service';
 
-import { PayablePaymentDTO } from '../../dtos/payable-payment-dto';
-import { Payable } from '../../models/Payable';
+import { ReceivablePaymentDTO } from '../../dtos/receivable-payment-dto';
+import { Receivable } from '../../models/Receivable';
 
 @Component({
-  selector: 'app-payable-payment-modal',
-  templateUrl: './payable-payment-modal.component.html',
-  styleUrls: ['./payable-payment-modal.component.css'],
+  selector: 'app-receivable-payment-modal',
+  templateUrl: './receivable-payment-modal.component.html',
+  styleUrls: ['./receivable-payment-modal.component.css'],
 })
-export class PayablePaymentModalComponent implements OnInit, OnChanges {
+export class ReceivablePaymentModalComponent implements OnInit, OnChanges {
   @Input() visible = false;
-  @Input() payable: Payable | null = null;
+  @Input() receivable: Receivable | null = null;
   @Input() lateFee: number = 0;
   @Input() lateInterest: number = 0;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() pay = new EventEmitter<PayablePaymentDTO>();
+  @Output() pay = new EventEmitter<ReceivablePaymentDTO>();
 
   paymentMethods: PaymentMethodDTO[] = [];
   paymentMethodId: number | null = null;
@@ -44,8 +44,8 @@ export class PayablePaymentModalComponent implements OnInit, OnChanges {
 
     if (visibleChanged && this.visible) {
       this.paymentDate = this.todayDateString();
-      if (this.payable != null && this.payable.paymentMethodId != null) {
-        this.paymentMethodId = this.payable.paymentMethodId;
+      if (this.receivable != null && this.receivable.paymentMethodId != null) {
+        this.paymentMethodId = this.receivable.paymentMethodId;
       }
       this.paymentAmount = this.getCurrentAmount();
     }
@@ -56,19 +56,19 @@ export class PayablePaymentModalComponent implements OnInit, OnChanges {
   }
 
   getOriginalAmount(): number {
-    return Number(this.payable?.originalAmount ?? this.payable?.amount ?? 0);
+    return Number(this.receivable?.originalAmount ?? this.receivable?.amount ?? 0);
   }
 
   getOpenAmount(): number {
-    if (this.payable?.paid) {
+    if (this.receivable?.paid) {
       return 0;
     }
 
-    const amount = Number(this.payable?.amount ?? 0);
+    const amount = Number(this.receivable?.amount ?? 0);
     let paidAmount = 0;
 
-    if (this.payable != null && (this.payable.paid || this.payable.paymentDate)) {
-      paidAmount = Number(this.payable.subtotal ?? 0);
+    if (this.receivable != null && (this.receivable.paid || this.receivable.paymentDate)) {
+      paidAmount = Number(this.receivable.subtotal ?? 0);
     }
 
     if (amount > 0 && paidAmount >= amount) {
@@ -79,7 +79,7 @@ export class PayablePaymentModalComponent implements OnInit, OnChanges {
       return this.roundMoney(amount - paidAmount);
     }
 
-    const remaining = this.payable?.remainingBalance;
+    const remaining = this.receivable?.remainingBalance;
     if (remaining != null && remaining > 0 && remaining < amount) {
       return Number(remaining);
     }
@@ -104,13 +104,13 @@ export class PayablePaymentModalComponent implements OnInit, OnChanges {
   }
 
   isOverdue(): boolean {
-    if (!this.payable?.dueDate || this.payable.paid || this.payable.canceled) {
+    if (!this.receivable?.dueDate || this.receivable.paid || this.receivable.canceled) {
       return false;
     }
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const dueDate = new Date(this.payable.dueDate + 'T00:00:00');
+    const dueDate = new Date(this.receivable.dueDate + 'T00:00:00');
 
     return dueDate.getTime() < today.getTime();
   }
@@ -166,11 +166,11 @@ export class PayablePaymentModalComponent implements OnInit, OnChanges {
       return;
     }
 
-    const payment = new PayablePaymentDTO({
+    const payment = new ReceivablePaymentDTO({
       paymentAmount: this.getPaymentAmount(),
       paymentDate: this.paymentDate,
       paymentMethodId: this.paymentMethodId,
-      subtotal: Number(this.payable?.amount ?? 0),
+      subtotal: Number(this.receivable?.amount ?? 0),
       fee: this.getPaymentMethodFee(),
       lateInterest: this.getLateInterest(),
       lateFee: this.getLateFee(),
@@ -185,7 +185,7 @@ export class PayablePaymentModalComponent implements OnInit, OnChanges {
       .subscribe({
         next: (data) => {
           this.paymentMethods = data.content;
-          this.paymentMethodId = this.payable?.paymentMethodId ?? this.paymentMethods[0]?.id ?? null;
+          this.paymentMethodId = this.receivable?.paymentMethodId ?? this.paymentMethods[0]?.id ?? null;
           this.paymentAmount = this.getCurrentAmount();
         },
       });

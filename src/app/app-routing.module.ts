@@ -119,6 +119,14 @@ const routes: Routes = [
       },
 
       {
+        path: 'receivables',
+        loadChildren: () =>
+          import('./features/financial/receivables/receivables.module').then(
+            (m) => m.ReceivablesModule,
+          ),
+      },
+
+      {
         path: 'payment-methods',
         loadChildren: () =>
           import('./features/financial/payment-methods/payment-methods.module').then(

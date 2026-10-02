@@ -183,6 +183,7 @@
           data-bs-target="#submenuFinancialDesktop"
           *ngIf="
             hasAuthority('PAYABLE_READ') ||
+            hasAuthority('RECEIVABLE_READ') ||
             hasAuthority('METHODS_READ') ||
             hasAuthority('FREQUENCY_READ') ||
             hasAuthority('FINANCIAL_SETTINGS_READ')
@@ -212,6 +213,17 @@
             >
               <i class="fa-solid fa-file-invoice me-2"></i>
               <span>Contas a pagar</span>
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/receivables"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('RECEIVABLE_READ')"
+            >
+              <i class="fa-solid fa-file-invoice-dollar me-2"></i>
+              <span>Contas a receber</span>
             </a>
           </li>
           <li>

@@ -1,0 +1,25 @@
+<p-dialog
+  header="Conta vencida"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '420px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <div class="choice-actions">
+    <button
+      type="button"
+      class="btn btn-outline-primary"
+      (click)="editCharges.emit()"
+    >
+      Editar multa e juros
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="useDefaultCharges.emit()"
+    >
+      Usar valores padrão
+    </button>
+  </div>
+</p-dialog>

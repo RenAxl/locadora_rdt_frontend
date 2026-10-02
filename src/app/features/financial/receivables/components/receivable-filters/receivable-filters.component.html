@@ -1,0 +1,175 @@
+<form class="receivable-filters" #filterForm="ngForm" (ngSubmit)="applyFilters()">
+  <div class="row g-3 receivable-form-inputs">
+    <div class="col-12">
+      <label class="form-label-custom" for="receivable-search">Busca</label>
+      <input
+        id="receivable-search"
+        type="text"
+        class="form-control"
+        name="search"
+        [(ngModel)]="filters.search"
+        placeholder="Pesquisar descrição, cliente, referência ou número da conta"
+      />
+    </div>
+
+    <div class="col-12">
+      <app-receivable-quick-period-filter
+        [startDate]="filters.startDate"
+        [endDate]="filters.endDate"
+        (periodChange)="onQuickPeriodChange($event)"
+      ></app-receivable-quick-period-filter>
+    </div>
+
+    <div class="col-12 col-lg-3">
+      <label class="form-label-custom" for="receivable-period-type">Tipo de Período</label>
+      <select
+        id="receivable-period-type"
+        class="form-control"
+        name="periodType"
+        [(ngModel)]="filters.periodType"
+      >
+        <option value="DUE_DATE">Vencimento</option>
+        <option value="PAYMENT_DATE">Recebimento</option>
+        <option value="CREATED_DATE">Cadastro</option>
+      </select>
+    </div>
+
+    <div class="col-12 col-lg-3">
+      <label class="form-label-custom" for="receivable-start-date">Data Inicial</label>
+      <input
+        id="receivable-start-date"
+        type="date"
+        class="form-control"
+        name="startDate"
+        [(ngModel)]="filters.startDate"
+      />
+    </div>
+
+    <div class="col-12 col-lg-3">
+      <label class="form-label-custom" for="receivable-end-date">Data Final</label>
+      <input
+        id="receivable-end-date"
+        type="date"
+        class="form-control"
+        name="endDate"
+        [(ngModel)]="filters.endDate"
+      />
+    </div>
+
+    <div class="col-12 col-lg-3">
+      <label class="form-label-custom" for="receivable-status">Status</label>
+      <select
+        id="receivable-status"
+        class="form-control"
+        name="status"
+        [(ngModel)]="filters.status"
+      >
+        <option value="ALL">Todos</option>
+        <option value="PENDING">Pendentes</option>
+        <option value="PAID">Pagas</option>
+        <option value="OVERDUE">Vencidas</option>
+        <option value="PARTIALLY_PAID">Recebimento Parcial</option>
+        <option value="CANCELED">Canceladas</option>
+      </select>
+    </div>
+
+    <div class="col-12 col-lg-3">
+      <label class="form-label-custom" for="receivable-customer">Cliente</label>
+      <input
+        id="receivable-customer"
+        type="text"
+        class="form-control"
+        list="receivable-customers"
+        name="customerSearch"
+        [(ngModel)]="customerSearch"
+        (input)="onCustomerInput()"
+      />
+      <datalist id="receivable-customers">
+        <option *ngFor="let customer of customers" [value]="customer.name"></option>
+      </datalist>
+    </div>
+
+    <div class="col-12 col-lg-3">
+      <label class="form-label-custom" for="receivable-payment-method">Forma de Recebimento</label>
+      <select
+        id="receivable-payment-method"
+        class="form-control"
+        name="paymentMethodId"
+        [(ngModel)]="filters.paymentMethodId"
+      >
+        <option [ngValue]="null">Todas</option>
+        <option *ngFor="let method of paymentMethods" [ngValue]="method.id">
+          {{ method.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="col-12 col-lg-3">
+      <label class="form-label-custom" for="receivable-payment-frequency">Frequência</label>
+      <select
+        id="receivable-payment-frequency"
+        class="form-control"
+        name="paymentFrequencyId"
+        [(ngModel)]="filters.paymentFrequencyId"
+      >
+        <option [ngValue]="null">Todas</option>
+        <option *ngFor="let frequency of paymentFrequencies" [ngValue]="frequency.id">
+          {{ frequency.frequency }}
+        </option>
+      </select>
+    </div>
+
+    <div class="col-12 col-lg-3">
+      <label class="form-label-custom" for="receivable-minimum-amount">Valor Inicial</label>
+      <input
+        id="receivable-minimum-amount"
+        type="number"
+        min="0"
+        step="0.01"
+        class="form-control"
+        name="minimumAmount"
+        [(ngModel)]="filters.minimumAmount"
+      />
+    </div>
+
+    <div class="col-12 col-lg-3">
+      <label class="form-label-custom" for="receivable-maximum-amount">Valor Final</label>
+      <input
+        id="receivable-maximum-amount"
+        type="number"
+        min="0"
+        step="0.01"
+        class="form-control"
+        name="maximumAmount"
+        [(ngModel)]="filters.maximumAmount"
+      />
+    </div>
+
+    <div class="col-12 col-lg-3">
+      <label class="form-label-custom" for="receivable-sort">Ordenação</label>
+      <select
+        id="receivable-sort"
+        class="form-control"
+        name="sort"
+        [(ngModel)]="selectedSort"
+      >
+        <option *ngFor="let option of sortOptions; let i = index" [ngValue]="i">
+          {{ option.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="receivable-form-buttons mt-4">
+    <button type="submit" class="btn btn-primary receivable-form-button">
+      FILTRAR
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-danger receivable-form-button"
+      (click)="clearFilters()"
+    >
+      LIMPAR
+    </button>
+  </div>
+</form>

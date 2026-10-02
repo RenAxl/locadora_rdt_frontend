@@ -1,0 +1,10 @@
+.choice-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.choice-actions .btn {
+  min-height: 50px;
+  border-radius: 10px;
+  font-weight: bold;
+}

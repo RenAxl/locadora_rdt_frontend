@@ -5,8 +5,8 @@
   [style]="{ width: '560px', maxWidth: '95vw' }"
   (onHide)="close()"
 >
-  <form #paymentForm="ngForm" (ngSubmit)="submit(paymentForm)" *ngIf="payable">
-    <div class="row g-3 payable-form-inputs">
+  <form #paymentForm="ngForm" (ngSubmit)="submit(paymentForm)" *ngIf="receivable">
+    <div class="row g-3 receivable-form-inputs">
       <div class="col-12 col-lg-6">
         <label class="form-label-custom">Valor original</label>
         <input
@@ -17,18 +17,18 @@
         />
       </div>
 
-      <div class="col-12 col-lg-6" *ngIf="payable.parentPayableId">
+      <div class="col-12 col-lg-6" *ngIf="receivable.parentReceivableId">
         <label class="form-label-custom">Valor da parcela</label>
         <input
           class="form-control"
           type="text"
-          [value]="payable.amount | currency: 'BRL'"
+          [value]="receivable.amount | currency: 'BRL'"
           readonly
         />
       </div>
 
       <div class="col-12 col-lg-6">
-        <label class="form-label-custom">Forma de pagamento *</label>
+        <label class="form-label-custom">Forma de recebimento *</label>
         <select
           name="paymentMethodId"
           class="form-control"
@@ -45,7 +45,7 @@
         <app-message
           [control]="method"
           error="required"
-          text="Informe a forma de pagamento"
+          text="Informe a forma de recebimento"
         ></app-message>
       </div>
 
@@ -71,7 +71,7 @@
           Multa <i class="pi pi-lock" aria-hidden="true"></i>
         </label>
         <input
-          class="form-control payable-readonly-input"
+          class="form-control receivable-readonly-input"
           type="text"
           [value]="getLateFee() | currency: 'BRL'"
           title="Campo somente leitura"
@@ -84,7 +84,7 @@
           Juros <i class="pi pi-lock" aria-hidden="true"></i>
         </label>
         <input
-          class="form-control payable-readonly-input"
+          class="form-control receivable-readonly-input"
           type="text"
           [value]="getLateInterest() | currency: 'BRL'"
           title="Campo somente leitura"
@@ -97,7 +97,7 @@
           Taxa da forma de pagamento <i class="pi pi-lock" aria-hidden="true"></i>
         </label>
         <input
-          class="form-control payable-readonly-input"
+          class="form-control receivable-readonly-input"
           type="text"
           [value]="getPaymentMethodFee() | currency: 'BRL'"
           title="Campo somente leitura"
@@ -116,7 +116,7 @@
       </div>
 
       <div class="col-12">
-        <label class="form-label-custom">Valor a pagar *</label>
+        <label class="form-label-custom">Valor a receber *</label>
         <p-inputNumber
           name="paymentAmount"
           [(ngModel)]="paymentAmount"
@@ -124,8 +124,8 @@
           mode="currency"
           currency="BRL"
           locale="pt-BR"
-          class="payable-amount-control"
-          styleClass="payable-amount-input"
+          class="receivable-amount-control"
+          styleClass="receivable-amount-input"
           [required]="true"
           [min]="0.01"
           [minFractionDigits]="2"
@@ -134,21 +134,21 @@
         <app-message
           [control]="amount"
           error="required"
-          text="Informe o valor a pagar"
+          text="Informe o valor a receber"
         ></app-message>
         <small class="text-danger" *ngIf="isPaymentAmountGreaterThanCurrent()">
-          O valor a ser pago é maior que o Valor Atual.
+          O valor a ser recebido é maior que o Valor Atual.
         </small>
         <small class="text-danger" *ngIf="isPaymentAmountEmptyOrZero()">
-          Informe um valor a pagar maior que zero.
+          Informe um valor a receber maior que zero.
         </small>
       </div>
     </div>
 
-    <div class="payable-form-buttons mt-4">
+    <div class="receivable-form-buttons mt-4">
       <button
         type="submit"
-        class="btn btn-primary payable-form-button"
+        class="btn btn-primary receivable-form-button"
         [disabled]="paymentForm.invalid || isPaymentAmountInvalid()"
       >
         BAIXAR
