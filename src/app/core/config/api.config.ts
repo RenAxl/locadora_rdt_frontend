@@ -132,6 +132,12 @@ export const API = {
     ROOT: `${BASE_URL}/financial-settings`,
   },
 
+  FINANCIAL_REPORTS: {
+    GENERATE: (reportType: string, format: string) =>
+      `${BASE_URL}/reports/financial-reports/${reportType}/${format}`,
+    COMPARISON: `${BASE_URL}/reports/financial-reports/comparison`,
+  },
+
   ROLES: {
     ROOT: `${BASE_URL}/roles`,
     BY_ID: (id: number | string) => `${BASE_URL}/roles/${id}`,

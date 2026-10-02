@@ -1,0 +1,296 @@
+<div class="financial-report-list-container">
+  <header class="module-page-header">
+    <div>
+      <span class="module-page-eyebrow">RELATÓRIOS</span>
+      <h1>Relatórios financeiros</h1>
+      <p>Gere e consulte os relatórios financeiros da locadora.</p>
+    </div>
+    <div class="module-page-header-icon">
+      <i class="fa-solid fa-chart-line"></i>
+    </div>
+  </header>
+
+  <form class="financial-report-card">
+    <div class="row g-3 financial-report-form-inputs">
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom" for="report-type">Relatório</label>
+        <select
+          id="report-type"
+          class="form-control"
+          name="reportType"
+          [(ngModel)]="selectedReportType"
+        >
+          <option *ngFor="let option of reportOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showAnnualFilter()">
+        <label class="form-label-custom" for="report-year">Ano</label>
+        <input
+          id="report-year"
+          type="number"
+          class="form-control"
+          name="year"
+          [(ngModel)]="filters.year"
+        />
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showPeriodFilters()">
+        <label class="form-label-custom" for="report-period-type">Tipo de Período</label>
+        <select
+          id="report-period-type"
+          class="form-control"
+          name="periodType"
+          [(ngModel)]="filters.periodType"
+        >
+          <option value="DUE_DATE">Vencimento</option>
+          <option value="PAYMENT_DATE">Pagamento</option>
+          <option value="CREATED_DATE">Cadastro</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showPeriodFilters()">
+        <label class="form-label-custom" for="report-start-date">Data Inicial</label>
+        <input
+          id="report-start-date"
+          type="date"
+          class="form-control"
+          name="startDate"
+          [(ngModel)]="filters.startDate"
+        />
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showPeriodFilters()">
+        <label class="form-label-custom" for="report-end-date">Data Final</label>
+        <input
+          id="report-end-date"
+          type="date"
+          class="form-control"
+          name="endDate"
+          [(ngModel)]="filters.endDate"
+        />
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showStatusFilter()">
+        <label class="form-label-custom" for="report-status">Situação</label>
+        <select
+          id="report-status"
+          class="form-control"
+          name="status"
+          [(ngModel)]="filters.status"
+        >
+          <option value="ALL">Todas</option>
+          <option value="PENDING">Em Aberto</option>
+          <option value="PAID">Pago</option>
+          <option value="OVERDUE">Vencido</option>
+          <option value="PARTIALLY_PAID">Pago Parcialmente</option>
+          <option value="CANCELED">Cancelado</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-6" *ngIf="showPeriodFilters()">
+        <label class="form-label-custom" for="report-search">Busca</label>
+        <input
+          id="report-search"
+          type="text"
+          class="form-control"
+          name="search"
+          [(ngModel)]="filters.search"
+          placeholder="Descrição, referência ou nome"
+        />
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showCustomerFilter()">
+        <label class="form-label-custom" for="report-customer">Cliente</label>
+        <select
+          id="report-customer"
+          class="form-control"
+          name="customerId"
+          [(ngModel)]="filters.customerId"
+        >
+          <option [ngValue]="null">Todos</option>
+          <option *ngFor="let customer of customers" [ngValue]="customer.id">
+            {{ customer.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showSupplierFilter()">
+        <label class="form-label-custom" for="report-supplier">Fornecedor</label>
+        <select
+          id="report-supplier"
+          class="form-control"
+          name="supplierId"
+          [(ngModel)]="filters.supplierId"
+        >
+          <option [ngValue]="null">Todos</option>
+          <option *ngFor="let supplier of suppliers" [ngValue]="supplier.id">
+            {{ supplier.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showEmployeeFilter()">
+        <label class="form-label-custom" for="report-employee">Funcionário</label>
+        <select
+          id="report-employee"
+          class="form-control"
+          name="employeeId"
+          [(ngModel)]="filters.employeeId"
+        >
+          <option [ngValue]="null">Todos</option>
+          <option *ngFor="let employee of employees" [ngValue]="employee.id">
+            {{ employee.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showPeriodFilters()">
+        <label class="form-label-custom" for="report-payment-method">Forma de Pagamento</label>
+        <select
+          id="report-payment-method"
+          class="form-control"
+          name="paymentMethodId"
+          [(ngModel)]="filters.paymentMethodId"
+        >
+          <option [ngValue]="null">Todas</option>
+          <option *ngFor="let method of paymentMethods" [ngValue]="method.id">
+            {{ method.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showPeriodFilters()">
+        <label class="form-label-custom" for="report-minimum-amount">Valor Inicial</label>
+        <input
+          id="report-minimum-amount"
+          type="number"
+          min="0"
+          step="0.01"
+          class="form-control"
+          name="minimumAmount"
+          [(ngModel)]="filters.minimumAmount"
+        />
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showPeriodFilters()">
+        <label class="form-label-custom" for="report-maximum-amount">Valor Final</label>
+        <input
+          id="report-maximum-amount"
+          type="number"
+          min="0"
+          step="0.01"
+          class="form-control"
+          name="maximumAmount"
+          [(ngModel)]="filters.maximumAmount"
+        />
+      </div>
+    </div>
+
+    <div
+      class="financial-report-form-buttons mt-4"
+      *ngIf="hasAuthority('FINANCIAL_REPORTS_READ')"
+    >
+      <button
+        type="button"
+        class="btn btn-primary financial-report-form-button"
+        [disabled]="loading"
+        (click)="generate('pdf')"
+      >
+        <i class="pi pi-file-pdf me-2"></i>GERAR PDF
+      </button>
+      <button
+        type="button"
+        class="btn btn-success financial-report-form-button"
+        [disabled]="loading"
+        (click)="generate('xlsx')"
+      >
+        <i class="pi pi-file-excel me-2"></i>GERAR EXCEL
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-danger financial-report-form-button"
+        [disabled]="loading"
+        (click)="clearFilters()"
+      >
+        LIMPAR
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary financial-report-form-button"
+        [disabled]="chartLoading"
+        (click)="loadComparison()"
+      >
+        <i class="pi pi-chart-bar me-2"></i>ATUALIZAR GRÁFICO
+      </button>
+    </div>
+  </form>
+
+  <section class="financial-report-card">
+    <div class="comparison-header">
+      <div>
+        <h2>Recebimentos / Despesas {{ chartYear }}</h2>
+      </div>
+      <span class="loading-label" *ngIf="chartLoading">Carregando...</span>
+    </div>
+
+    <div class="comparison-summary">
+      <div class="summary-item">
+        <span>Contas à Receber</span>
+        <strong>{{ comparison.receivableTotal | currency: "BRL": "symbol": "1.2-2" }}</strong>
+        <small>{{ comparison.receivableCount }} conta(s)</small>
+      </div>
+      <div class="summary-item">
+        <span>Contas a Pagar</span>
+        <strong>{{ comparison.payableTotal | currency: "BRL": "symbol": "1.2-2" }}</strong>
+        <small>{{ comparison.payableCount }} conta(s)</small>
+      </div>
+      <div class="summary-item balance" [ngClass]="balanceClass">
+        <span>Saldo</span>
+        <strong>{{ comparison.balance | currency: "BRL": "symbol": "1.2-2" }}</strong>
+        <small>Receber - Pagar</small>
+      </div>
+    </div>
+
+    <div class="chart-legend">
+      <span><i class="legend-marker receivable"></i> Contas à Receber</span>
+      <span><i class="legend-marker payable"></i> Contas a Pagar</span>
+    </div>
+
+    <div class="monthly-chart" aria-label="Gráfico mensal de Recebimentos e Despesas">
+      <div class="chart-y-axis">
+        <span>{{ chartTickValue(1) | number: "1.0-0" }}</span>
+        <span>{{ chartTickValue(0.75) | number: "1.0-0" }}</span>
+        <span>{{ chartTickValue(0.5) | number: "1.0-0" }}</span>
+        <span>{{ chartTickValue(0.25) | number: "1.0-0" }}</span>
+        <span>0</span>
+      </div>
+
+      <div class="chart-plot">
+        <div class="grid-line line-100"></div>
+        <div class="grid-line line-75"></div>
+        <div class="grid-line line-50"></div>
+        <div class="grid-line line-25"></div>
+        <div class="grid-line line-0"></div>
+
+        <div class="month-group" *ngFor="let month of comparison.months">
+          <div class="month-bars">
+            <div
+              class="month-column receivable"
+              [style.height]="chartColumnHeight(month.receivableTotal)"
+              [title]="'Contas à Receber: ' + (month.receivableTotal | currency: 'BRL': 'symbol': '1.2-2')"
+            ></div>
+            <div
+              class="month-column payable"
+              [style.height]="chartColumnHeight(month.payableTotal)"
+              [title]="'Contas a Pagar: ' + (month.payableTotal | currency: 'BRL': 'symbol': '1.2-2')"
+            ></div>
+          </div>
+          <div class="month-label">{{ month.label }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
