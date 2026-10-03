@@ -74,6 +74,20 @@ const routes: Routes = [
     ],
   },
 
+    {
+    path: '',
+    component: MainComponent,
+    children: [
+      {
+        path: 'contact',
+        loadChildren: () =>
+          import('./features/contact/contact.module').then(
+            (m) => m.ContactModule,
+          ),
+      },
+    ],
+  },
+
   {
     path: '',
     component: MainComponent,
