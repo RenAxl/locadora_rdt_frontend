@@ -1,0 +1,61 @@
+<p-dialog
+  [header]="title"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '720px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <div class="details-grid" *ngIf="category; else loading">
+    <div class="wide">
+      <span>Nome</span><strong>{{ category.name || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Ativa</span><strong>{{ getActiveLabel(category.active) }}</strong>
+    </div>
+
+    <div>
+      <span>Data cadastro</span
+      ><strong>{{
+        category.createdAt ? (category.createdAt | date: "dd/MM/yyyy") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Data atualização</span
+      ><strong>{{
+        category.updatedAt ? (category.updatedAt | date: "dd/MM/yyyy") : "-"
+      }}</strong>
+    </div>
+
+    <div>
+      <span>Criado por</span><strong>{{ category.createdBy || "-" }}</strong>
+    </div>
+
+    <div>
+      <span>Atualizado por</span><strong>{{ category.updatedBy || "-" }}</strong>
+    </div>
+
+    <div class="wide image">
+      <span>Imagem</span>
+      <strong>
+        <ng-container *ngIf="imagePreviewUrl; else noImage">
+          <img
+            [src]="imagePreviewUrl"
+            alt="Imagem da categoria"
+            (error)="onImgError()"
+          />
+        </ng-container>
+        <ng-template #noImage>
+          <span class="image-placeholder">Sem imagem</span>
+        </ng-template>
+      </strong>
+    </div>
+
+  </div>
+
+  <ng-template #loading>
+    <div class="empty">Carregando...</div>
+  </ng-template>
+
+</p-dialog>

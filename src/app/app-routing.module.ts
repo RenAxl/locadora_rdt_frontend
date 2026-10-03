@@ -125,6 +125,14 @@ const routes: Routes = [
       },
 
       {
+        path: 'categories',
+        loadChildren: () =>
+          import('./features/stocks/categories/categories.module').then(
+            (m) => m.CategoriesModule,
+          ),
+      },
+
+      {
         path: 'payables',
         loadChildren: () =>
           import('./features/financial/payables/payables.module').then(

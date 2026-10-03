@@ -52,6 +52,14 @@ export const API = {
     },
   },
 
+  CATEGORIES: {
+    ROOT: `${BASE_URL}/rental/categories`,
+    BY_ID: (id: number | string) => `${BASE_URL}/rental/categories/${id}`,
+    DELETE_ALL: `${BASE_URL}/rental/categories/all`,
+    CHANGE_ACTIVE: (id: number | string) => `${BASE_URL}/rental/categories/${id}/active`,
+    IMAGE: (id: number) => `${BASE_URL}/rental/categories/${id}/image`,
+  },
+
   PAYABLES: {
     ROOT: `${BASE_URL}/payables`,
     BY_ID: (id: number | string) => `${BASE_URL}/payables/${id}`,

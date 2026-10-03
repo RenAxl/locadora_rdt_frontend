@@ -1,0 +1,152 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">ESTOQUE</span>
+    <h1>Categorias</h1>
+    <p>Consulte e gerencie as categorias cadastradas.</p>
+  </div>
+  <div class="module-page-header-icon"><i class="fa-solid fa-tags"></i></div>
+</header>
+
+<div class="category-filter-container">
+  <div class="category-actions-group">
+    <a
+      routerLink="/categories/create"
+      class="action-link"
+      *ngIf="hasAuthority('CATEGORY_WRITE')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVA CATEGORIA
+      </button>
+    </a>
+
+    <button
+      *ngIf="selectedCategoryIds.length > 0 && hasAuthority('CATEGORY_DELETE')"
+      class="btn btn-danger text-white btn-crud-action"
+      type="button"
+      (click)="deleteSelectedCategories()"
+    >
+      EXCLUIR CATEGORIAS
+    </button>
+  </div>
+
+  <app-name-filter
+    text="Digite o nome da categoria"
+    (search)="searchCategory($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #imageTemplate let-category>
+  <ng-container *ngIf="imageMap[category.id!]; else noImage">
+    <img
+      class="category-image"
+      [src]="imageMap[category.id!]"
+      alt="Imagem da categoria"
+    />
+  </ng-container>
+
+  <ng-template #noImage>
+    <div class="profile-photo-placeholder">
+      <i class="pi pi-tags profile-photo-icon"></i>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #activeTemplate let-category>
+  {{ category.active ? "Sim" : "Não" }}
+</ng-template>
+
+<ng-template #actionsTemplate let-category>
+  <div class="actions-wrap">
+    <a
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-pencil"
+      pTooltip="Editar categoria"
+      tooltipPosition="top"
+      [routerLink]="['/categories/', category.id, 'edit']"
+      *ngIf="hasAuthority('CATEGORY_WRITE')"
+    ></a>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-danger"
+      icon="pi pi-trash"
+      pTooltip="Excluir categoria"
+      tooltipPosition="top"
+      (click)="delete(category)"
+      *ngIf="hasAuthority('CATEGORY_DELETE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-warning"
+      [icon]="category.active ? 'pi pi-ban' : 'pi pi-check'"
+      pTooltip="Ativar / Desativar Categoria"
+      tooltipPosition="top"
+      (click)="toggleActive(category)"
+      *ngIf="hasAuthority('CATEGORY_WRITE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-eye"
+      pTooltip="Detalhamento da categoria"
+      tooltipPosition="top"
+      (click)="openDetails(category)"
+      *ngIf="hasAuthority('CATEGORY_READ')"
+    ></button>
+  </div>
+</ng-template>
+
+<ng-template #createdAtTemplate let-category>
+  {{ category.createdAt ? (category.createdAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #updatedAtTemplate let-category>
+  {{ category.updatedAt ? (category.updatedAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<app-data-table
+  #categoryTable
+  [records]="categories"
+  [columns]="visibleTableColumns"
+  [selectedRecords]="selectedCategories"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [showSelection]="hasAuthority('CATEGORY_DELETE')"
+  [columnTemplates]="{
+    active: activeTemplate,
+    image: imageTemplate,
+    createdAt: createdAtTemplate,
+    updatedAt: updatedAtTemplate
+  }"
+  [actionsTemplate]="actionsTemplate"
+  [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Categorias"
+  exportFileName="categorias"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadCategoriesForExport"
+  emptyMessage="Nenhuma categoria encontrada."
+  (lazyLoad)="changePage($event)"
+  (selectedRecordsChange)="onSelectionChange($event)"
+  (columnsButtonClick)="openFieldCustomization()"
+></app-data-table>
+
+<app-category-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [title]="'Detalhamento da Categoria'"
+  [category]="categoryDetails"
+></app-category-details-modal>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="categorias"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>

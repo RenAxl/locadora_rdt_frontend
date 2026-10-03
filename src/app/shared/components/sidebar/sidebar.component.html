@@ -307,6 +307,40 @@
           </li>
         </ul>
       </li>
+       <li class="treeview">
+        <a
+          class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
+          data-bs-toggle="collapse"
+          data-bs-target="#submenuEstoqueDesktop"
+          *ngIf="hasAuthority('CATEGORY_READ')"
+        >
+          <span class="d-flex align-items-center">
+            <i class="fa-solid fa-boxes-stacked me-2"></i>
+            <span>Estoque</span>
+          </span>
+
+          <span>
+            <i class="fa-solid fa-caret-right submenu-toggle-icon closed"></i>
+            <i class="fa-solid fa-caret-down submenu-toggle-icon open"></i>
+          </span>
+        </a>
+
+        <ul
+          class="treeview-menu collapse list-unstyled mb-0"
+          id="submenuEstoqueDesktop"
+        >
+          <li>
+            <a
+              routerLink="/categories"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+            >
+              <i class="fa-solid fa-tags me-2"></i>
+              <span>Categorias</span>
+            </a>
+          </li>
+        </ul>
+      </li>
     </ul>
   </nav>
 </aside>
