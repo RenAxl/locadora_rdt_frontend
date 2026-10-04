@@ -1,0 +1,176 @@
+<div class="item-form-container">
+  <div class="item-card">
+    <form #itemForm="ngForm" (ngSubmit)="save(itemForm)">
+      <div class="col-12 mb-3">
+        <h1>Dados do Item</h1>
+      </div>
+
+      <div class="item-image-header">
+        <div class="item-image-area">
+          <div class="item-image-frame">
+            <ng-container *ngIf="imagePreviewUrl; else noImage">
+              <img
+                class="item-image"
+                [src]="imagePreviewUrl"
+                alt="Imagem do item"
+              />
+            </ng-container>
+
+            <ng-template #noImage>
+              <div class="item-image-placeholder" aria-label="Sem imagem">
+                <span class="item-image-icon">📦</span>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="item-image-meta">
+            <div class="item-image-title">Imagem do Item</div>
+            <div class="item-image-subtitle">JPG, PNG ou WEBP • até 2MB</div>
+
+            <div class="item-image-actions">
+              <label class="upload-btn" for="image">
+                <span class="upload-btn-icon">⬆️</span>
+                <span>Selecionar imagem</span>
+              </label>
+
+              <input
+                id="image"
+                type="file"
+                name="image"
+                accept="image/jpeg,image/png,image/webp"
+                (change)="onImageSelected(imageInput)"
+                #imageInput
+                class="upload-input"
+              />
+
+              <span class="file-chip" *ngIf="selectedImageName">
+                {{ selectedImageName }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 item-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Nome *</label>
+          <input
+            pInputText
+            placeholder="Nome"
+            type="text"
+            name="name"
+            [(ngModel)]="item.name"
+            #name="ngModel"
+            required
+            minlength="3"
+            maxlength="100"
+            class="form-control"
+          />
+
+          <app-message
+            [control]="name"
+            error="required"
+            text="Informe o nome do item"
+          ></app-message>
+
+          <app-message
+            [control]="name"
+            error="minlength"
+            text="Mínimo de {{
+              name.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              name.errors?.['minlength']?.actualLength
+            }}"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Categoria *</label>
+          <select
+            name="category"
+            [(ngModel)]="item.category"
+            [compareWith]="compareById"
+            #category="ngModel"
+            required
+            class="form-control"
+          >
+            <option [ngValue]="undefined">Selecione uma categoria</option>
+            <option *ngFor="let category of categories" [ngValue]="category">
+              {{ category.name }}
+            </option>
+          </select>
+
+          <app-message
+            [control]="category"
+            error="required"
+            text="Informe a categoria"
+          ></app-message>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label-custom">Descrição *</label>
+          <textarea
+            pInputTextarea
+            placeholder="Descrição"
+            name="description"
+            [(ngModel)]="item.description"
+            #description="ngModel"
+            required
+            minlength="3"
+            maxlength="500"
+            rows="4"
+            class="form-control description-field"
+          ></textarea>
+
+          <app-message
+            [control]="description"
+            error="required"
+            text="Informe a descrição do item"
+          ></app-message>
+
+          <app-message
+            [control]="description"
+            error="minlength"
+            text="Mínimo de {{
+              description.errors?.['minlength']?.requiredLength
+            }} caracteres. Você digitou apenas {{
+              description.errors?.['minlength']?.actualLength
+            }}"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Preço *</label>
+          <p-inputNumber
+            [(ngModel)]="item.price"
+            name="price"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+            [min]="0.01"
+            placeholder="Preço"
+            [required]="true"
+          ></p-inputNumber>
+        </div>
+      </div>
+
+      <div class="item-form-buttons mt-4">
+        <button
+          type="submit"
+          [disabled]="itemForm.invalid"
+          class="btn btn-primary item-form-button"
+        >
+          SALVAR
+        </button>
+
+        <a routerLink="/items/">
+          <button type="button" class="btn btn-outline-danger item-form-button">
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

@@ -307,12 +307,12 @@
           </li>
         </ul>
       </li>
-       <li class="treeview">
+      <li class="treeview">
         <a
           class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
           data-bs-toggle="collapse"
           data-bs-target="#submenuEstoqueDesktop"
-          *ngIf="hasAuthority('CATEGORY_READ')"
+          *ngIf="hasAuthority('CATEGORY_READ') || hasAuthority('ITEM_READ')"
         >
           <span class="d-flex align-items-center">
             <i class="fa-solid fa-boxes-stacked me-2"></i>
@@ -334,9 +334,21 @@
               routerLink="/categories"
               routerLinkActive="active"
               class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('CATEGORY_READ')"
             >
               <i class="fa-solid fa-tags me-2"></i>
               <span>Categorias</span>
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/items"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('ITEM_READ')"
+            >
+              <i class="fa-solid fa-box-open me-2"></i>
+              <span>Itens</span>
             </a>
           </li>
         </ul>

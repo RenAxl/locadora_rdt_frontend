@@ -133,6 +133,14 @@ const routes: Routes = [
       },
 
       {
+        path: 'items',
+        loadChildren: () =>
+          import('./features/stocks/items/items.module').then(
+            (m) => m.ItemsModule,
+          ),
+      },
+
+      {
         path: 'payables',
         loadChildren: () =>
           import('./features/financial/payables/payables.module').then(

@@ -60,6 +60,15 @@ export const API = {
     IMAGE: (id: number) => `${BASE_URL}/rental/categories/${id}/image`,
   },
 
+  ITEMS: {
+    ROOT: `${BASE_URL}/inventory/items`,
+    BY_ID: (id: number | string) => `${BASE_URL}/inventory/items/${id}`,
+    DELETE_ALL: `${BASE_URL}/inventory/items/all`,
+    CHANGE_ACTIVE: (id: number | string) => `${BASE_URL}/inventory/items/${id}/active`,
+    IMAGE: (id: number) => `${BASE_URL}/inventory/items/${id}/image`,
+    UNITS: (itemId: number) => `${BASE_URL}/rentals/availability/items/${itemId}/all-units`,
+  },
+
   PAYABLES: {
     ROOT: `${BASE_URL}/payables`,
     BY_ID: (id: number | string) => `${BASE_URL}/payables/${id}`,

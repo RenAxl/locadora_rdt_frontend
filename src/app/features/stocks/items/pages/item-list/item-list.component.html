@@ -1,0 +1,169 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">ESTOQUE</span>
+    <h1>Itens</h1>
+    <p>Consulte e gerencie os itens cadastrados.</p>
+  </div>
+  <div class="module-page-header-icon">
+    <i class="fa-solid fa-box-open"></i>
+  </div>
+</header>
+
+<div class="item-filter-container">
+  <div class="item-actions-group">
+    <a
+      routerLink="/items/create"
+      class="action-link"
+      *ngIf="hasAuthority('ITEM_WRITE')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVO ITEM
+      </button>
+    </a>
+
+    <button
+      *ngIf="selectedItemIds.length > 0 && hasAuthority('ITEM_DELETE')"
+      class="btn btn-danger text-white btn-crud-action"
+      type="button"
+      (click)="deleteSelectedItems()"
+    >
+      EXCLUIR ITENS
+    </button>
+  </div>
+
+  <app-name-filter
+    text="Digite o nome do item"
+    (search)="searchItem($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #imageTemplate let-item>
+  <ng-container *ngIf="imageMap[item.id!]; else noImage">
+    <img class="item-image" [src]="imageMap[item.id!]" alt="Imagem do item" />
+  </ng-container>
+
+  <ng-template #noImage>
+    <div class="profile-photo-placeholder">
+      <span class="profile-photo-icon">📦</span>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #priceTemplate let-item>
+  {{
+    item.price != null
+      ? (item.price | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR")
+      : "-"
+  }}
+</ng-template>
+
+<ng-template #activeTemplate let-item>
+  {{ item.active ? "Sim" : "Não" }}
+</ng-template>
+
+<ng-template #actionsTemplate let-item>
+  <div class="actions-wrap">
+    <a
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-pencil"
+      pTooltip="Editar item"
+      tooltipPosition="top"
+      [routerLink]="['/items/', item.id, 'edit']"
+      *ngIf="hasAuthority('ITEM_WRITE')"
+    ></a>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-danger"
+      icon="pi pi-trash"
+      pTooltip="Excluir item"
+      tooltipPosition="top"
+      (click)="delete(item)"
+      *ngIf="hasAuthority('ITEM_DELETE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-warning"
+      [icon]="item.active ? 'pi pi-ban' : 'pi pi-check'"
+      pTooltip="Ativar / Desativar Item"
+      tooltipPosition="top"
+      (click)="toggleActive(item)"
+      *ngIf="hasAuthority('ITEM_WRITE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-eye"
+      pTooltip="Detalhamento do item"
+      tooltipPosition="top"
+      (click)="openDetails(item)"
+      *ngIf="hasAuthority('ITEM_READ')"
+    ></button>
+
+    <a
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-box"
+      pTooltip="Unidades físicas do item"
+      tooltipPosition="top"
+      [routerLink]="['/items/stock-balances', item.id, 'units']"
+      *ngIf="hasAuthority('STOCKBALANCES_READ')"
+    ></a>
+  </div>
+</ng-template>
+
+<ng-template #createdAtTemplate let-item>
+  {{ item.createdAt ? (item.createdAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #updatedAtTemplate let-item>
+  {{ item.updatedAt ? (item.updatedAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<app-data-table
+  #itemTable
+  [records]="items"
+  [columns]="visibleTableColumns"
+  [selectedRecords]="selectedItems"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [showSelection]="hasAuthority('ITEM_DELETE')"
+  [columnTemplates]="{
+    active: activeTemplate,
+    image: imageTemplate,
+    price: priceTemplate,
+    createdAt: createdAtTemplate,
+    updatedAt: updatedAtTemplate
+  }"
+  [actionsTemplate]="actionsTemplate"
+  [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Itens"
+  exportFileName="itens"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadItemsForExport"
+  emptyMessage="Nenhum item encontrado."
+  (lazyLoad)="changePage($event)"
+  (selectedRecordsChange)="onSelectionChange($event)"
+  (columnsButtonClick)="openFieldCustomization()"
+></app-data-table>
+
+<app-item-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [title]="'Detalhamento do Item'"
+  [item]="itemDetails"
+></app-item-details-modal>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="itens"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>

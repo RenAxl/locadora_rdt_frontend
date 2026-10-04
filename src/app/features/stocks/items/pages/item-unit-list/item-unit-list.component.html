@@ -1,0 +1,51 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">ESTOQUE</span>
+    <h1>Unidades físicas</h1>
+    <p *ngIf="itemName">{{ itemName }}</p>
+  </div>
+  <div class="module-page-header-icon">
+    <i class="fa-solid fa-box-open"></i>
+  </div>
+</header>
+
+<div class="item-unit-filter-container">
+  <div class="item-unit-actions-group">
+    <a routerLink="/items/" class="action-link">
+      <button class="btn btn-outline-secondary btn-crud-action">VOLTAR</button>
+    </a>
+  </div>
+</div>
+
+<ng-template #assetCodeTemplate let-unit>
+  {{ unit.itemName }} - {{ unit.assetCode || "-" }}
+</ng-template>
+
+<ng-template #statusTemplate let-unit>
+  {{ getStatusLabel(unit.status) }}
+</ng-template>
+
+<ng-template #conditionTemplate let-unit>
+  {{ getConditionLabel(unit.conditionStatus) }}
+</ng-template>
+
+<ng-template #activeTemplate let-unit>
+  {{ unit.active ? "Sim" : "Não" }}
+</ng-template>
+
+<app-data-table
+  [records]="units"
+  [columns]="columns"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [showSelection]="false"
+  [columnTemplates]="{
+    assetCode: assetCodeTemplate,
+    status: statusTemplate,
+    conditionStatus: conditionTemplate,
+    active: activeTemplate
+  }"
+  emptyMessage="Nenhuma unidade física cadastrada para este item."
+  (lazyLoad)="changePage($event)"
+></app-data-table>
