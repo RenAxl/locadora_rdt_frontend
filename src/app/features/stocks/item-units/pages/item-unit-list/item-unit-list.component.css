@@ -21,6 +21,13 @@
   text-decoration: none;
 }
 
+.actions-wrap {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  align-items: center;
+}
+
 @media (min-width: 768px) {
   .item-unit-filter-container {
     display: flex;
@@ -57,6 +64,10 @@
     flex-direction: row;
     gap: 10px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .actions-wrap {
     flex-wrap: wrap;
   }
 }

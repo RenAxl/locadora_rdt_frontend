@@ -1,34 +1,34 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ItemListComponent } from './pages/item-list/item-list.component';
-import { ItemFormComponent } from './pages/item-form/item-form.component';
+import { ItemUnitListComponent } from './pages/item-unit-list/item-unit-list.component';
+import { ItemUnitFormComponent } from './pages/item-unit-form/item-unit-form.component';
 import { AuthGuard } from 'src/app/core/auth/guards/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
-    component: ItemListComponent,
+    component: ItemUnitListComponent,
     canActivate: [AuthGuard],
     data: {
-      authorities: ['ITEM_READ'],
+      authorities: ['ITEM_UNIT_READ'],
     },
   },
 
   {
     path: 'create',
-    component: ItemFormComponent,
+    component: ItemUnitFormComponent,
     canActivate: [AuthGuard],
     data: {
-      authorities: ['ITEM_WRITE'],
+      authorities: ['ITEM_UNIT_WRITE'],
     },
   },
 
   {
-    path: ':itemId/edit',
-    component: ItemFormComponent,
+    path: ':itemUnitId/edit',
+    component: ItemUnitFormComponent,
     canActivate: [AuthGuard],
     data: {
-      authorities: ['ITEM_WRITE'],
+      authorities: ['ITEM_UNIT_WRITE'],
     },
   },
 
@@ -39,4 +39,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ItemsRoutingModule {}
+export class ItemUnitsRoutingModule {}

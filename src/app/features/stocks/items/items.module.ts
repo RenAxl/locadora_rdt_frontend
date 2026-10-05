@@ -12,14 +12,12 @@ import { ItemListComponent } from './pages/item-list/item-list.component';
 import { ItemFormComponent } from './pages/item-form/item-form.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ItemDetailsModalComponent } from './components/item-details-modal/item-details-modal.component';
-import { ItemUnitListComponent } from './pages/item-unit-list/item-unit-list.component';
 
 @NgModule({
   declarations: [
     ItemListComponent,
     ItemFormComponent,
     ItemDetailsModalComponent,
-    ItemUnitListComponent,
   ],
   imports: [
     CommonModule,

@@ -74,7 +74,7 @@ const routes: Routes = [
     ],
   },
 
-    {
+  {
     path: '',
     component: MainComponent,
     children: [
@@ -137,6 +137,22 @@ const routes: Routes = [
         loadChildren: () =>
           import('./features/stocks/items/items.module').then(
             (m) => m.ItemsModule,
+          ),
+      },
+
+      {
+        path: 'item-units',
+        loadChildren: () =>
+          import('./features/stocks/item-units/item-units.module').then(
+            (m) => m.ItemUnitsModule,
+          ),
+      },
+
+      {
+        path: 'stock-balances',
+        loadChildren: () =>
+          import('./features/stocks/stock-balances/stock-balances.module').then(
+            (m) => m.StockBalancesModule,
           ),
       },
 

@@ -1,0 +1,96 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">ESTOQUE</span>
+    <h1>Saldos de estoque</h1>
+    <p>Acompanhe os saldos atuais dos itens da locadora.</p>
+  </div>
+  <div class="module-page-header-icon">
+    <i class="fa-solid fa-warehouse"></i>
+  </div>
+</header>
+
+<div class="stock-balance-filter-container">
+  <app-name-filter
+    text="Digite o nome do item"
+    (search)="searchStockBalance($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #minimumQuantityTemplate let-stockBalance>
+  <input
+    class="form-control minimum-quantity-input"
+    type="number"
+    min="0"
+    step="1"
+    [(ngModel)]="stockBalance.minimumQuantity"
+    (change)="updateMinimum(stockBalance)"
+    [disabled]="!hasAuthority('STOCK_BALANCES_WRITE')"
+    aria-label="Estoque mínimo"
+  />
+</ng-template>
+
+<ng-template #lowStockTemplate let-stockBalance>
+  <span [ngClass]="{ 'low-stock-alert': stockBalance.lowStock }">
+    {{ stockBalance.lowStock ? "Estoque baixo" : "-" }}
+  </span>
+</ng-template>
+
+<ng-template #actionsTemplate let-stockBalance>
+  <div class="actions-wrap">
+    <a
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-box"
+      pTooltip="Ver unidades físicas"
+      tooltipPosition="top"
+      [routerLink]="['/stock-balances', stockBalance.itemId, 'units']"
+      *ngIf="hasAuthority('STOCK_BALANCES_READ')"
+    ></a>
+  </div>
+</ng-template>
+
+<ng-template #createdAtTemplate let-stockBalance>
+  {{
+    stockBalance.createdAt ? (stockBalance.createdAt | date: "dd/MM/yyyy") : "-"
+  }}
+</ng-template>
+
+<ng-template #updatedAtTemplate let-stockBalance>
+  {{
+    stockBalance.updatedAt ? (stockBalance.updatedAt | date: "dd/MM/yyyy") : "-"
+  }}
+</ng-template>
+
+<app-data-table
+  [records]="stockBalances"
+  [columns]="visibleTableColumns"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [showSelection]="false"
+  [columnTemplates]="{
+    minimumQuantity: minimumQuantityTemplate,
+    lowStock: lowStockTemplate,
+    createdAt: createdAtTemplate,
+    updatedAt: updatedAtTemplate
+  }"
+  [actionsTemplate]="actionsTemplate"
+  [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Saldos de estoque"
+  exportFileName="saldos-de-estoque"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadStockBalancesForExport"
+  emptyMessage="Nenhum saldo de estoque encontrado."
+  (lazyLoad)="changePage($event)"
+  (columnsButtonClick)="openFieldCustomization()"
+></app-data-table>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="saldos de estoque"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>

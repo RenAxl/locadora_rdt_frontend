@@ -66,7 +66,20 @@ export const API = {
     DELETE_ALL: `${BASE_URL}/inventory/items/all`,
     CHANGE_ACTIVE: (id: number | string) => `${BASE_URL}/inventory/items/${id}/active`,
     IMAGE: (id: number) => `${BASE_URL}/inventory/items/${id}/image`,
-    UNITS: (itemId: number) => `${BASE_URL}/rentals/availability/items/${itemId}/all-units`,
+  },
+
+  ITEM_UNITS: {
+    ROOT: `${BASE_URL}/inventory/item-units`,
+    BY_ID: (id: number | string) => `${BASE_URL}/inventory/item-units/${id}`,
+    DELETE_ALL: `${BASE_URL}/inventory/item-units/all`,
+    CHANGE_ACTIVE: (id: number | string) => `${BASE_URL}/inventory/item-units/${id}/active`,
+  },
+
+  STOCK_BALANCES: {
+    ROOT: `${BASE_URL}/inventory/stock-balances`,
+    BY_ID: (id: number | string) => `${BASE_URL}/inventory/stock-balances/${id}`,
+    BY_ITEM: (itemId: number | string) => `${BASE_URL}/inventory/stock-balances/item/${itemId}`,
+    UPDATE_MINIMUM: (id: number) => `${BASE_URL}/inventory/stock-balances/${id}/minimum`,
   },
 
   PAYABLES: {

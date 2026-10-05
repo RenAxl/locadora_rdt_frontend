@@ -1,0 +1,32 @@
+.actions-wrap {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  align-items: center;
+}
+
+.low-stock-alert {
+  color: #dc3545;
+  font-weight: 700;
+}
+
+.minimum-quantity-input {
+  width: 82px;
+  height: 46px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .stock-balance-filter-container {
+    display: flex;
+    margin-bottom: 20px;
+    gap: 16px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 767px) {
+  .actions-wrap {
+    flex-wrap: wrap;
+  }
+}

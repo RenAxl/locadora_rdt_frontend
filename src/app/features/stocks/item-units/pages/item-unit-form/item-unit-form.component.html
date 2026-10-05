@@ -1,0 +1,128 @@
+<div class="item-unit-form-container">
+  <div class="item-unit-card">
+    <form #itemUnitForm="ngForm" (ngSubmit)="save(itemUnitForm)">
+      <div class="col-12 mb-3">
+        <h1>Dados da Unidade Física</h1>
+      </div>
+
+      <div class="row g-3 item-unit-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Item *</label>
+          <select
+            name="item"
+            [(ngModel)]="unit.item"
+            [compareWith]="compareById"
+            #item="ngModel"
+            [disabled]="editing"
+            required
+            class="form-control"
+          >
+            <option [ngValue]="undefined">Selecione um item</option>
+            <option *ngFor="let item of items" [ngValue]="item">
+              {{ item.name }}
+            </option>
+          </select>
+          <app-message
+            [control]="item"
+            error="required"
+            text="Informe o item"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Código patrimonial *</label>
+          <input
+            pInputText
+            placeholder="Código patrimonial"
+            type="text"
+            name="assetCode"
+            [(ngModel)]="unit.assetCode"
+            #assetCode="ngModel"
+            required
+            maxlength="60"
+            class="form-control"
+          />
+          <app-message
+            [control]="assetCode"
+            error="required"
+            text="Informe o código patrimonial"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Número de série</label>
+          <input
+            pInputText
+            placeholder="Número de série"
+            type="text"
+            name="serialNumber"
+            [(ngModel)]="unit.serialNumber"
+            maxlength="100"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Conservação *</label>
+          <select
+            name="conditionStatus"
+            [(ngModel)]="unit.conditionStatus"
+            #conditionStatus="ngModel"
+            required
+            class="form-control"
+          >
+            <option value="NEW">Nova</option>
+            <option value="GOOD">Boa</option>
+            <option value="DAMAGED">Danificada</option>
+          </select>
+          <app-message
+            [control]="conditionStatus"
+            error="required"
+            text="Informe a conservação"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Data de compra</label>
+          <input
+            type="date"
+            name="purchaseDate"
+            [(ngModel)]="unit.purchaseDate"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-12">
+          <label class="form-label-custom">Observações</label>
+          <textarea
+            pInputTextarea
+            placeholder="Observações"
+            name="notes"
+            [(ngModel)]="unit.notes"
+            maxlength="500"
+            rows="4"
+            class="form-control notes-field"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="item-unit-form-buttons mt-4">
+        <button
+          type="submit"
+          [disabled]="itemUnitForm.invalid"
+          class="btn btn-primary item-unit-form-button"
+        >
+          SALVAR
+        </button>
+        <a routerLink="/item-units/" [queryParams]="{ itemId: itemId }">
+          <button
+            type="button"
+            class="btn btn-outline-danger item-unit-form-button"
+          >
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,60 +1,53 @@
 <header class="module-page-header">
   <div>
     <span class="module-page-eyebrow">ESTOQUE</span>
-    <h1>Itens</h1>
-    <p>Consulte e gerencie os itens cadastrados.</p>
+    <h1>Unidades físicas</h1>
+    <p>Consulte e gerencie as unidades físicas cadastradas.</p>
   </div>
   <div class="module-page-header-icon">
     <i class="fa-solid fa-box-open"></i>
   </div>
 </header>
 
-<div class="item-filter-container">
-  <div class="item-actions-group">
+<div class="item-unit-filter-container">
+  <div class="item-unit-actions-group">
     <a
-      routerLink="/items/create"
+      routerLink="/item-units/create"
+      [queryParams]="{ itemId: itemId }"
       class="action-link"
-      *ngIf="hasAuthority('ITEM_WRITE')"
+      *ngIf="hasAuthority('ITEM_UNIT_WRITE')"
     >
       <button class="btn btn-primary text-white btn-crud-action">
-        NOVO ITEM
+        NOVA UNIDADE
       </button>
     </a>
 
     <button
-      *ngIf="selectedItemIds.length > 0 && hasAuthority('ITEM_DELETE')"
+      *ngIf="selectedItemUnitIds.length > 0 && hasAuthority('ITEM_UNIT_DELETE')"
       class="btn btn-danger text-white btn-crud-action"
       type="button"
-      (click)="deleteSelectedItems()"
+      (click)="deleteSelectedItemUnits()"
     >
-      EXCLUIR ITENS
+      EXCLUIR UNIDADES
     </button>
   </div>
 
   <app-name-filter
-    text="Digite o nome do item"
-    (search)="searchItem($event)"
+    text="Digite o item ou código patrimonial"
+    (search)="searchItemUnit($event)"
   ></app-name-filter>
 </div>
 
-<ng-template #imageTemplate let-item>
-  <ng-container *ngIf="imageMap[item.id!]; else noImage">
-    <img class="item-image" [src]="imageMap[item.id!]" alt="Imagem do item" />
-  </ng-container>
-
-  <ng-template #noImage>
-    <div class="profile-photo-placeholder">
-      <span class="profile-photo-icon">📦</span>
-    </div>
-  </ng-template>
+<ng-template #statusTemplate let-item>
+  {{ getStatusLabel(item.status) }}
 </ng-template>
 
-<ng-template #priceTemplate let-item>
-  {{
-    item.price != null
-      ? (item.price | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR")
-      : "-"
-  }}
+<ng-template #conditionTemplate let-item>
+  {{ getConditionLabel(item.conditionStatus) }}
+</ng-template>
+
+<ng-template #purchaseDateTemplate let-item>
+  {{ item.purchaseDate ? (item.purchaseDate | date: "dd/MM/yyyy") : "-" }}
 </ng-template>
 
 <ng-template #activeTemplate let-item>
@@ -67,52 +60,43 @@
       pButton
       class="p-button-rounded p-button-text"
       icon="pi pi-pencil"
-      pTooltip="Editar item"
+      pTooltip="Editar unidade física"
       tooltipPosition="top"
-      [routerLink]="['/items/', item.id, 'edit']"
-      *ngIf="hasAuthority('ITEM_WRITE')"
+      [routerLink]="['/item-units/', item.id, 'edit']"
+      [queryParams]="{ itemId: itemId }"
+      *ngIf="hasAuthority('ITEM_UNIT_WRITE')"
     ></a>
 
     <button
       pButton
       class="p-button-rounded p-button-text p-button-danger"
       icon="pi pi-trash"
-      pTooltip="Excluir item"
+      pTooltip="Excluir unidade física"
       tooltipPosition="top"
       (click)="delete(item)"
-      *ngIf="hasAuthority('ITEM_DELETE')"
+      *ngIf="hasAuthority('ITEM_UNIT_DELETE')"
     ></button>
 
     <button
       pButton
       class="p-button-rounded p-button-text p-button-warning"
       [icon]="item.active ? 'pi pi-ban' : 'pi pi-check'"
-      pTooltip="Ativar / Desativar Item"
+      pTooltip="Ativar / Desativar unidade"
       tooltipPosition="top"
       (click)="toggleActive(item)"
-      *ngIf="hasAuthority('ITEM_WRITE')"
+      *ngIf="hasAuthority('ITEM_UNIT_WRITE')"
     ></button>
 
     <button
       pButton
       class="p-button-rounded p-button-text"
       icon="pi pi-eye"
-      pTooltip="Detalhamento do item"
+      pTooltip="Detalhamento da unidade"
       tooltipPosition="top"
       (click)="openDetails(item)"
-      *ngIf="hasAuthority('ITEM_READ')"
+      *ngIf="hasAuthority('ITEM_UNIT_READ')"
     ></button>
 
-    <a
-      pButton
-      class="p-button-rounded p-button-text"
-      icon="pi pi-box"
-      pTooltip="Unidades físicas do item"
-      tooltipPosition="top"
-      routerLink="/item-units"
-      [queryParams]="{ itemId: item.id }"
-      *ngIf="hasAuthority('ITEM_READ') || hasAuthority('STOCK_BALANCES_READ')"
-    ></a>
   </div>
 </ng-template>
 
@@ -125,46 +109,47 @@
 </ng-template>
 
 <app-data-table
-  #itemTable
-  [records]="items"
+  #itemUnitTable
+  [records]="itemUnits"
   [columns]="visibleTableColumns"
-  [selectedRecords]="selectedItems"
+  [selectedRecords]="selectedItemUnits"
   [totalRecords]="totalElements"
   [rows]="pagination.linesPerPage"
   [loading]="loading"
-  [showSelection]="hasAuthority('ITEM_DELETE')"
+  [showSelection]="hasAuthority('ITEM_UNIT_DELETE')"
   [columnTemplates]="{
     active: activeTemplate,
-    image: imageTemplate,
-    price: priceTemplate,
+    status: statusTemplate,
+    conditionStatus: conditionTemplate,
+    purchaseDate: purchaseDateTemplate,
     createdAt: createdAtTemplate,
     updatedAt: updatedAtTemplate
   }"
   [actionsTemplate]="actionsTemplate"
   [showColumnsButton]="true"
   [showExportButton]="true"
-  exportTitle="Itens"
-  exportFileName="itens"
+  exportTitle="Unidades físicas"
+  exportFileName="unidades-fisicas"
   [exportPagination]="pagination"
-  [exportLoadRecords]="loadItemsForExport"
-  emptyMessage="Nenhum item encontrado."
+  [exportLoadRecords]="loadItemUnitsForExport"
+  emptyMessage="Nenhuma unidade física encontrada."
   (lazyLoad)="changePage($event)"
   (selectedRecordsChange)="onSelectionChange($event)"
   (columnsButtonClick)="openFieldCustomization()"
 ></app-data-table>
 
-<app-item-details-modal
+<app-item-unit-details-modal
   [visible]="detailsVisible"
   (visibleChange)="detailsVisible = $event"
-  [title]="'Detalhamento do Item'"
-  [item]="itemDetails"
-></app-item-details-modal>
+  [title]="'Detalhamento da Unidade Física'"
+  [unit]="itemUnitDetails"
+></app-item-unit-details-modal>
 
 <app-field-customization
   [visible]="fieldCustomizationVisible"
   (visibleChange)="fieldCustomizationVisible = $event"
   [selectedFields]="visibleFields"
   [fields]="availableFields"
-  contentName="itens"
+  contentName="unidades físicas"
   (apply)="applyVisibleFields($event)"
 ></app-field-customization>
