@@ -70,6 +70,14 @@ export class ItemFormComponent implements OnInit, OnDestroy {
     this.itemService.findById(id).subscribe((data) => {
       const itemFound = ItemMapper.toModel(data);
       this.item = itemFound;
+      if (
+        this.item.category != null &&
+        !this.categories.some(
+          (category) => category.id === this.item.category?.id,
+        )
+      ) {
+        this.categories.push(this.item.category);
+      }
       if (this.item.imageContentType) {
         this.loadItemImage();
       }
@@ -116,19 +124,39 @@ export class ItemFormComponent implements OnInit, OnDestroy {
     return category1 === category2;
   }
 
-  loadCategories(): void {
-    const pagination = new Pagination(0, 1000, 'ASC', 'name');
+  loadCategories(page: number = 0): void {
+    if (page === 0) {
+      this.categories = [];
+    }
+
+    const pagination = new Pagination(page, 1000, 'ASC', 'name');
 
     this.categoriesSubscription = this.categoryService
       .list(pagination, '')
       .subscribe({
         next: (data) => {
-          this.categories = [];
-
           data.content.forEach((dto) => {
             const category = CategoryMapper.toModel(dto);
-            this.categories.push(category);
+            if (
+              category.active &&
+              !this.categories.some((current) => current.id === category.id)
+            ) {
+              this.categories.push(category);
+            }
           });
+
+          if ((page + 1) * pagination.linesPerPage < data.totalElements) {
+            this.loadCategories(page + 1);
+          }
+
+          if (
+            this.item.category != null &&
+            !this.categories.some(
+              (category) => category.id === this.item.category?.id,
+            )
+          ) {
+            this.categories.push(this.item.category);
+          }
         },
         error: () => {
           this.categories = [];

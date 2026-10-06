@@ -34,8 +34,10 @@ export class StockBalanceListComponent {
     'itemName',
     'totalQuantity',
     'availableQuantity',
-    'reservedQuantity',
     'unavailableQuantity',
+    'maintenanceQuantity',
+    'damagedQuantity',
+    'lostQuantity',
     'minimumQuantity',
     'lowStock',
   ];
@@ -44,8 +46,10 @@ export class StockBalanceListComponent {
     { field: 'itemName', label: 'Item' },
     { field: 'totalQuantity', label: 'Total' },
     { field: 'availableQuantity', label: 'Disponível' },
-    { field: 'reservedQuantity', label: 'Alugado' },
     { field: 'unavailableQuantity', label: 'Indisponível' },
+    { field: 'maintenanceQuantity', label: 'Em manutenção' },
+    { field: 'damagedQuantity', label: 'Danificados' },
+    { field: 'lostQuantity', label: 'Não localizados' },
     { field: 'minimumQuantity', label: 'Mínimo' },
     { field: 'lowStock', label: 'Alerta' },
     { field: 'createdAt', label: 'Data cadastro' },
@@ -131,10 +135,15 @@ export class StockBalanceListComponent {
       return;
     }
 
-    let minimumQuantity = Number(stockBalance.minimumQuantity ?? 0);
+    const minimumQuantity = stockBalance.minimumQuantity;
 
-    if (minimumQuantity < 0) {
-      minimumQuantity = 0;
+    if (minimumQuantity == null || !Number.isInteger(minimumQuantity) || minimumQuantity < 0) {
+      this.messageService.add({
+        severity: 'warn',
+        detail: 'O estoque mínimo deve ser um número inteiro maior ou igual a zero.',
+      });
+      this.list(this.pagination.page);
+      return;
     }
 
     stockBalance.minimumQuantity = minimumQuantity;

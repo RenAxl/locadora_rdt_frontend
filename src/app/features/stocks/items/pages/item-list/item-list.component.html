@@ -111,7 +111,7 @@
       tooltipPosition="top"
       routerLink="/item-units"
       [queryParams]="{ itemId: item.id }"
-      *ngIf="hasAuthority('ITEM_READ') || hasAuthority('STOCK_BALANCES_READ')"
+      *ngIf="hasAuthority('ITEM_UNIT_READ')"
     ></a>
   </div>
 </ng-template>

@@ -10,7 +10,6 @@ export class ItemUnitMapper {
       id: dto.id,
       version: dto.version,
       assetCode: dto.assetCode || '',
-      serialNumber: dto.serialNumber,
       status: dto.status || '',
       conditionStatus: dto.conditionStatus || '',
       purchaseDate: dto.purchaseDate,
@@ -32,8 +31,6 @@ export class ItemUnitMapper {
   static toInsertDTO(unit: ItemUnit): ItemUnitInsertDTO {
     return new ItemUnitInsertDTO({
       itemId: unit.item?.id ?? null,
-      assetCode: unit.assetCode,
-      serialNumber: unit.serialNumber || null,
       conditionStatus: unit.conditionStatus,
       purchaseDate: unit.purchaseDate || null,
       notes: unit.notes,
@@ -44,8 +41,6 @@ export class ItemUnitMapper {
     return new ItemUnitUpdateDTO({
       id: unit.id,
       itemId: unit.item?.id ?? null,
-      assetCode: unit.assetCode,
-      serialNumber: unit.serialNumber || null,
       conditionStatus: unit.conditionStatus,
       purchaseDate: unit.purchaseDate || null,
       notes: unit.notes,

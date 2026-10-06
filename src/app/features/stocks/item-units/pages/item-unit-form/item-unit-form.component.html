@@ -30,39 +30,6 @@
         </div>
 
         <div class="col-12 col-lg-6">
-          <label class="form-label-custom">Código patrimonial *</label>
-          <input
-            pInputText
-            placeholder="Código patrimonial"
-            type="text"
-            name="assetCode"
-            [(ngModel)]="unit.assetCode"
-            #assetCode="ngModel"
-            required
-            maxlength="60"
-            class="form-control"
-          />
-          <app-message
-            [control]="assetCode"
-            error="required"
-            text="Informe o código patrimonial"
-          ></app-message>
-        </div>
-
-        <div class="col-12 col-lg-6">
-          <label class="form-label-custom">Número de série</label>
-          <input
-            pInputText
-            placeholder="Número de série"
-            type="text"
-            name="serialNumber"
-            [(ngModel)]="unit.serialNumber"
-            maxlength="100"
-            class="form-control"
-          />
-        </div>
-
-        <div class="col-12 col-lg-6">
           <label class="form-label-custom">Conservação *</label>
           <select
             name="conditionStatus"
@@ -71,9 +38,9 @@
             required
             class="form-control"
           >
-            <option value="NEW">Nova</option>
-            <option value="GOOD">Boa</option>
-            <option value="DAMAGED">Danificada</option>
+            <option *ngFor="let condition of conditions" [value]="condition.value">
+              {{ condition.label }}
+            </option>
           </select>
           <app-message
             [control]="conditionStatus"

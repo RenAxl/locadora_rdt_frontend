@@ -1,7 +1,5 @@
 export class ItemUnitInsertDTO {
   itemId?: number | null;
-  assetCode: string = '';
-  serialNumber?: string | null;
   conditionStatus: string = 'GOOD';
   purchaseDate?: string | null;
   notes: string = '';
@@ -9,12 +7,7 @@ export class ItemUnitInsertDTO {
   constructor(unit?: Partial<ItemUnitInsertDTO>) {
     if (unit != null) {
       this.itemId = unit.itemId;
-      this.serialNumber = unit.serialNumber;
       this.purchaseDate = unit.purchaseDate;
-
-      if (unit.assetCode != null) {
-        this.assetCode = unit.assetCode;
-      }
 
       if (unit.conditionStatus != null) {
         this.conditionStatus = unit.conditionStatus;

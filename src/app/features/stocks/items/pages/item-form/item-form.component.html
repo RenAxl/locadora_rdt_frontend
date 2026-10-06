@@ -95,7 +95,7 @@
             class="form-control"
           >
             <option [ngValue]="undefined">Selecione uma categoria</option>
-            <option *ngFor="let category of categories" [ngValue]="category">
+            <option *ngFor="let category of categories" [ngValue]="category" [disabled]="!category.active">
               {{ category.name }}
             </option>
           </select>
@@ -140,7 +140,7 @@
         </div>
 
         <div class="col-12 col-lg-6">
-          <label class="form-label-custom">Preço *</label>
+          <label class="form-label-custom">Preço</label>
           <p-inputNumber
             [(ngModel)]="item.price"
             name="price"
@@ -149,9 +149,8 @@
             locale="pt-BR"
             [minFractionDigits]="2"
             [maxFractionDigits]="2"
-            [min]="0.01"
+            [min]="0"
             placeholder="Preço"
-            [required]="true"
           ></p-inputNumber>
         </div>
       </div>

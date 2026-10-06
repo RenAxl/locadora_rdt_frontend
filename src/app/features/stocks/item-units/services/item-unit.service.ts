@@ -10,6 +10,7 @@ import { buildPaginationParams } from 'src/app/core/utils/pagination-params.util
 import { ItemUnitDTO } from '../dtos/item-unit-dto';
 import { ItemUnitUpdateDTO } from '../dtos/item-unit-update-dto';
 import { ItemUnitInsertDTO } from '../dtos/item-unit-insert-dto';
+import { ItemUnitStatusUpdateDTO } from '../dtos/item-unit-status-update-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -21,11 +22,16 @@ export class ItemUnitService {
     pagination: Pagination,
     filterName: string,
     itemId?: number,
+    active?: boolean,
   ): Observable<PageResponse<ItemUnitDTO>> {
     let params = buildPaginationParams(pagination, 'name', filterName);
 
     if (itemId != null) {
       params = params.set('itemId', itemId);
+    }
+
+    if (active != null) {
+      params = params.set('active', active);
     }
 
     return this.http.get<PageResponse<ItemUnitDTO>>(API.ITEM_UNITS.ROOT, { params });
@@ -58,6 +64,14 @@ export class ItemUnitService {
 
   changeActive(id: number, active: boolean): Observable<void> {
     return this.http.patch<void>(API.ITEM_UNITS.CHANGE_ACTIVE(id), active);
+  }
+
+  changeMaintenance(id: number, maintenance: boolean): Observable<ItemUnitDTO> {
+    return this.http.patch<ItemUnitDTO>(API.ITEM_UNITS.CHANGE_MAINTENANCE(id), maintenance);
+  }
+
+  updateStatus(id: number, dto: ItemUnitStatusUpdateDTO): Observable<ItemUnitDTO> {
+    return this.http.patch<ItemUnitDTO>(API.ITEM_UNITS.UPDATE_STATUS(id), dto);
   }
 
 }

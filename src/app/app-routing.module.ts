@@ -157,6 +157,14 @@ const routes: Routes = [
       },
 
       {
+        path: 'stock-movements',
+        loadChildren: () =>
+          import('./features/stocks/stock-movements/stock-movements.module').then(
+            (m) => m.StockMovementsModule,
+          ),
+      },
+
+      {
         path: 'payables',
         loadChildren: () =>
           import('./features/financial/payables/payables.module').then(

@@ -1,0 +1,81 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">ESTOQUE</span>
+    <h1>Movimentações de estoque</h1>
+    <p>Consulte as entradas, baixas, ajustes e alterações de situação do estoque.</p>
+  </div>
+  <div class="module-page-header-icon"><i class="fa-solid fa-right-left"></i></div>
+</header>
+
+<div class="stock-movement-filter-container">
+  <div class="stock-movement-actions-group">
+    <a
+      routerLink="/stock-movements/create"
+      class="action-link"
+      *ngIf="hasAuthority('STOCK_MOVEMENTS_WRITE')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVA MOVIMENTAÇÃO
+      </button>
+    </a>
+  </div>
+
+  <app-name-filter
+    text="Digite o nome do item"
+    (search)="searchStockMovement($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #createdAtTemplate let-stockMovement>
+  {{ stockMovement.createdAt ? (stockMovement.createdAt | date: "dd/MM/yyyy HH:mm") : "-" }}
+</ng-template>
+
+<ng-template #typeTemplate let-stockMovement>
+  {{ getTypeLabel(stockMovement.type) }}
+</ng-template>
+
+<ng-template #quantityTemplate let-stockMovement>
+  {{ stockMovement.quantity ?? 0 }}
+</ng-template>
+
+<ng-template #previousStatusTemplate let-stockMovement>
+  {{ getStatusLabel(stockMovement.previousStatus) }}
+</ng-template>
+
+<ng-template #newStatusTemplate let-stockMovement>
+  {{ getStatusLabel(stockMovement.newStatus) }}
+</ng-template>
+
+<app-data-table
+  [records]="stockMovements"
+  [columns]="visibleTableColumns"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [showSelection]="false"
+  [columnTemplates]="{
+    createdAt: createdAtTemplate,
+    type: typeTemplate,
+    quantity: quantityTemplate,
+    previousStatus: previousStatusTemplate,
+    newStatus: newStatusTemplate
+  }"
+  [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Movimentações de estoque"
+  exportFileName="movimentacoes-de-estoque"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadStockMovementsForExport"
+  emptyMessage="Nenhuma movimentação de estoque encontrada."
+  (lazyLoad)="changePage($event)"
+  (columnsButtonClick)="openFieldCustomization()"
+></app-data-table>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="movimentações de estoque"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>

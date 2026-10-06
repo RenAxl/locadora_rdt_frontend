@@ -5,7 +5,6 @@ export class ItemUnitDTO {
   version?: number;
   item?: ItemDTO;
   assetCode?: string;
-  serialNumber?: string | null;
   status?: string;
   conditionStatus?: string;
   purchaseDate?: string | null;
@@ -22,7 +21,6 @@ export class ItemUnitDTO {
       this.version = unit.version;
       this.item = unit.item;
       this.assetCode = unit.assetCode;
-      this.serialNumber = unit.serialNumber;
       this.status = unit.status;
       this.conditionStatus = unit.conditionStatus;
       this.purchaseDate = unit.purchaseDate;

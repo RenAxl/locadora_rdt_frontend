@@ -1,0 +1,159 @@
+<div class="stock-movement-form-container">
+  <div class="stock-movement-card">
+    <form #stockMovementForm="ngForm" (ngSubmit)="save(stockMovementForm)">
+      <div class="col-12 mb-3">
+        <h1>Movimentar Estoque</h1>
+      </div>
+
+      <div class="row g-3 stock-movement-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Item *</label>
+          <select
+            name="itemId"
+            [(ngModel)]="stockMovement.itemId"
+            (ngModelChange)="changeSelection()"
+            #itemId="ngModel"
+            required
+            class="form-control form-select"
+          >
+            <option [ngValue]="undefined">Selecione um item</option>
+            <option *ngFor="let item of items" [ngValue]="item.id"
+              [disabled]="(stockMovement.type === 'ENTRY' || stockMovement.type === 'EXIT') && (!item.active || item.category?.active === false)">
+              {{ item.name }}
+            </option>
+          </select>
+
+          <app-message
+            [control]="itemId"
+            error="required"
+            text="Informe o item"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Tipo *</label>
+          <select
+            name="type"
+            [(ngModel)]="stockMovement.type"
+            (ngModelChange)="changeSelection()"
+            #type="ngModel"
+            required
+            class="form-control form-select"
+          >
+            <option
+              *ngFor="let movementType of movementTypes"
+              [value]="movementType.value"
+              [disabled]="movementType.value === 'STATUS_CHANGE' && !canReadUnits()"
+            >
+              {{ movementType.label }}
+            </option>
+          </select>
+
+          <app-message
+            [control]="type"
+            error="required"
+            text="Informe o tipo de movimentação"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6" *ngIf="canReadUnits() && (stockMovement.type === 'EXIT' || stockMovement.type === 'STATUS_CHANGE')">
+          <label for="movementUnit" class="form-label-custom">
+            Unidade física {{ stockMovement.type === 'STATUS_CHANGE' ? '*' : '(opcional)' }}
+          </label>
+          <select id="movementUnit" name="itemUnitId" class="form-control form-select"
+            [(ngModel)]="stockMovement.itemUnitId" (ngModelChange)="changeUnit()"
+            [required]="stockMovement.type === 'STATUS_CHANGE'" [disabled]="loadingUnits">
+            <option [ngValue]="null">
+              {{ stockMovement.type === 'EXIT' ? 'Selecionar disponíveis automaticamente' : 'Selecione uma unidade' }}
+            </option>
+            <option *ngFor="let unit of itemUnits" [ngValue]="unit.id">
+              {{ unit.assetCode }} — {{ getStatusLabel(unit) }}
+            </option>
+          </select>
+          <small *ngIf="loadingUnits">Carregando unidades...</small>
+          <small *ngIf="!loadingUnits && stockMovement.itemId != null && itemUnits.length === 0">
+            Nenhuma unidade {{ stockMovement.type === 'EXIT' ? 'disponível' : 'ativa' }} encontrada.
+          </small>
+        </div>
+
+        <div class="col-12 col-lg-6" *ngIf="stockMovement.type === 'STATUS_CHANGE'">
+          <label for="movementStatus" class="form-label-custom">Nova situação *</label>
+          <select id="movementStatus" name="status" class="form-control form-select"
+            [(ngModel)]="stockMovement.status" required>
+            <option [ngValue]="null">Selecione a nova situação</option>
+            <option *ngFor="let status of statuses" [value]="status.value"
+              [disabled]="status.value === getSelectedUnit()?.status">{{ status.label }}</option>
+          </select>
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <label class="form-label-custom">{{ stockMovement.type === 'ADJUSTMENT' ? 'Quantidade total desejada *' : 'Quantidade *' }}</label>
+          <input
+            pInputText
+            placeholder="Quantidade"
+            type="number"
+            name="quantity"
+            [(ngModel)]="stockMovement.quantity"
+            #quantity="ngModel"
+            required
+            [min]="stockMovement.type === 'ADJUSTMENT' ? 0 : 1"
+            step="1"
+            [readonly]="stockMovement.type === 'STATUS_CHANGE' || stockMovement.itemUnitId != null"
+            class="form-control"
+          />
+
+          <app-message
+            [control]="quantity"
+            error="required"
+            text="Informe a quantidade"
+          ></app-message>
+
+          <app-message
+            [control]="quantity"
+            error="min"
+            [text]="stockMovement.type === 'ADJUSTMENT' ? 'A quantidade não pode ser negativa' : 'A quantidade deve ser maior que zero'"
+          ></app-message>
+          <small *ngIf="stockMovement.type === 'ADJUSTMENT'">
+            Informe o total de unidades ativas desejado. O ajuste reduz apenas unidades disponíveis. Para zerar, informe 0.
+          </small>
+          <small *ngIf="stockMovement.type === 'EXIT'">
+            A saída dá baixa definitiva nas unidades. Para indisponibilidade temporária, use Alteração de situação.
+          </small>
+        </div>
+
+        <div class="col-12 col-lg-8">
+          <label class="form-label-custom">Motivo</label>
+          <input
+            pInputText
+            placeholder="Motivo"
+            type="text"
+            name="reason"
+            [(ngModel)]="stockMovement.reason"
+            maxlength="255"
+            class="form-control"
+          />
+        </div>
+
+      </div>
+
+      <div class="stock-movement-form-buttons mt-4">
+        <button
+          type="submit"
+          [disabled]="stockMovementForm.invalid || saving || loadingUnits"
+          class="btn btn-primary stock-movement-form-button"
+        >
+          SALVAR
+        </button>
+
+        <a routerLink="/stock-movements/">
+          <button
+            type="button"
+            class="btn btn-outline-danger stock-movement-form-button"
+          >
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

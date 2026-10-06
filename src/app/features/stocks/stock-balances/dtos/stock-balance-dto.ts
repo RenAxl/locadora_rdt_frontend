@@ -6,9 +6,11 @@ export class StockBalanceDTO {
   itemName?: string;
 
   totalQuantity?: number;
-  reservedQuantity?: number;
   unavailableQuantity?: number;
   availableQuantity?: number;
+  maintenanceQuantity?: number;
+  damagedQuantity?: number;
+  lostQuantity?: number;
   minimumQuantity?: number;
 
   lowStock?: boolean;
@@ -26,9 +28,11 @@ export class StockBalanceDTO {
       this.itemId = stockBalance.itemId;
       this.itemName = stockBalance.itemName;
       this.totalQuantity = stockBalance.totalQuantity;
-      this.reservedQuantity = stockBalance.reservedQuantity;
       this.unavailableQuantity = stockBalance.unavailableQuantity;
       this.availableQuantity = stockBalance.availableQuantity;
+      this.maintenanceQuantity = stockBalance.maintenanceQuantity;
+      this.damagedQuantity = stockBalance.damagedQuantity;
+      this.lostQuantity = stockBalance.lostQuantity;
       this.minimumQuantity = stockBalance.minimumQuantity;
       this.lowStock = stockBalance.lowStock;
       this.createdBy = stockBalance.createdBy;

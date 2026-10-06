@@ -5,7 +5,6 @@ export class ItemUnit {
   version?: number;
   item?: Item;
   assetCode: string = '';
-  serialNumber?: string | null;
   status: string = 'AVAILABLE';
   conditionStatus: string = 'GOOD';
   purchaseDate?: string | null;
@@ -21,7 +20,6 @@ export class ItemUnit {
       this.id = unit.id;
       this.version = unit.version;
       this.assetCode = unit.assetCode;
-      this.serialNumber = unit.serialNumber;
       this.status = unit.status;
       this.conditionStatus = unit.conditionStatus;
       this.purchaseDate = unit.purchaseDate;

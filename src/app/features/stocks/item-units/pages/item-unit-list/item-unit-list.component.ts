@@ -11,12 +11,14 @@ import {
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
 
 import { ItemUnit } from '../../models/ItemUnit';
+import { ITEM_UNIT_STATUSES, getItemUnitAvailabilityLabel, getItemUnitConditionLabel } from '../../constants/item-unit-options';
 import { ItemUnitService } from '../../services/item-unit.service';
 import { ItemUnitDTO } from '../../dtos/item-unit-dto';
 import { ItemUnitMapper } from '../../mapper/item-unit.mapper';
 import { DataTableColumn } from 'src/app/shared/components/data-table/models/data-table-column';
-import { Observable, Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { PageResponse } from 'src/app/core/models/page-response';
+import { ItemUnitStatusUpdateDTO } from '../../dtos/item-unit-status-update-dto';
 
 @Component({
   selector: 'app-item-unit-list',
@@ -34,6 +36,8 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
 
   filterName: string = '';
 
+  filterActive: boolean | undefined = true;
+
   selectedItemUnits: ItemUnit[] = [];
 
   selectedItemUnitIds: number[] = [];
@@ -47,7 +51,6 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
   availableFields: DataTableColumn[] = [
     { field: 'item.name', label: 'Item' },
     { field: 'assetCode', label: 'Código patrimonial' },
-    { field: 'serialNumber', label: 'Número de série' },
     { field: 'status', label: 'Situação' },
     { field: 'conditionStatus', label: 'Conservação' },
     { field: 'purchaseDate', label: 'Data de compra' },
@@ -76,6 +79,14 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
   detailsVisible = false;
 
   itemUnitDetails: ItemUnit | null = null;
+
+  statusDialogVisible = false;
+  statusUnit: ItemUnit | null = null;
+  statusUpdate = new ItemUnitStatusUpdateDTO();
+  statuses = ITEM_UNIT_STATUSES;
+  savingStatus = false;
+
+  canSelectUnit = (event: { data: ItemUnit }): boolean => event.data.active;
 
   private routeSubscription?: Subscription;
 
@@ -120,7 +131,7 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
     this.pagination.page = page;
     this.loading = true;
 
-    this.itemUnitService.list(this.pagination, this.filterName, this.itemId).subscribe({
+    this.itemUnitService.list(this.pagination, this.filterName, this.itemId, this.filterActive).subscribe({
       next: (data) => {
         this.itemUnits = [];
 
@@ -133,6 +144,10 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
 
         this.selectedItemUnits = [];
         this.itemUnits.forEach((item) => {
+          if (!item.active) {
+            this.selectedItemUnitIds = this.selectedItemUnitIds.filter(id => id !== item.id);
+          }
+
           if (
             item.id != null &&
             this.selectedItemUnitIds.includes(item.id)
@@ -181,19 +196,27 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
     this.list();
   }
 
-  delete(item: ItemUnit): void {
-    if (!item.id) {
+  changeActiveFilter(): void {
+    this.selectedItemUnits = [];
+    this.selectedItemUnitIds = [];
+    this.grid.reset();
+  }
+
+  retireUnit(item: ItemUnit): void {
+    if (!item.id || !item.active) {
       return;
     }
 
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja excluir?',
+      message: 'Dar baixa definitiva nesta unidade? Ela ficará inativa e seu histórico será preservado.',
       accept: () => {
         this.itemUnitService.delete(item.id!).subscribe(() => {
+          this.selectedItemUnitIds = [];
+          this.selectedItemUnits = [];
           this.grid.reset();
           this.messageService.add({
             severity: 'success',
-            detail: 'Unidade física excluída com sucesso!',
+            detail: 'Baixa da unidade física registrada!',
           });
         });
       },
@@ -201,7 +224,7 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
   }
 
   onSelectionChange(items: ItemUnit[]): void {
-    this.selectedItemUnits = items;
+    this.selectedItemUnits = items.filter(item => item.active);
 
     this.itemUnits.forEach((item) => {
       if (item.id != null) {
@@ -216,6 +239,7 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
     items.forEach((item) => {
       if (
         item.id != null &&
+        item.active &&
         !this.selectedItemUnitIds.includes(item.id)
       ) {
         this.selectedItemUnitIds.push(item.id);
@@ -223,7 +247,7 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteSelectedItemUnits(): void {
+  retireSelectedUnits(): void {
     if (!this.selectedItemUnitIds || this.selectedItemUnitIds.length === 0) {
       return;
     }
@@ -231,7 +255,7 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
     const ids = [...this.selectedItemUnitIds];
 
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja excluir ${ids.length} unidade(s)?`,
+      message: `Dar baixa definitiva em ${ids.length} unidade(s)? Elas ficarão inativas e seus históricos serão preservados.`,
       accept: () => {
         this.itemUnitService.deleteAll(ids).subscribe(() => {
           this.selectedItemUnitIds = [];
@@ -241,7 +265,7 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
 
           this.messageService.add({
             severity: 'success',
-            detail: 'Unidades físicas excluídas com sucesso!',
+            detail: 'Baixa das unidades físicas registrada!',
           });
         });
       },
@@ -265,20 +289,18 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggleActive(item: ItemUnit): void {
-    if (!item.id) {
+  reactivate(item: ItemUnit): void {
+    if (!item.id || item.active || item.item?.active === false || item.item?.category?.active === false) {
       return;
     }
 
-    const newStatus = !item.active;
-
-    this.itemUnitService.changeActive(item.id, newStatus).subscribe({
+    this.itemUnitService.changeActive(item.id, true).subscribe({
       next: () => {
-        item.active = newStatus;
+        this.grid.reset();
 
         this.messageService.add({
           severity: 'success',
-          detail: `Unidade física ${newStatus ? 'ativada' : 'desativada'} com sucesso!`,
+          detail: 'Reentrada da unidade física registrada!',
         });
       },
     });
@@ -288,6 +310,49 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
     this.fieldCustomizationVisible = true;
   }
 
+  openStatusChange(unit: ItemUnit): void {
+    if (unit.id == null || !unit.active) {
+      return;
+    }
+
+    this.statusUnit = unit;
+    this.statusUpdate = new ItemUnitStatusUpdateDTO({ status: unit.status, reason: '' });
+    this.statusDialogVisible = true;
+  }
+
+  updateStatus(): void {
+    if (this.statusUnit?.id == null || !this.statusUnit.active || this.savingStatus) {
+      return;
+    }
+
+    if (!this.statuses.some(option => option.value === this.statusUpdate.status)) {
+      this.messageService.add({ severity: 'warn', detail: 'Selecione uma situação válida.' });
+      return;
+    }
+
+    if ((this.statusUpdate.reason || '').length > 255) {
+      this.messageService.add({ severity: 'warn', detail: 'O motivo deve ter até 255 caracteres.' });
+      return;
+    }
+
+    if (this.statusUpdate.status === this.statusUnit.status) {
+      return;
+    }
+
+    this.savingStatus = true;
+    this.itemUnitService.updateStatus(this.statusUnit.id, this.statusUpdate).subscribe({
+      next: () => {
+        this.savingStatus = false;
+        this.statusDialogVisible = false;
+        this.list(this.pagination.page);
+        this.messageService.add({ severity: 'success', detail: 'Situação da unidade atualizada!' });
+      },
+      error: () => {
+        this.savingStatus = false;
+      },
+    });
+  }
+
   applyVisibleFields(fields: string[]): void {
     this.visibleFields = [...fields];
   }
@@ -295,46 +360,33 @@ export class ItemUnitListComponent implements OnInit, OnDestroy {
   loadItemUnitsForExport = (
     pagination: Pagination,
   ): Observable<PageResponse<ItemUnitDTO>> => {
-    return this.itemUnitService.list(pagination, this.filterName, this.itemId);
+    return this.itemUnitService.list(pagination, this.filterName, this.itemId, this.filterActive).pipe(
+      map(data => {
+        const content: ItemUnitDTO[] = [];
+
+        for (const dto of data.content) {
+          const unit = ItemUnitMapper.toModel(dto);
+          content.push({
+            ...dto,
+            status: this.getStatusLabel(unit),
+            conditionStatus: this.getConditionLabel(unit.conditionStatus),
+          });
+        }
+
+        return { content, totalElements: data.totalElements };
+      }),
+    );
   };
 
   hasAuthority(authority: string): boolean {
     return this.authService.hasAuthority(authority);
   }
 
-  getStatusLabel(status: string): string {
-    if (status === 'AVAILABLE') {
-      return 'Disponível';
-    }
-
-    if (status === 'RESERVED') {
-      return 'Reservada';
-    }
-
-    if (status === 'RENTED') {
-      return 'Alugada';
-    }
-
-    if (status === 'MAINTENANCE') {
-      return 'Em manutenção';
-    }
-
-    return status;
+  getStatusLabel(unit: ItemUnit): string {
+    return getItemUnitAvailabilityLabel(unit);
   }
 
   getConditionLabel(condition: string): string {
-    if (condition === 'NEW') {
-      return 'Nova';
-    }
-
-    if (condition === 'GOOD') {
-      return 'Boa';
-    }
-
-    if (condition === 'DAMAGED') {
-      return 'Danificada';
-    }
-
-    return condition;
+    return getItemUnitConditionLabel(condition);
   }
 }

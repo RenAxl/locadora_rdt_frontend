@@ -8,7 +8,7 @@
   margin-bottom: 20px;
 }
 
-.item-unit-actions-group {
+.stock-movement-actions-group {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -21,32 +21,15 @@
   text-decoration: none;
 }
 
-.item-unit-active-filter {
-  min-width: 160px;
-  margin-bottom: 20px;
-}
-
-.item-unit-active-filter .form-label {
-  margin-bottom: 4px;
-}
-
-.actions-wrap {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  align-items: center;
-}
-
 @media (min-width: 768px) {
-  .item-unit-filter-container {
+  .stock-movement-filter-container {
     display: flex;
     margin-bottom: 20px;
     gap: 16px;
-    flex-wrap: wrap;
     align-items: flex-start;
   }
 
-  .item-unit-actions-group {
+  .stock-movement-actions-group {
     flex-direction: row;
     width: auto;
     gap: 12px;
@@ -70,14 +53,10 @@
     margin-bottom: 0;
   }
 
-  .item-unit-actions-group {
+  .stock-movement-actions-group {
     flex-direction: row;
     gap: 10px;
     margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-
-  .actions-wrap {
     flex-wrap: wrap;
   }
 }

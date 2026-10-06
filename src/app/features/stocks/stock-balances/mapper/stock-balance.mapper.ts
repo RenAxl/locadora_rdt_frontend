@@ -15,11 +15,15 @@ export class StockBalanceMapper {
 
       totalQuantity: dto.totalQuantity ?? 0,
 
-      reservedQuantity: dto.reservedQuantity ?? 0,
-
       unavailableQuantity: dto.unavailableQuantity ?? 0,
 
       availableQuantity: dto.availableQuantity ?? 0,
+
+      maintenanceQuantity: dto.maintenanceQuantity ?? 0,
+
+      damagedQuantity: dto.damagedQuantity ?? 0,
+
+      lostQuantity: dto.lostQuantity ?? 0,
 
       minimumQuantity: dto.minimumQuantity ?? 0,
 

@@ -26,9 +26,9 @@
       *ngIf="selectedItemUnitIds.length > 0 && hasAuthority('ITEM_UNIT_DELETE')"
       class="btn btn-danger text-white btn-crud-action"
       type="button"
-      (click)="deleteSelectedItemUnits()"
+      (click)="retireSelectedUnits()"
     >
-      EXCLUIR UNIDADES
+      DAR BAIXA NAS UNIDADES
     </button>
   </div>
 
@@ -36,10 +36,19 @@
     text="Digite o item ou código patrimonial"
     (search)="searchItemUnit($event)"
   ></app-name-filter>
+  <div class="item-unit-active-filter">
+    <label for="unitActiveFilter" class="form-label">Unidades</label>
+    <select id="unitActiveFilter" name="unitActiveFilter" class="form-select"
+      [(ngModel)]="filterActive" (ngModelChange)="changeActiveFilter()">
+      <option [ngValue]="true">Ativas</option>
+      <option [ngValue]="false">Com baixa</option>
+      <option [ngValue]="undefined">Todas</option>
+    </select>
+  </div>
 </div>
 
 <ng-template #statusTemplate let-item>
-  {{ getStatusLabel(item.status) }}
+  {{ getStatusLabel(item) }}
 </ng-template>
 
 <ng-template #conditionTemplate let-item>
@@ -70,21 +79,22 @@
     <button
       pButton
       class="p-button-rounded p-button-text p-button-danger"
-      icon="pi pi-trash"
-      pTooltip="Excluir unidade física"
+      icon="pi pi-minus-circle"
+      pTooltip="Dar baixa definitiva na unidade"
       tooltipPosition="top"
-      (click)="delete(item)"
-      *ngIf="hasAuthority('ITEM_UNIT_DELETE')"
+      (click)="retireUnit(item)"
+      *ngIf="hasAuthority('ITEM_UNIT_DELETE') && item.active"
     ></button>
 
     <button
       pButton
       class="p-button-rounded p-button-text p-button-warning"
-      [icon]="item.active ? 'pi pi-ban' : 'pi pi-check'"
-      pTooltip="Ativar / Desativar unidade"
+      icon="pi pi-check"
+      pTooltip="Registrar reentrada da unidade"
       tooltipPosition="top"
-      (click)="toggleActive(item)"
-      *ngIf="hasAuthority('ITEM_UNIT_WRITE')"
+      (click)="reactivate(item)"
+      [disabled]="item.item?.active === false || item.item?.category?.active === false"
+      *ngIf="hasAuthority('ITEM_UNIT_WRITE') && !item.active"
     ></button>
 
     <button
@@ -95,6 +105,16 @@
       tooltipPosition="top"
       (click)="openDetails(item)"
       *ngIf="hasAuthority('ITEM_UNIT_READ')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-sync"
+      pTooltip="Alterar situação da unidade"
+      tooltipPosition="top"
+      (click)="openStatusChange(item)"
+      *ngIf="hasAuthority('ITEM_UNIT_WRITE') && item.active"
     ></button>
 
   </div>
@@ -113,6 +133,7 @@
   [records]="itemUnits"
   [columns]="visibleTableColumns"
   [selectedRecords]="selectedItemUnits"
+  [rowSelectable]="canSelectUnit"
   [totalRecords]="totalElements"
   [rows]="pagination.linesPerPage"
   [loading]="loading"
@@ -137,6 +158,40 @@
   (selectedRecordsChange)="onSelectionChange($event)"
   (columnsButtonClick)="openFieldCustomization()"
 ></app-data-table>
+
+<p-dialog
+  header="Alterar situação da unidade"
+  [(visible)]="statusDialogVisible"
+  [modal]="true"
+  [closable]="!savingStatus"
+  [closeOnEscape]="!savingStatus"
+  [style]="{ width: '480px', maxWidth: '95vw' }"
+>
+  <form #statusForm="ngForm" (ngSubmit)="updateStatus()" *ngIf="statusUnit">
+    <p>{{ statusUnit.assetCode }} — {{ statusUnit.item?.name }}</p>
+    <div class="mb-3">
+      <label for="unitStatus" class="form-label">Situação *</label>
+      <select id="unitStatus" name="status" class="form-control form-select"
+        [(ngModel)]="statusUpdate.status" required [disabled]="savingStatus">
+        <option *ngFor="let status of statuses" [value]="status.value">{{ status.label }}</option>
+      </select>
+      <small *ngIf="statusUnit.item?.active === false || statusUnit.item?.category?.active === false">
+        A unidade só ficará disponível para uso quando o item e a categoria estiverem ativos.
+      </small>
+    </div>
+    <div class="mb-3">
+      <label for="statusReason" class="form-label">Motivo</label>
+      <textarea id="statusReason" name="reason" class="form-control" rows="3"
+        [(ngModel)]="statusUpdate.reason" maxlength="255" [disabled]="savingStatus"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary"
+      [disabled]="statusForm.invalid || savingStatus || statusUpdate.status === statusUnit.status">
+      SALVAR
+    </button>
+    <button type="button" class="btn btn-outline-danger ms-2"
+      (click)="statusDialogVisible = false" [disabled]="savingStatus">CANCELAR</button>
+  </form>
+</p-dialog>
 
 <app-item-unit-details-modal
   [visible]="detailsVisible"

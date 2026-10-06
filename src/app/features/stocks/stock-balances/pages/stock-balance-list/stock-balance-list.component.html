@@ -2,7 +2,7 @@
   <div>
     <span class="module-page-eyebrow">ESTOQUE</span>
     <h1>Saldos de estoque</h1>
-    <p>Acompanhe os saldos atuais dos itens da locadora.</p>
+    <p>Acompanhe as quantidades das unidades ativas e sua disponibilidade.</p>
   </div>
   <div class="module-page-header-icon">
     <i class="fa-solid fa-warehouse"></i>
@@ -44,7 +44,7 @@
       pTooltip="Ver unidades físicas"
       tooltipPosition="top"
       [routerLink]="['/stock-balances', stockBalance.itemId, 'units']"
-      *ngIf="hasAuthority('STOCK_BALANCES_READ')"
+      *ngIf="hasAuthority('STOCK_BALANCES_READ') && hasAuthority('ITEM_UNIT_READ')"
     ></a>
   </div>
 </ng-template>

@@ -10,6 +10,7 @@ import { ItemService } from '../../../items/services/item.service';
 import { ItemUnitService } from '../../services/item-unit.service';
 import { ItemUnitMapper } from '../../mapper/item-unit.mapper';
 import { ItemUnit } from '../../models/ItemUnit';
+import { ITEM_UNIT_CONDITIONS } from '../../constants/item-unit-options';
 
 @Component({
   selector: 'app-item-unit-form',
@@ -20,6 +21,8 @@ export class ItemUnitFormComponent implements OnInit, OnDestroy {
   unit: ItemUnit = new ItemUnit();
 
   items: Item[] = [];
+
+  conditions = ITEM_UNIT_CONDITIONS;
 
   itemId?: number;
 
@@ -78,21 +81,29 @@ export class ItemUnitFormComponent implements OnInit, OnDestroy {
     return item1 === item2;
   }
 
-  loadItems(): void {
-    const pagination = new Pagination(0, 1000, 'ASC', 'name');
+  loadItems(page: number = 0): void {
+    if (page === 0) {
+      this.items = [];
+    }
+
+    const pagination = new Pagination(page, 1000, 'ASC', 'name');
 
     this.itemsSubscription = this.itemService.list(pagination, '').subscribe({
       next: (data) => {
-        this.items = [];
-
         data.content.forEach((dto) => {
           const item = ItemMapper.toModel(dto);
-          this.items.push(item);
+          if (item.active && item.category?.active !== false) {
+            this.items.push(item);
+          }
 
-          if (item.id === this.itemId) {
+          if (item.active && item.category?.active !== false && item.id === this.itemId) {
             this.unit.item = item;
           }
         });
+
+        if ((page + 1) * pagination.linesPerPage < data.totalElements) {
+          this.loadItems(page + 1);
+        }
       },
       error: () => {
         this.items = [];

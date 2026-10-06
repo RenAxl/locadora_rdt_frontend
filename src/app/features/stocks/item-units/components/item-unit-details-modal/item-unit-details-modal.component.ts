@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ItemUnit } from '../../models/ItemUnit';
+import { getItemUnitAvailabilityLabel, getItemUnitConditionLabel } from '../../constants/item-unit-options';
 
 @Component({
   selector: 'app-item-unit-details-modal',
@@ -29,39 +30,11 @@ export class ItemUnitDetailsModalComponent {
     return 'Não';
   }
 
-  getStatusLabel(status: string): string {
-    if (status === 'AVAILABLE') {
-      return 'Disponível';
-    }
-
-    if (status === 'RESERVED') {
-      return 'Reservada';
-    }
-
-    if (status === 'RENTED') {
-      return 'Alugada';
-    }
-
-    if (status === 'MAINTENANCE') {
-      return 'Em manutenção';
-    }
-
-    return status;
+  getStatusLabel(unit: ItemUnit): string {
+    return getItemUnitAvailabilityLabel(unit);
   }
 
   getConditionLabel(condition: string): string {
-    if (condition === 'NEW') {
-      return 'Nova';
-    }
-
-    if (condition === 'GOOD') {
-      return 'Boa';
-    }
-
-    if (condition === 'DAMAGED') {
-      return 'Danificada';
-    }
-
-    return condition;
+    return getItemUnitConditionLabel(condition);
   }
 }

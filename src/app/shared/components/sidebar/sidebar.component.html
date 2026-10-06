@@ -312,7 +312,7 @@
           class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
           data-bs-toggle="collapse"
           data-bs-target="#submenuEstoqueDesktop"
-          *ngIf="hasAuthority('CATEGORY_READ') || hasAuthority('ITEM_READ') || hasAuthority('STOCK_BALANCES_READ') || hasAuthority('ITEM_UNIT_READ')"
+          *ngIf="hasAuthority('CATEGORY_READ') || hasAuthority('ITEM_READ') || hasAuthority('STOCK_BALANCES_READ') || hasAuthority('ITEM_UNIT_READ') || hasAuthority('STOCK_MOVEMENTS_READ')"
         >
           <span class="d-flex align-items-center">
             <i class="fa-solid fa-boxes-stacked me-2"></i>
@@ -356,7 +356,7 @@
               routerLink="/item-units"
               routerLinkActive="active"
               class="d-flex align-items-center nav-link px-4"
-              *ngIf="hasAuthority('ITEM_READ')"
+              *ngIf="hasAuthority('ITEM_UNIT_READ')"
             >
               <i class="fa-solid fa-boxes-stacked me-2"></i>
               <span>Unidades físicas</span>
@@ -367,10 +367,21 @@
               routerLink="/stock-balances"
               routerLinkActive="active"
               class="d-flex align-items-center nav-link px-4"
-              *ngIf="hasAuthority('ITEM_UNIT_READ')"
+              *ngIf="hasAuthority('STOCK_BALANCES_READ')"
             >
               <i class="fa-solid fa-warehouse me-2"></i>
               <span>Estoque Atual</span>
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/stock-movements"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('STOCK_MOVEMENTS_READ')"
+            >
+              <i class="fa-solid fa-right-left me-2"></i>
+              <span>Movimentações de estoque</span>
             </a>
           </li>
         </ul>

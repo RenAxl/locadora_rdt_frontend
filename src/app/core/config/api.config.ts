@@ -53,11 +53,11 @@ export const API = {
   },
 
   CATEGORIES: {
-    ROOT: `${BASE_URL}/rental/categories`,
-    BY_ID: (id: number | string) => `${BASE_URL}/rental/categories/${id}`,
-    DELETE_ALL: `${BASE_URL}/rental/categories/all`,
-    CHANGE_ACTIVE: (id: number | string) => `${BASE_URL}/rental/categories/${id}/active`,
-    IMAGE: (id: number) => `${BASE_URL}/rental/categories/${id}/image`,
+    ROOT: `${BASE_URL}/inventory/categories`,
+    BY_ID: (id: number | string) => `${BASE_URL}/inventory/categories/${id}`,
+    DELETE_ALL: `${BASE_URL}/inventory/categories/all`,
+    CHANGE_ACTIVE: (id: number | string) => `${BASE_URL}/inventory/categories/${id}/active`,
+    IMAGE: (id: number) => `${BASE_URL}/inventory/categories/${id}/image`,
   },
 
   ITEMS: {
@@ -73,6 +73,8 @@ export const API = {
     BY_ID: (id: number | string) => `${BASE_URL}/inventory/item-units/${id}`,
     DELETE_ALL: `${BASE_URL}/inventory/item-units/all`,
     CHANGE_ACTIVE: (id: number | string) => `${BASE_URL}/inventory/item-units/${id}/active`,
+    UPDATE_STATUS: (id: number) => `${BASE_URL}/inventory/item-units/${id}/status`,
+    CHANGE_MAINTENANCE: (id: number) => `${BASE_URL}/inventory/item-units/${id}/maintenance`,
   },
 
   STOCK_BALANCES: {
@@ -80,6 +82,10 @@ export const API = {
     BY_ID: (id: number | string) => `${BASE_URL}/inventory/stock-balances/${id}`,
     BY_ITEM: (itemId: number | string) => `${BASE_URL}/inventory/stock-balances/item/${itemId}`,
     UPDATE_MINIMUM: (id: number) => `${BASE_URL}/inventory/stock-balances/${id}/minimum`,
+  },
+
+  STOCK_MOVEMENTS: {
+    ROOT: `${BASE_URL}/inventory/stock-movements`,
   },
 
   PAYABLES: {
