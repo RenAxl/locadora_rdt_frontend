@@ -1,0 +1,128 @@
+<div class="stock-report-list-container">
+  <header class="module-page-header">
+    <div>
+      <span class="module-page-eyebrow">RELATÓRIOS</span>
+      <h1>Relatórios de estoque</h1>
+      <p>Consulte saldos, unidades físicas e o histórico de movimentações.</p>
+    </div>
+    <div class="module-page-header-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+  </header>
+
+  <form class="stock-report-card">
+    <div class="row g-3 stock-report-form-inputs">
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom" for="stock-report-type">Relatório</label>
+        <select id="stock-report-type" name="reportType" class="form-control"
+          [(ngModel)]="selectedReportType" (ngModelChange)="changeReportType()">
+          <option *ngFor="let option of reportOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </div>
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom" for="stock-report-search">Busca</label>
+        <input id="stock-report-search" name="search" class="form-control" type="text"
+          [(ngModel)]="filters.search" [placeholder]="searchPlaceholder" />
+      </div>
+      <div class="col-12 col-lg-4">
+        <label class="form-label-custom" for="stock-report-category">Categoria</label>
+        <select id="stock-report-category" name="categoryId" class="form-control"
+          [(ngModel)]="filters.categoryId" (ngModelChange)="changeCategory()" [disabled]="optionsLoading">
+          <option [ngValue]="null">Todas</option>
+          <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
+        </select>
+      </div>
+      <div class="col-12 col-lg-4">
+        <label class="form-label-custom" for="stock-report-item">Item</label>
+        <select id="stock-report-item" name="itemId" class="form-control" [(ngModel)]="filters.itemId"
+          [disabled]="optionsLoading">
+          <option [ngValue]="null">Todos</option>
+          <option *ngFor="let item of filteredItems" [ngValue]="item.id">{{ item.name }}</option>
+        </select>
+      </div>
+      <div class="col-12 col-lg-4" *ngIf="selectedReportType !== 'movements'">
+        <label class="form-label-custom" for="stock-report-active">
+          {{ selectedReportType === 'item-units' ? 'Unidades' : 'Itens' }}
+        </label>
+        <select id="stock-report-active" name="active" class="form-control" [(ngModel)]="filters.active"
+          (ngModelChange)="changeActiveFilter()">
+          <option [ngValue]="true">{{ selectedReportType === 'item-units' ? 'Ativas' : 'Ativos' }}</option>
+          <option [ngValue]="false">{{ selectedReportType === 'item-units' ? 'Com baixa' : 'Inativos' }}</option>
+          <option [ngValue]="null">Todos</option>
+        </select>
+      </div>
+      <div class="col-12 col-lg-4" *ngIf="selectedReportType === 'item-units'">
+        <label class="form-label-custom" for="stock-report-status">Situação</label>
+        <select id="stock-report-status" name="status" class="form-control" [(ngModel)]="filters.status"
+          [disabled]="filters.active === false">
+          <option value="ALL">Todas</option>
+          <option *ngFor="let status of statuses" [value]="status.value">{{ status.label }}</option>
+        </select>
+      </div>
+      <div class="col-12 col-lg-4" *ngIf="selectedReportType === 'item-units'">
+        <label class="form-label-custom" for="stock-report-condition">Conservação</label>
+        <select id="stock-report-condition" name="conditionStatus" class="form-control"
+          [(ngModel)]="filters.conditionStatus">
+          <option value="ALL">Todas</option>
+          <option *ngFor="let condition of conditions" [value]="condition.value">{{ condition.label }}</option>
+        </select>
+      </div>
+      <div class="col-12 col-lg-4" *ngIf="selectedReportType === 'movements'">
+        <label class="form-label-custom" for="stock-report-movement">Tipo de movimentação</label>
+        <select id="stock-report-movement" name="movementType" class="form-control" [(ngModel)]="filters.movementType">
+          <option value="ALL">Todos</option>
+          <option *ngFor="let type of movementTypes" [value]="type.value">{{ type.label }}</option>
+        </select>
+      </div>
+      <div class="col-12 col-lg-4" *ngIf="selectedReportType === 'movements'">
+        <label class="form-label-custom" for="stock-report-start-date">Data inicial</label>
+        <input id="stock-report-start-date" name="startDate" type="date" class="form-control" [(ngModel)]="filters.startDate" />
+      </div>
+      <div class="col-12 col-lg-4" *ngIf="selectedReportType === 'movements'">
+        <label class="form-label-custom" for="stock-report-end-date">Data final</label>
+        <input id="stock-report-end-date" name="endDate" type="date" class="form-control" [(ngModel)]="filters.endDate" />
+      </div>
+    </div>
+    <p class="report-note mt-3" *ngIf="selectedReportType === 'low-stock'">
+      São exibidos os itens cuja quantidade disponível está abaixo do estoque mínimo.
+    </p>
+    <p class="report-note mt-3" *ngIf="selectedReportType === 'movements'">
+      O histórico inclui unidades com baixa. Nos ajustes, a quantidade representa o total ativo final informado.
+      Datas e horários das movimentações são apresentados em UTC.
+    </p>
+    <div class="stock-report-form-buttons mt-4" *ngIf="hasAuthority('STOCK_REPORTS_READ')">
+      <button type="button" class="btn btn-primary stock-report-form-button" [disabled]="loading" (click)="generate('pdf')">
+        <i class="pi pi-file-pdf me-2"></i>GERAR PDF
+      </button>
+      <button type="button" class="btn btn-success stock-report-form-button" [disabled]="loading" (click)="generate('xlsx')">
+        <i class="pi pi-file-excel me-2"></i>GERAR EXCEL
+      </button>
+      <button type="button" class="btn btn-outline-danger stock-report-form-button" [disabled]="loading || summaryLoading" (click)="clearFilters()">
+        LIMPAR
+      </button>
+      <button type="button" class="btn btn-outline-primary stock-report-form-button" [disabled]="summaryLoading" (click)="loadSummary()">
+        <i class="pi pi-chart-bar me-2"></i>ATUALIZAR RESUMO
+      </button>
+    </div>
+    <span class="loading-label" *ngIf="loading" role="status">Gerando relatório...</span>
+  </form>
+
+  <section class="stock-report-card" [attr.aria-busy]="summaryLoading">
+    <div class="summary-header">
+      <h2>Disponibilidade atual</h2>
+      <span class="loading-label" *ngIf="summaryLoading" role="status">Carregando...</span>
+    </div>
+    <p class="report-note">Resumo por categoria e item selecionados. Quantidades calculadas pelas unidades ativas.</p>
+    <div class="stock-summary">
+      <div class="summary-item"><span>Itens</span><strong>{{ summary.itemCount }}</strong></div>
+      <div class="summary-item"><span>Unidades ativas</span><strong>{{ summary.totalQuantity }}</strong></div>
+      <div class="summary-item low-stock"><span>Itens abaixo do mínimo</span><strong>{{ summary.lowStockItemCount }}</strong></div>
+    </div>
+    <div class="availability-chart" aria-label="Distribuição das unidades ativas por situação">
+      <div class="availability-row" *ngFor="let entry of availability">
+        <span>{{ entry.label }}</span>
+        <div class="availability-track"><div class="availability-bar" [style.width]="barWidth(entry.quantity)" [style.background]="entry.color"></div></div>
+        <strong>{{ entry.quantity }}</strong>
+      </div>
+    </div>
+    <p class="report-note mt-3" *ngIf="!summaryLoading && summary.itemCount === 0">Nenhum item encontrado.</p>
+  </section>
+</div>

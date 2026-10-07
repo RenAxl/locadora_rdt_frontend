@@ -168,6 +168,12 @@ export const API = {
     ROOT: `${BASE_URL}/financial-settings`,
   },
 
+  STOCK_REPORTS: {
+    GENERATE: (reportType: string, format: string) => `${BASE_URL}/reports/stock-reports/${reportType}/${format}`,
+    SUMMARY: `${BASE_URL}/reports/stock-reports/summary`,
+    OPTIONS: `${BASE_URL}/reports/stock-reports/options`,
+  },
+
   FINANCIAL_REPORTS: {
     GENERATE: (reportType: string, format: string) =>
       `${BASE_URL}/reports/financial-reports/${reportType}/${format}`,

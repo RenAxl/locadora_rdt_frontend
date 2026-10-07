@@ -278,7 +278,7 @@
           class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
           data-bs-toggle="collapse"
           data-bs-target="#submenuRelatoriosDesktop"
-          *ngIf="hasAuthority('FINANCIAL_REPORTS_READ')"
+          *ngIf="hasAuthority('FINANCIAL_REPORTS_READ') || hasAuthority('STOCK_REPORTS_READ')"
         >
           <span class="d-flex align-items-center">
             <i class="fa-solid fa-chart-column me-2"></i>
@@ -298,11 +298,19 @@
           <li>
             <a
               routerLink="/reports/financial-reports"
+              *ngIf="hasAuthority('FINANCIAL_REPORTS_READ')"
               routerLinkActive="active"
               class="d-flex align-items-center nav-link px-4"
             >
               <i class="fa-solid fa-chart-line me-2"></i>
               <span>Relatórios Financeiros</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/reports/stock-reports" routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4" *ngIf="hasAuthority('STOCK_REPORTS_READ')">
+              <i class="fa-solid fa-boxes-stacked me-2"></i>
+              <span>Relatórios de Estoque</span>
             </a>
           </li>
         </ul>
