@@ -1,0 +1,89 @@
+.catalog-page-toolbar {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  margin: 0 0 20px;
+}
+
+.catalog-filter-container {
+  flex: 1;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+  justify-content: center;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  min-height: 620px;
+  align-items: start;
+}
+
+.catalog-empty {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #607080;
+}
+
+.catalog-empty i {
+  font-size: 24px;
+}
+
+.catalog-paginator {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 18px;
+}
+
+:host ::ng-deep .p-paginator {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+@media (max-width: 1199px) {
+  .catalog-filter-container,
+  .catalog-page-toolbar,
+  .catalog-grid,
+  .catalog-paginator {
+    max-width: 100%;
+  }
+
+  .catalog-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    min-height: 0;
+  }
+}
+
+@media (max-width: 575px) {
+  .catalog-page-toolbar {
+    align-items: flex-end;
+    flex-direction: column-reverse;
+  }
+}
+
+@media (max-width: 991px) {
+  .catalog-grid {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  }
+}
+
+@media (max-width: 575px) {
+  .catalog-filter-container,
+  .catalog-grid,
+  .catalog-paginator {
+    max-width: 100%;
+  }
+
+  .catalog-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}

@@ -1,0 +1,39 @@
+<div class="catalog-filter">
+  <form class="catalog-filter-form" (ngSubmit)="searchCatalog()">
+    <div class="catalog-filter-name">
+      <input
+        pInputText
+        type="text"
+        class="form-control"
+        placeholder="Digite o nome do item"
+        name="name"
+        [(ngModel)]="nameFilter"
+      />
+      <button class="catalog-filter-search" type="submit">
+        <img src="assets/images/search-icon.svg" alt="filtro" />
+      </button>
+    </div>
+
+    <div class="catalog-filter-category">
+      <select
+        name="category"
+        class="form-control catalog-filter-select"
+        [(ngModel)]="categoryId"
+        (change)="searchCatalog()"
+      >
+        <option [ngValue]="null">Todas as categorias</option>
+        <option *ngFor="let category of categories" [ngValue]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+
+    <button
+      class="btn btn-outline-secondary catalog-filter-clear"
+      type="button"
+      (click)="formClear()"
+    >
+      LIMPAR FILTRO
+    </button>
+  </form>
+</div>

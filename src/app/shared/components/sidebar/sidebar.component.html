@@ -47,6 +47,17 @@
 
       <li class="treeview">
         <a
+          routerLink="/catalog"
+          routerLinkActive="active"
+          class="d-flex align-items-center nav-link px-3"
+        >
+          <i class="fa-solid fa-gauge me-2"></i>
+          <span>Catálogo</span>
+        </a>
+      </li>
+
+      <li class="treeview">
+        <a
           routerLink="/contact"
           routerLinkActive="active"
           class="d-flex align-items-center nav-link px-3"
@@ -278,7 +289,10 @@
           class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
           data-bs-toggle="collapse"
           data-bs-target="#submenuRelatoriosDesktop"
-          *ngIf="hasAuthority('FINANCIAL_REPORTS_READ') || hasAuthority('STOCK_REPORTS_READ')"
+          *ngIf="
+            hasAuthority('FINANCIAL_REPORTS_READ') ||
+            hasAuthority('STOCK_REPORTS_READ')
+          "
         >
           <span class="d-flex align-items-center">
             <i class="fa-solid fa-chart-column me-2"></i>
@@ -307,8 +321,12 @@
             </a>
           </li>
           <li>
-            <a routerLink="/reports/stock-reports" routerLinkActive="active"
-              class="d-flex align-items-center nav-link px-4" *ngIf="hasAuthority('STOCK_REPORTS_READ')">
+            <a
+              routerLink="/reports/stock-reports"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('STOCK_REPORTS_READ')"
+            >
               <i class="fa-solid fa-boxes-stacked me-2"></i>
               <span>Relatórios de Estoque</span>
             </a>
@@ -320,7 +338,13 @@
           class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
           data-bs-toggle="collapse"
           data-bs-target="#submenuEstoqueDesktop"
-          *ngIf="hasAuthority('CATEGORY_READ') || hasAuthority('ITEM_READ') || hasAuthority('STOCK_BALANCES_READ') || hasAuthority('ITEM_UNIT_READ') || hasAuthority('STOCK_MOVEMENTS_READ')"
+          *ngIf="
+            hasAuthority('CATEGORY_READ') ||
+            hasAuthority('ITEM_READ') ||
+            hasAuthority('STOCK_BALANCES_READ') ||
+            hasAuthority('ITEM_UNIT_READ') ||
+            hasAuthority('STOCK_MOVEMENTS_READ')
+          "
         >
           <span class="d-flex align-items-center">
             <i class="fa-solid fa-boxes-stacked me-2"></i>

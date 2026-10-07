@@ -1,0 +1,43 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">CATÁLOGO</span>
+    <h1>Catálogo</h1>
+    <p>Encontre os jogos e consoles disponíveis para locação.</p>
+  </div>
+  <div class="module-page-header-icon"><i class="fa-solid fa-grip"></i></div>
+</header>
+
+<div class="catalog-page-toolbar">
+  <div class="catalog-filter-container">
+    <app-catalog-filter (search)="searchCatalog($event)"></app-catalog-filter>
+  </div>
+</div>
+
+<div
+  class="catalog-grid"
+  *ngIf="items.length > 0; else emptyCatalog"
+  [attr.aria-busy]="loading"
+>
+  <app-catalog-item-card
+    *ngFor="let item of items"
+    [item]="item"
+    [imageUrl]="imageMap[item.id!]"
+    (details)="openDetails($event)"
+  ></app-catalog-item-card>
+</div>
+
+<ng-template #emptyCatalog>
+  <div class="catalog-empty">
+    <i class="pi pi-box"></i>
+    <span>Nenhum item encontrado.</span>
+  </div>
+</ng-template>
+
+<div class="catalog-paginator">
+  <p-paginator
+    [rows]="pagination.linesPerPage"
+    [first]="pagination.page * pagination.linesPerPage"
+    [totalRecords]="totalElements"
+    (onPageChange)="changePage($event)"
+  ></p-paginator>
+</div>

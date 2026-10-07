@@ -1,0 +1,48 @@
+<article
+  class="catalog-item-card"
+  [ngClass]="{ 'catalog-item-inactive': item.active === false }"
+  tabindex="0"
+  role="button"
+  (click)="openDetails()"
+  (keydown.enter)="openDetails()"
+>
+  <div class="catalog-image-wrap">
+    <ng-container *ngIf="imageUrl; else noImage">
+      <img
+        class="catalog-image"
+        [src]="imageUrl"
+        alt="Imagem do item"
+      />
+    </ng-container>
+
+    <ng-template #noImage>
+      <div class="catalog-image-placeholder">
+        <i class="pi pi-box catalog-image-icon"></i>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="catalog-content">
+    <div>
+      <h3>{{ item.name }}</h3>
+      <span>{{ item.category?.name || "Sem categoria" }}</span>
+    </div>
+
+    <strong>
+      {{
+        item.price != null
+          ? (item.price | currency: "BRL":"symbol":"1.2-2":"pt-BR")
+          : "-"
+      }}
+    </strong>
+  </div>
+
+  <button
+    pButton
+    type="button"
+    class="p-button-sm catalog-details-button"
+    icon="pi pi-eye"
+    label="Detalhes"
+    (click)="openDetails($event)"
+  ></button>
+</article>

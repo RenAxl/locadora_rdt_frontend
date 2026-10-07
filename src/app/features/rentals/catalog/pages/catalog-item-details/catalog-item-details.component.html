@@ -1,0 +1,53 @@
+<div class="details-page">
+  <div class="details-toolbar">
+    <button
+      pButton
+      type="button"
+      class="p-button-text back-button"
+      icon="pi pi-arrow-left"
+      label="Voltar ao catálogo"
+      (click)="goBack()"
+    ></button>
+  </div>
+
+  <div class="loading" *ngIf="loading">Carregando...</div>
+
+  <div class="not-found" *ngIf="itemNotFound">
+    <i class="pi pi-exclamation-circle"></i>
+    <h2>Item não encontrado</h2>
+    <p>Não foi possível carregar os dados deste item.</p>
+  </div>
+
+  <main class="details-card" *ngIf="item">
+    <section class="item-image-section">
+      <img *ngIf="imageUrl" [src]="imageUrl" [alt]="item.name" />
+
+      <div class="image-placeholder" *ngIf="!imageUrl">
+        <i class="pi pi-box"></i>
+        <span>Sem imagem</span>
+      </div>
+    </section>
+
+    <section class="item-information">
+      <span class="category">{{ item.category?.name || "Sem categoria" }}</span>
+      <h1>{{ item.name }}</h1>
+
+      <div class="price">
+        {{
+          item.price != null
+            ? (item.price | currency: "BRL":"symbol":"1.2-2":"pt-BR")
+            : "Preço não informado"
+        }}
+      </div>
+
+      <div class="description">
+        <span>Descrição</span>
+        <p>{{ item.description || "Sem descrição." }}</p>
+      </div>
+
+      <div class="inactive-message" *ngIf="item.active === false">
+        Este item não está disponível para locação.
+      </div>
+    </section>
+  </main>
+</div>
