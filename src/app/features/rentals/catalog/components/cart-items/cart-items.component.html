@@ -94,5 +94,12 @@
       label="Continuar no catálogo"
       (click)="close()"
     ></button>
+    <button
+      pButton
+      type="button"
+      icon="pi pi-check"
+      label="Finalizar"
+      [disabled]="items.length === 0 || updatingItemId != null"
+    ></button>
   </ng-template>
 </p-dialog>
