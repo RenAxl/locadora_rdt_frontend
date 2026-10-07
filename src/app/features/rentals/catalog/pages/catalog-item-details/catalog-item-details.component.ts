@@ -2,10 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { MessageService } from 'primeng/api';
 import { PhotoPreview } from 'src/app/core/utils/photo-preview.util';
 import { CatalogService } from '../../services/catalog.service';
 import { ItemMapper } from 'src/app/features/stocks/items/mapper/item.mapper';
 import { Item } from 'src/app/features/stocks/items/models/Item';
+import { CartItemsService } from '../../services/cart-items.service';
 
 @Component({
   selector: 'app-catalog-item-details',
@@ -21,15 +23,21 @@ export class CatalogItemDetailsComponent implements OnInit, OnDestroy {
 
   itemNotFound: boolean = false;
 
+  quantity: number = 1;
+  addingToCart: boolean = false;
+
   private imagePreview: PhotoPreview;
   private itemSubscription?: Subscription;
   private imageSubscription?: Subscription;
+  private cartSubscription?: Subscription;
 
   constructor(
     private catalogService: CatalogService,
     private router: Router,
     private route: ActivatedRoute,
     sanitizer: DomSanitizer,
+    private cartItemsService: CartItemsService,
+    private messageService: MessageService,
   ) {
     this.imagePreview = new PhotoPreview(sanitizer);
   }
@@ -56,6 +64,10 @@ export class CatalogItemDetailsComponent implements OnInit, OnDestroy {
     }
 
     this.imagePreview.clear();
+
+    if (this.cartSubscription != null) {
+      this.cartSubscription.unsubscribe();
+    }
   }
 
   loadItem(itemId: number): void {
@@ -97,5 +109,34 @@ export class CatalogItemDetailsComponent implements OnInit, OnDestroy {
 
   goBack(): void {
     this.router.navigate(['/catalog']);
+  }
+
+  addToCart(): void {
+    if (this.item == null || this.addingToCart) {
+      return;
+    }
+
+    this.addingToCart = true;
+    this.cartSubscription = this.cartItemsService
+      .addItem(this.item, this.quantity)
+      .subscribe({
+        next: () => {
+          this.addingToCart = false;
+          this.quantity = 1;
+          this.messageService.add({
+            severity: 'success',
+            detail: 'Item adicionado ao Cart Items!',
+          });
+        },
+        error: (error) => {
+          this.addingToCart = false;
+          this.messageService.add({
+            severity: 'warn',
+            detail: error instanceof Error
+              ? error.message
+              : 'Não foi possível consultar o estoque. O item não foi adicionado.',
+          });
+        },
+      });
   }
 }

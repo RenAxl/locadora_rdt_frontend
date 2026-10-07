@@ -8,6 +8,7 @@
       label="Voltar ao catálogo"
       (click)="goBack()"
     ></button>
+    <app-cart-items></app-cart-items>
   </div>
 
   <div class="loading" *ngIf="loading">Carregando...</div>
@@ -47,6 +48,17 @@
 
       <div class="inactive-message" *ngIf="item.active === false">
         Este item não está disponível para locação.
+      </div>
+
+      <div class="cart-selection" *ngIf="item.active">
+        <label for="item-quantity">Quantidade</label>
+        <div class="cart-selection-actions">
+          <input id="item-quantity" type="number" min="1" step="1"
+            [(ngModel)]="quantity" [disabled]="addingToCart" />
+          <button pButton type="button" icon="pi pi-shopping-cart"
+            label="Adicionar ao Cart Items" [disabled]="addingToCart"
+            (click)="addToCart()"></button>
+        </div>
       </div>
     </section>
   </main>

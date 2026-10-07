@@ -115,7 +115,36 @@ h1 {
   color: #fca5a5;
 }
 
+.cart-selection {
+  margin-top: 24px;
+}
+
+.cart-selection label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.cart-selection-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cart-selection-actions input {
+  width: 80px;
+  padding: 10px;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  background: #1e293b;
+  color: #f8fafc;
+}
+
 @media (max-width: 768px) {
+  .details-toolbar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
   .details-card {
     grid-template-columns: 1fr;
   }

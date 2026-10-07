@@ -1,0 +1,98 @@
+<button
+  pButton
+  type="button"
+  class="cart-items-button"
+  icon="pi pi-shopping-cart"
+  [label]="'Carrinho (' + totalQuantity + ')'"
+  (click)="open()"
+></button>
+
+<p-dialog
+  header="Cart Items"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '760px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <div class="cart-empty" *ngIf="items.length === 0">
+    <i class="pi pi-shopping-cart"></i>
+    <p>Nenhum item no carrinho.</p>
+  </div>
+
+  <div class="cart-item" *ngFor="let item of items">
+    <div class="cart-item-information">
+      <strong>{{ item.itemName }}</strong>
+      <span
+        >{{
+          item.unitPrice | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+        }}
+        por unidade</span
+      >
+      <small>Unidades físicas: {{ item.totalQuantity }}</small>
+    </div>
+
+    <div class="cart-item-quantity">
+      <label [for]="'cart-quantity-' + item.itemId">Quantidade</label>
+      <div class="quantity-actions">
+        <input
+          [id]="'cart-quantity-' + item.itemId"
+          type="number"
+          min="1"
+          step="1"
+          [max]="item.totalQuantity"
+          [(ngModel)]="quantities[item.itemId]"
+          [disabled]="updatingItemId != null"
+        />
+        <button
+          pButton
+          type="button"
+          icon="pi pi-check"
+          label="Salvar"
+          [disabled]="updatingItemId != null"
+          (click)="updateQuantity(item)"
+        ></button>
+      </div>
+    </div>
+
+    <div class="cart-item-actions">
+      <strong>{{
+        item.unitPrice * item.quantity
+          | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+      }}</strong>
+      <button
+        pButton
+        type="button"
+        class="p-button-text p-button-danger"
+        icon="pi pi-trash"
+        label="Remover"
+        [disabled]="updatingItemId != null"
+        (click)="removeItem(item)"
+      ></button>
+    </div>
+  </div>
+
+  <div class="cart-total" *ngIf="items.length > 0">
+    <span>Total ({{ totalQuantity }} unidade(s))</span>
+    <strong>{{
+      totalPrice | currency: "BRL" : "symbol" : "1.2-2" : "pt-BR"
+    }}</strong>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      type="button"
+      class="p-button-outlined p-button-danger"
+      icon="pi pi-trash"
+      label="Limpar carrinho"
+      [disabled]="items.length === 0 || updatingItemId != null"
+      (click)="clear()"
+    ></button>
+    <button
+      pButton
+      type="button"
+      label="Continuar no catálogo"
+      (click)="close()"
+    ></button>
+  </ng-template>
+</p-dialog>

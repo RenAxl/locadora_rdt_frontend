@@ -136,5 +136,4 @@ export class CatalogListComponent implements OnInit, OnDestroy {
         });
     });
   }
-
 }
