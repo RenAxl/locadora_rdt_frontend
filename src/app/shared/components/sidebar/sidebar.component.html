@@ -71,6 +71,42 @@
         <a
           class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
           data-bs-toggle="collapse"
+          data-bs-target="#submenuLocacaoDesktop"
+          *ngIf="hasAuthority('RENTAL_TYPES_READ')"
+        >
+          <span class="d-flex align-items-center">
+            <i class="fa-solid fa-file-signature me-2"></i>
+            <span>Locadora</span>
+          </span>
+
+          <span>
+            <i class="fa-solid fa-caret-right submenu-toggle-icon closed"></i>
+            <i class="fa-solid fa-caret-down submenu-toggle-icon open"></i>
+          </span>
+        </a>
+
+        <ul
+          class="treeview-menu collapse list-unstyled mb-0"
+          id="submenuLocacaoDesktop"
+        >
+          <li>
+            <a
+              routerLink="/rental-types"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('RENTAL_TYPES_READ')"
+            >
+              <i class="fa-solid fa-clock me-2"></i>
+              <span>Tipos de locação</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="treeview">
+        <a
+          class="d-flex align-items-center justify-content-between nav-link px-3 collapsed"
+          data-bs-toggle="collapse"
           data-bs-target="#submenuAdministracaoDesktop"
           *ngIf="hasAuthority('USER_READ') || hasAuthority('ROLE_READ')"
         >
@@ -94,6 +130,7 @@
               routerLink="/users"
               routerLinkActive="active"
               class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('USER_READ')"
             >
               <i class="fa-solid fa-user me-2"></i>
               <span>Usuários</span>

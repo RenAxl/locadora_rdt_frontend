@@ -115,6 +115,14 @@ const routes: Routes = [
       },
 
       {
+        path: 'rental-types',
+        loadChildren: () =>
+          import('./features/rentals/rental-types/rental-types.module').then(
+            (m) => m.RentalTypesModule,
+          ),
+      },
+
+      {
         path: 'positions',
         loadChildren: () =>
           import('./features/organization/positions/positions.module').then(

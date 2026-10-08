@@ -1,0 +1,137 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">LOCAÇÃO</span>
+    <h1>Tipos de locação</h1>
+    <p>Consulte e gerencie os tipos de locação cadastrados.</p>
+  </div>
+  <div class="module-page-header-icon"><i class="fa-solid fa-clock"></i></div>
+</header>
+
+<div class="rental-type-filter-container">
+  <div class="rental-type-actions-group">
+    <a
+      routerLink="/rental-types/create"
+      class="action-link"
+      *ngIf="hasAuthority('RENTAL_TYPES_WRITE')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVO TIPO DE LOCAÇÃO
+      </button>
+    </a>
+
+    <button
+      *ngIf="
+        selectedRentalTypeIds.length > 0 && hasAuthority('RENTAL_TYPES_DELETE')
+      "
+      class="btn btn-danger text-white btn-crud-action"
+      type="button"
+      (click)="deleteSelectedRentalTypes()"
+    >
+      EXCLUIR TIPOS
+    </button>
+  </div>
+
+  <app-name-filter
+    text="Digite o nome do tipo de locação"
+    (search)="searchRentalType($event)"
+  ></app-name-filter>
+</div>
+
+<ng-template #activeTemplate let-rentalType>
+  {{ rentalType.active ? "Sim" : "Não" }}
+</ng-template>
+
+<ng-template #actionsTemplate let-rentalType>
+  <div class="actions-wrap">
+    <a
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-pencil"
+      pTooltip="Editar tipo de locação"
+      tooltipPosition="top"
+      [routerLink]="['/rental-types/', rentalType.id, 'edit']"
+      *ngIf="hasAuthority('RENTAL_TYPES_WRITE')"
+    ></a>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-danger"
+      icon="pi pi-trash"
+      pTooltip="Excluir tipo de locação"
+      tooltipPosition="top"
+      (click)="delete(rentalType)"
+      *ngIf="hasAuthority('RENTAL_TYPES_DELETE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text p-button-warning"
+      [icon]="rentalType.active ? 'pi pi-ban' : 'pi pi-check'"
+      pTooltip="Ativar / Desativar Tipo de Locação"
+      tooltipPosition="top"
+      (click)="toggleActive(rentalType)"
+      *ngIf="hasAuthority('RENTAL_TYPES_WRITE')"
+    ></button>
+
+    <button
+      pButton
+      class="p-button-rounded p-button-text"
+      icon="pi pi-eye"
+      pTooltip="Detalhamento do tipo de locação"
+      tooltipPosition="top"
+      (click)="openDetails(rentalType)"
+      *ngIf="hasAuthority('RENTAL_TYPES_READ')"
+    ></button>
+  </div>
+</ng-template>
+
+<ng-template #createdAtTemplate let-rentalType>
+  {{ rentalType.createdAt ? (rentalType.createdAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<ng-template #updatedAtTemplate let-rentalType>
+  {{ rentalType.updatedAt ? (rentalType.updatedAt | date: "dd/MM/yyyy") : "-" }}
+</ng-template>
+
+<app-data-table
+  #rentalTypeTable
+  [records]="rentalTypes"
+  [columns]="visibleTableColumns"
+  [selectedRecords]="selectedRentalTypes"
+  [totalRecords]="totalElements"
+  [rows]="pagination.linesPerPage"
+  [loading]="loading"
+  [showSelection]="hasAuthority('RENTAL_TYPES_DELETE')"
+  [columnTemplates]="{
+    active: activeTemplate,
+    createdAt: createdAtTemplate,
+    updatedAt: updatedAtTemplate
+  }"
+  [actionsTemplate]="actionsTemplate"
+  [showColumnsButton]="true"
+  [showExportButton]="true"
+  exportTitle="Tipos de locação"
+  exportFileName="tipos-de-locacao"
+  [exportPagination]="pagination"
+  [exportLoadRecords]="loadRentalTypesForExport"
+  emptyMessage="Nenhum tipo de locação encontrado."
+  (lazyLoad)="changePage($event)"
+  (selectedRecordsChange)="onSelectionChange($event)"
+  (columnsButtonClick)="openFieldCustomization()"
+></app-data-table>
+
+<app-rental-type-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [title]="'Detalhamento do Tipo de Locação'"
+  [rentalType]="rentalTypeDetails"
+></app-rental-type-details-modal>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="tipos de locação"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>
