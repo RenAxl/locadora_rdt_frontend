@@ -1,0 +1,180 @@
+<article
+  class="rental-item"
+  [class.single-section]="!hasMainFields() || !hasSummaryFields()"
+  [ngClass]="{
+    delivered: rental.status === 'DELIVERED',
+    rented: rental.status === 'RENTED'
+  }"
+>
+  <div class="rental-main" *ngIf="hasMainFields()">
+    <div class="rental-heading" *ngIf="isFieldVisible('id') || isFieldVisible('rentalNumber') || isFieldVisible('status')">
+      <div class="rental-title-wrap" *ngIf="isFieldVisible('id') || isFieldVisible('rentalNumber')">
+        <span class="rental-id" *ngIf="isFieldVisible('id')">#{{ rental.id }}</span>
+        <h2 *ngIf="isFieldVisible('rentalNumber')">{{ rental.rentalNumber || "-" }}</h2>
+      </div>
+
+      <span class="status-chip" [ngClass]="getStatusClass()" *ngIf="isFieldVisible('status')">
+        {{ getStatusLabel() }}
+      </span>
+    </div>
+
+    <div class="rental-meta" *ngIf="isFieldVisible('customerName') || isFieldVisible('rentalTypeName')">
+      <span *ngIf="isFieldVisible('customerName')">
+        <i class="fa-solid fa-user"></i>
+        {{ rental.customerName || "Sem cliente" }}
+      </span>
+      <span *ngIf="isFieldVisible('rentalTypeName')">
+        <i class="fa-solid fa-calendar-days"></i>
+        {{ rental.rentalTypeName || "Sem tipo" }}
+      </span>
+    </div>
+  </div>
+
+  <div class="rental-summary" *ngIf="hasSummaryFields()">
+    <div class="summary-block" *ngIf="isFieldVisible('paymentMethodName')">
+      <span>Forma de pagamento</span>
+      <strong>{{ rental.paymentMethodName || "-" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('registrationDate')">
+      <span>Data do registro</span>
+      <strong>{{ rental.registrationDate ? (rental.registrationDate | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('rentalStartDate')">
+      <span>Início da locação</span>
+      <strong>{{ rental.rentalStartDate ? (rental.rentalStartDate | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+    </div>
+    <div class="summary-block return-date" *ngIf="isFieldVisible('returnForecastDate')">
+      <span>Previsão de devolução</span>
+      <button
+        *ngIf="isOverdue(); else expectedReturnText"
+        type="button"
+        class="return-date-button overdue"
+        pTooltip="Ver multa por atraso"
+        tooltipPosition="top"
+        (click)="overdueDetails.emit(rental)"
+      >
+        {{ rental.returnForecastDate ? (rental.returnForecastDate | date: "dd/MM/yyyy HH:mm") : "-" }}
+      </button>
+      <ng-template #expectedReturnText>
+        <strong>{{ rental.returnForecastDate ? (rental.returnForecastDate | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+      </ng-template>
+    </div>
+    <div class="summary-block actual-return-date" *ngIf="isFieldVisible('effectiveReturnDate')">
+      <span>Devolução efetiva</span>
+      <strong>{{ rental.effectiveReturnDate ? (rental.effectiveReturnDate | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+    </div>
+    <div class="summary-block paid" *ngIf="isFieldVisible('paid')">
+      <span>Pago</span>
+      <strong>{{ rental.paid ? "SIM" : "NÃO" }}</strong>
+    </div>
+    <div class="summary-block pickup" *ngIf="isFieldVisible('pickup')">
+      <span>Retirada</span>
+      <strong>Na loja. O envio por aplicativo, como Uber, pode ser solicitado.</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('subtotal')">
+      <span>Subtotal</span>
+      <strong>{{ rental.subtotal | currency: "BRL" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('discount')">
+      <span>Desconto</span>
+      <strong>{{ rental.discount | currency: "BRL" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('shippingFee')">
+      <span>Frete registrado</span>
+      <strong>{{ rental.shippingFee | currency: "BRL" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('additionalFee')">
+      <span>Acréscimos</span>
+      <strong>{{ rental.additionalFee | currency: "BRL" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('lateFee')">
+      <span>Multa registrada</span>
+      <strong>{{ rental.lateFee | currency: "BRL" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('damageFee')">
+      <span>Danos</span>
+      <strong>{{ rental.damageFee | currency: "BRL" }}</strong>
+    </div>
+    <div class="summary-block total-amount" *ngIf="isFieldVisible('totalAmount')">
+      <span>Total</span>
+      <strong>{{ rental.totalAmount | currency: "BRL" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('downPayment')">
+      <span>Entrada</span>
+      <strong>{{ rental.downPayment | currency: "BRL" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('remainingAmount')">
+      <span>Saldo</span>
+      <strong>{{ rental.remainingAmount | currency: "BRL" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('createdAt')">
+      <span>Data cadastro</span>
+      <strong>{{ rental.createdAt ? (rental.createdAt | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('updatedAt')">
+      <span>Data atualização</span>
+      <strong>{{ rental.updatedAt ? (rental.updatedAt | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('createdBy')">
+      <span>Criado por</span>
+      <strong>{{ rental.createdBy || "-" }}</strong>
+    </div>
+    <div class="summary-block" *ngIf="isFieldVisible('updatedBy')">
+      <span>Atualizado por</span>
+      <strong>{{ rental.updatedBy || "-" }}</strong>
+    </div>
+  </div>
+
+  <div class="actions-wrap">
+    <button
+      pButton
+      type="button"
+      class="p-button-rounded p-button-text"
+      icon="pi pi-eye"
+      *ngIf="canRead"
+      pTooltip="Detalhes da locação"
+      tooltipPosition="top"
+      (click)="details.emit(rental)"
+    ></button>
+    <button
+      *ngIf="canWrite && rental.status === 'RENTED'"
+      pButton
+      type="button"
+      class="p-button-rounded p-button-text p-button-success"
+      icon="pi pi-download"
+      pTooltip="Finalizar locação"
+      tooltipPosition="top"
+      (click)="start.emit(rental)"
+    ></button>
+    <button
+      *ngIf="canRead && rental.status === 'DELIVERED'"
+      pButton
+      type="button"
+      class="p-button-rounded p-button-text"
+      icon="pi pi-file"
+      pTooltip="Recibo"
+      tooltipPosition="top"
+      (click)="receipt.emit(rental)"
+    ></button>
+    <button
+      *ngIf="canRead && rental.status === 'DELIVERED'"
+      pButton
+      type="button"
+      class="p-button-rounded p-button-text"
+      icon="pi pi-print"
+      pTooltip="Cupom fiscal"
+      tooltipPosition="top"
+      (click)="fiscalCoupon.emit(rental)"
+    ></button>
+    <button
+      *ngIf="canDelete"
+      pButton
+      type="button"
+      class="p-button-rounded p-button-text p-button-danger"
+      icon="pi pi-trash"
+      pTooltip="Excluir locação"
+      tooltipPosition="top"
+      (click)="delete.emit(rental)"
+    ></button>
+  </div>
+</article>

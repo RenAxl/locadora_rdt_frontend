@@ -1,0 +1,90 @@
+.rental-form-container {
+  width: 100%;
+}
+
+.rental-card {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #00000012;
+}
+
+.rental-form-inputs .form-control,
+.rental-form-inputs .form-select {
+  height: 46px;
+}
+
+.rental-form-inputs app-message {
+  display: block;
+  margin-top: 4px;
+  margin-bottom: -4px;
+}
+
+.rental-form-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.rental-form-button {
+  height: 50px;
+  width: 110px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.form-label-custom {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #233247;
+}
+
+.number {
+  width: 85px;
+}
+
+.totals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.total-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 76px;
+  padding: 12px 16px;
+  border: 1px solid #d7dee7;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.total-item span {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.total-item strong {
+  font-size: 22px;
+}
+
+.total-highlight {
+  background: #eef6ff;
+  border-color: #b9d9ff;
+}
+
+@media (max-width: 700px) {
+  .totals {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 992px) {
+  .rental-form-buttons {
+    justify-content: flex-end;
+  }
+}

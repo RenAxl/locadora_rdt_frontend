@@ -1,0 +1,169 @@
+<header class="module-page-header">
+  <div>
+    <span class="module-page-eyebrow">LOCAÇÃO</span>
+    <h1>Locações</h1>
+    <p>Consulte e gerencie as locações realizadas.</p>
+  </div>
+  <div class="module-page-header-icon"><i class="fa-solid fa-file-signature"></i></div>
+</header>
+
+<div class="rental-filter-container">
+  <div class="rental-actions-group">
+    <a
+      routerLink="/rental/create"
+      class="action-link"
+      *ngIf="hasAuthority('RENTAL_WRITE') || hasAuthority('RENTAL_CUSTOMER')"
+    >
+      <button class="btn btn-primary text-white btn-crud-action">
+        NOVA LOCAÇÃO
+      </button>
+    </a>
+  </div>
+
+  <form class="filter-card" (ngSubmit)="searchRental()">
+    <div>
+      <label class="form-label-custom">Número</label>
+      <input
+        class="form-control"
+        name="number"
+        placeholder="Número da locação"
+        [(ngModel)]="filter.number"
+      />
+    </div>
+    <div>
+      <label class="form-label-custom">Cliente</label>
+      <input
+        class="form-control"
+        name="customer"
+        placeholder="Nome do cliente"
+        [(ngModel)]="filter.customer"
+      />
+    </div>
+    <div>
+      <label class="form-label-custom">Status</label>
+      <select class="form-select" name="status" [(ngModel)]="filter.status">
+        <option value="">Todos os status</option>
+        <option value="RENTED">Alugada</option>
+        <option value="DELIVERED">Entregue</option>
+      </select>
+    </div>
+    <div>
+      <label class="form-label-custom">Tipo de locação</label>
+      <select class="form-select" name="rentalTypeId" [(ngModel)]="filter.rentalTypeId">
+        <option [ngValue]="undefined">Todos os tipos</option>
+        <option *ngFor="let type of rentalTypes" [ngValue]="type.id">
+          {{ type.name }}
+        </option>
+      </select>
+    </div>
+    <div>
+      <label class="form-label-custom">Data do registro (de)</label>
+      <input type="date" class="form-control" name="dateFrom" [(ngModel)]="filter.dateFrom" />
+    </div>
+    <div>
+      <label class="form-label-custom">Data do registro (até)</label>
+      <input type="date" class="form-control" name="dateTo" [(ngModel)]="filter.dateTo" />
+    </div>
+    <div class="filter-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loading">FILTRAR</button>
+      <button type="button" class="btn btn-outline-danger" (click)="clearFilters()">LIMPAR</button>
+    </div>
+  </form>
+</div>
+
+<div class="listing-toolbar">
+  <button
+    pButton
+    type="button"
+    class="p-button-rounded p-button-text"
+    icon="pi pi-cog"
+    pTooltip="Personalizar campos"
+    tooltipPosition="left"
+    (click)="openFieldCustomization()"
+  ></button>
+  <app-excel-export
+    title="Locações"
+    fileName="locacoes"
+    [fields]="visibleTableColumns"
+    [pagination]="pagination"
+    [totalRecords]="totalElements"
+    [loadRecords]="loadRentalsForExport"
+  ></app-excel-export>
+</div>
+
+<div class="rental-card-container" [attr.aria-busy]="loading">
+  <div class="empty" *ngIf="loading">Carregando...</div>
+  <div class="empty" *ngIf="!loading && rentals.length === 0">
+    Nenhuma locação encontrada.
+  </div>
+
+  <div class="rental-list" *ngIf="!loading">
+    <app-rental-card
+      *ngFor="let rental of rentals"
+      [rental]="rental"
+      [visibleFields]="visibleFields"
+      [canRead]="hasAuthority('RENTAL_READ')"
+      [canWrite]="hasAuthority('RENTAL_WRITE')"
+      [canDelete]="hasAuthority('RENTAL_DELETE')"
+      (details)="openDetails($event)"
+      (start)="start($event)"
+      (overdueDetails)="openOverdueDetails($event)"
+      (receipt)="generateReceipt($event)"
+      (fiscalCoupon)="generateFiscalCoupon($event)"
+      (delete)="delete($event)"
+    ></app-rental-card>
+  </div>
+
+  <p-paginator
+    [first]="pagination.page * pagination.linesPerPage"
+    [rows]="pagination.linesPerPage"
+    [totalRecords]="totalElements"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    (onPageChange)="changePage($event)"
+  ></p-paginator>
+</div>
+
+<app-rental-details-modal
+  [visible]="detailsVisible"
+  (visibleChange)="detailsVisible = $event"
+  [title]="'Detalhamento da Locação'"
+  [rental]="rentalDetails"
+></app-rental-details-modal>
+
+<app-rental-overdue-modal
+  [visible]="overdueVisible"
+  (visibleChange)="overdueVisible = $event"
+  [rental]="overdueRental"
+></app-rental-overdue-modal>
+
+<app-rental-checkout-modal
+  [visible]="checkoutVisible"
+  (visibleChange)="checkoutVisible = $event"
+  [rental]="checkoutRental"
+  [paymentMethods]="paymentMethods"
+  [paymentMethodId]="paymentMethodId"
+  (paymentMethodIdChange)="paymentMethodId = $event"
+  [saving]="savingCheckout"
+  (confirm)="confirmCheckout()"
+></app-rental-checkout-modal>
+
+<app-field-customization
+  [visible]="fieldCustomizationVisible"
+  (visibleChange)="fieldCustomizationVisible = $event"
+  [selectedFields]="visibleFields"
+  [fields]="availableFields"
+  contentName="locações"
+  (apply)="applyVisibleFields($event)"
+></app-field-customization>
+
+<p-dialog
+  [header]="documentName"
+  [(visible)]="documentVisible"
+  [modal]="true"
+  [style]="{ width: '1100px', maxWidth: '95vw' }"
+  (onHide)="closeDocument()"
+>
+  <div class="document-view" *ngIf="documentUrl">
+    <iframe [src]="documentUrl" [title]="documentName"></iframe>
+  </div>
+</p-dialog>

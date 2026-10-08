@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { CartItem } from '../../models/CartItem';
@@ -22,6 +23,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   constructor(
     private cartItemsService: CartItemsService,
     private messageService: MessageService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -105,5 +107,14 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     }
 
     this.cartItemsService.clear();
+  }
+
+  finish(): void {
+    if (this.items.length === 0 || this.updatingItemId != null) {
+      return;
+    }
+
+    this.close();
+    this.router.navigate(['/rental/create']);
   }
 }

@@ -1,0 +1,36 @@
+.checkout-form-inputs .form-control,
+.checkout-form-inputs .form-select {
+  height: 46px;
+}
+
+.checkout-form-inputs app-message {
+  display: block;
+  margin-top: 4px;
+  margin-bottom: -4px;
+}
+
+.checkout-form-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.checkout-form-button {
+  height: 50px;
+  width: 110px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.form-label-custom {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #233247;
+}
+
+.total {
+  font-weight: bold;
+}

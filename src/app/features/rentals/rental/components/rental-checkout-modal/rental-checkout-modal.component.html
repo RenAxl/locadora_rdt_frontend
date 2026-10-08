@@ -1,0 +1,75 @@
+<p-dialog
+  header="Finalizar locação"
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="!saving"
+  [closeOnEscape]="!saving"
+  [style]="{ width: '500px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <form #checkoutForm="ngForm" (ngSubmit)="save(checkoutForm)" *ngIf="rental">
+    <div class="row g-3 checkout-form-inputs">
+      <div class="col-12 col-sm-6">
+        <label class="form-label-custom">Valor</label>
+        <input class="form-control" [value]="rentalValue | currency: 'BRL'" readonly />
+      </div>
+      <div class="col-12 col-sm-6">
+        <label class="form-label-custom">Multa</label>
+        <input class="form-control" [value]="lateFee | currency: 'BRL'" readonly />
+      </div>
+      <div class="col-12">
+        <label class="form-label-custom">Forma de pagamento *</label>
+        <select
+          class="form-select"
+          name="paymentMethodId"
+          [(ngModel)]="paymentMethodId"
+          (ngModelChange)="changePaymentMethod()"
+          #paymentMethod="ngModel"
+          required
+          [disabled]="saving"
+        >
+          <option [ngValue]="undefined">Selecione</option>
+          <option *ngFor="let method of paymentMethods" [ngValue]="method.id">
+            {{ method.name }}
+          </option>
+        </select>
+        <app-message
+          [control]="paymentMethod"
+          error="required"
+          text="Informe a forma de pagamento"
+        ></app-message>
+      </div>
+      <div class="col-12" *ngIf="hasLateFeeDiscountWarning">
+        <div class="alert alert-warning mb-0">
+          Não há desconto porque a locação possui multa.
+        </div>
+      </div>
+      <div class="col-12 col-sm-6">
+        <label class="form-label-custom">Data da baixa</label>
+        <input class="form-control" [value]="today | date: 'dd/MM/yyyy'" readonly />
+      </div>
+      <div class="col-12 col-sm-6">
+        <label class="form-label-custom">Total</label>
+        <input class="form-control total" [value]="total | currency: 'BRL'" readonly />
+      </div>
+    </div>
+
+    <div class="checkout-form-buttons mt-4">
+      <button
+        type="submit"
+        class="btn btn-primary checkout-form-button"
+        [disabled]="checkoutForm.invalid || saving"
+      >
+        FINALIZAR
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-danger checkout-form-button"
+        [disabled]="saving"
+        (click)="close()"
+      >
+        CANCELAR
+      </button>
+    </div>
+  </form>
+</p-dialog>

@@ -1,0 +1,184 @@
+<div class="rental-form-container">
+  <div class="rental-card">
+    <form #rentalForm="ngForm" (ngSubmit)="save(rentalForm)">
+      <div class="col-12 mb-3">
+        <h1>Dados da Locação</h1>
+      </div>
+
+      <div class="alert alert-info">
+        Retire os itens reservados na loja. O envio por aplicativo, como Uber,
+        pode ser solicitado à loja.
+      </div>
+
+      <div class="row g-3 rental-form-inputs">
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Cliente</label>
+          <input
+            pInputText
+            type="text"
+            class="form-control"
+            [value]="currentUser.name"
+            placeholder="Usuário autenticado"
+            readonly
+          />
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Tipo de locação *</label>
+          <select
+            class="form-select"
+            name="rentalTypeId"
+            [(ngModel)]="rental.rentalTypeId"
+            (ngModelChange)="changeRentalType()"
+            #rentalType="ngModel"
+            required
+            [disabled]="saving"
+          >
+            <option [ngValue]="undefined">Selecione</option>
+            <option *ngFor="let type of rentalTypes" [ngValue]="type.id">
+              {{ type.name }}
+            </option>
+          </select>
+          <app-message
+            [control]="rentalType"
+            error="required"
+            text="Informe o tipo de locação"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Início da locação *</label>
+          <input
+            type="datetime-local"
+            class="form-control"
+            name="rentalStartDate"
+            [(ngModel)]="rentalStartDate"
+            (ngModelChange)="changeRentalStartDate()"
+            #start="ngModel"
+            required
+            [disabled]="saving"
+          />
+          <app-message
+            [control]="start"
+            error="required"
+            text="Informe o início da locação"
+          ></app-message>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label-custom">Previsão de devolução *</label>
+          <input
+            type="datetime-local"
+            class="form-control"
+            name="returnForecastDate"
+            [(ngModel)]="returnForecastDate"
+            required
+            readonly
+          />
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
+        <h4 class="mb-0">Itens</h4>
+        <a routerLink="/catalog/" class="btn btn-outline-primary">CATÁLOGO</a>
+      </div>
+
+      <ng-template #quantityTemplate let-item>
+        <input
+          type="number"
+          class="form-control number"
+          [name]="'quantity-' + item.itemId"
+          [(ngModel)]="item.quantity"
+          (ngModelChange)="changeItemQuantity(item)"
+          #quantity="ngModel"
+          min="1"
+          step="1"
+          required
+          [disabled]="updatingItemId != null || saving"
+        />
+        <app-message
+          [control]="quantity"
+          error="required"
+          text="Informe a quantidade"
+        ></app-message>
+      </ng-template>
+
+      <ng-template #priceTemplate let-item>
+        {{ item.unitPrice | currency: "BRL" }}
+      </ng-template>
+      <ng-template #daysTemplate>
+        {{ getRentalDays() }}
+      </ng-template>
+      <ng-template #discountTemplate let-item>
+        {{ item.discount | currency: "BRL" }}
+      </ng-template>
+      <ng-template #additionalFeeTemplate let-item>
+        {{ item.additionalFee | currency: "BRL" }}
+      </ng-template>
+      <ng-template #subtotalTemplate let-item>
+        {{ item.subtotal | currency: "BRL" }}
+      </ng-template>
+      <ng-template #actionsTemplate let-item>
+        <button
+          pButton
+          type="button"
+          class="p-button-rounded p-button-text p-button-danger"
+          icon="pi pi-trash"
+          pTooltip="Remover item"
+          tooltipPosition="top"
+          [disabled]="updatingItemId != null || saving"
+          (click)="removeItem(item)"
+        ></button>
+      </ng-template>
+
+      <app-data-table
+        [records]="rental.items"
+        [columns]="itemColumns"
+        dataKey="itemId"
+        [showSelection]="false"
+        [paginator]="false"
+        [columnTemplates]="{
+          quantity: quantityTemplate,
+          unitPrice: priceTemplate,
+          days: daysTemplate,
+          discount: discountTemplate,
+          additionalFee: additionalFeeTemplate,
+          subtotal: subtotalTemplate
+        }"
+        [actionsTemplate]="actionsTemplate"
+        emptyMessage="Adicione itens pelo catálogo para reservar uma locação."
+      ></app-data-table>
+
+      <h4 class="mt-4 mb-3">Resumo financeiro</h4>
+      <div class="totals">
+        <div class="total-item">
+          <span>Subtotal</span>
+          <strong>{{ rental.subtotal | currency: "BRL" }}</strong>
+        </div>
+        <div class="total-item total-highlight">
+          <span>Total</span>
+          <strong>{{ rental.totalAmount | currency: "BRL" }}</strong>
+        </div>
+      </div>
+
+      <div class="rental-form-buttons mt-4">
+        <button
+          type="submit"
+          class="btn btn-primary rental-form-button"
+          [disabled]="rentalForm.invalid || currentCustomer == null || rental.items.length === 0 || updatingItemId != null || saving"
+        >
+          RESERVAR
+        </button>
+        <a routerLink="/catalog/">
+          <button
+            type="button"
+            class="btn btn-outline-danger rental-form-button"
+            [disabled]="saving"
+          >
+            CANCELAR
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

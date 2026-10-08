@@ -121,6 +121,14 @@ const routes: Routes = [
             (m) => m.RentalTypesModule,
           ),
       },
+      
+      {
+        path: 'rental',
+        loadChildren: () =>
+          import('./features/rentals/rental/rental.module').then(
+            (m) => m.RentalModule,
+          ),
+      },
 
       {
         path: 'positions',

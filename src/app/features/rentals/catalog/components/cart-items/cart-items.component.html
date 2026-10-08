@@ -100,6 +100,7 @@
       icon="pi pi-check"
       label="Finalizar"
       [disabled]="items.length === 0 || updatingItemId != null"
+      (click)="finish()"
     ></button>
   </ng-template>
 </p-dialog>

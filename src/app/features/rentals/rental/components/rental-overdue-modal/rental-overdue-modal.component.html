@@ -1,0 +1,34 @@
+<p-dialog
+  header="Locação em atraso"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '480px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <div class="overdue-grid" *ngIf="rental; else empty">
+    <div class="overdue-line">
+      <span>Dias em atraso</span>
+      <strong>{{ rental.overdueDays }}</strong>
+    </div>
+    <div class="overdue-line">
+      <span>Multa por dia</span>
+      <strong>{{ rental.lateFeePerDay | currency: "BRL" }}</strong>
+    </div>
+    <div class="overdue-line">
+      <span>Valor total da multa</span>
+      <strong>{{ rental.calculatedLateFee | currency: "BRL" }}</strong>
+    </div>
+    <div class="overdue-line">
+      <span>Valor total da locação</span>
+      <strong>{{ rental.totalAmount | currency: "BRL" }}</strong>
+    </div>
+    <div class="overdue-line highlight">
+      <span>Total da locação com multa</span>
+      <strong>{{ rental.totalWithLateFee | currency: "BRL" }}</strong>
+    </div>
+  </div>
+
+  <ng-template #empty>
+    <div class="empty">Nenhuma locação selecionada.</div>
+  </ng-template>
+</p-dialog>

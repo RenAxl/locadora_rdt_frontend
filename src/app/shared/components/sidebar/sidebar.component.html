@@ -100,6 +100,17 @@
               <span>Tipos de locação</span>
             </a>
           </li>
+          <li>
+            <a
+              routerLink="/rental"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('RENTAL_READ')"
+            >
+              <i class="fa-solid fa-clock me-2"></i>
+              <span>Locações</span>
+            </a>
+          </li>
         </ul>
       </li>
 

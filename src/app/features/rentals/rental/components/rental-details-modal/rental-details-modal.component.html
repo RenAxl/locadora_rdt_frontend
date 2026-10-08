@@ -1,0 +1,192 @@
+<p-dialog
+  [header]="title"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '1100px', maxWidth: '95vw' }"
+  (onHide)="close()"
+>
+  <ng-container *ngIf="rental; else loading">
+    <div class="details-grid">
+      <div>
+        <span>Número</span><strong>{{ rental.rentalNumber || "-" }}</strong>
+      </div>
+
+      <div>
+        <span>Cliente</span><strong>{{ rental.customerName || "-" }}</strong>
+      </div>
+
+      <div>
+        <span>Tipo de locação</span><strong>{{ rental.rentalTypeName || "-" }}</strong>
+      </div>
+
+      <div>
+        <span>Status</span><strong>{{ getStatusLabel(rental.status) }}</strong>
+      </div>
+
+      <div>
+        <span>Forma de pagamento</span><strong>{{ rental.paymentMethodName || "-" }}</strong>
+      </div>
+
+      <div>
+        <span>Pago</span><strong>{{ rental.paid ? "Sim" : "Não" }}</strong>
+      </div>
+
+      <div>
+        <span>Data do registro</span><strong>{{ rental.registrationDate ? (rental.registrationDate | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+      </div>
+
+      <div>
+        <span>Início da locação</span><strong>{{ rental.rentalStartDate ? (rental.rentalStartDate | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+      </div>
+
+      <div>
+        <span>Previsão de devolução</span><strong>{{ rental.returnForecastDate ? (rental.returnForecastDate | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+      </div>
+
+      <div>
+        <span>Devolução efetiva</span><strong>{{ rental.effectiveReturnDate ? (rental.effectiveReturnDate | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+      </div>
+
+      <div class="wide">
+        <span>Retirada</span>
+        <strong>Na loja. O envio por aplicativo, como Uber, pode ser solicitado.</strong>
+      </div>
+
+      <div>
+        <span>Subtotal</span><strong>{{ rental.subtotal | currency: "BRL" }}</strong>
+      </div>
+
+      <div>
+        <span>Desconto</span><strong>{{ rental.discount | currency: "BRL" }}</strong>
+      </div>
+
+      <div>
+        <span>Frete registrado</span><strong>{{ rental.shippingFee | currency: "BRL" }}</strong>
+      </div>
+
+      <div>
+        <span>Acréscimos</span><strong>{{ rental.additionalFee | currency: "BRL" }}</strong>
+      </div>
+
+      <div>
+        <span>Multa registrada</span><strong>{{ rental.lateFee | currency: "BRL" }}</strong>
+      </div>
+
+      <div>
+        <span>Danos</span><strong>{{ rental.damageFee | currency: "BRL" }}</strong>
+      </div>
+
+      <div>
+        <span>Total</span><strong>{{ rental.totalAmount | currency: "BRL" }}</strong>
+      </div>
+
+      <div>
+        <span>Entrada</span><strong>{{ rental.downPayment | currency: "BRL" }}</strong>
+      </div>
+
+      <div>
+        <span>Saldo</span><strong>{{ rental.remainingAmount | currency: "BRL" }}</strong>
+      </div>
+
+      <div>
+        <span>Data cadastro</span><strong>{{ rental.createdAt ? (rental.createdAt | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+      </div>
+
+      <div>
+        <span>Data atualização</span><strong>{{ rental.updatedAt ? (rental.updatedAt | date: "dd/MM/yyyy HH:mm") : "-" }}</strong>
+      </div>
+
+      <div>
+        <span>Criado por</span><strong>{{ rental.createdBy || "-" }}</strong>
+      </div>
+
+      <div>
+        <span>Atualizado por</span><strong>{{ rental.updatedBy || "-" }}</strong>
+      </div>
+
+    </div>
+
+    <h4 class="mt-4 mb-3">Itens</h4>
+    <ng-template #unitPriceTemplate let-item>
+      {{ item.unitPrice | currency: "BRL" }}
+    </ng-template>
+    <ng-template #discountTemplate let-item>
+      {{ item.discount | currency: "BRL" }}
+    </ng-template>
+    <ng-template #additionalFeeTemplate let-item>
+      {{ item.additionalFee | currency: "BRL" }}
+    </ng-template>
+    <ng-template #subtotalTemplate let-item>
+      {{ item.subtotal | currency: "BRL" }}
+    </ng-template>
+    <app-data-table
+      [records]="rental.items"
+      [columns]="itemColumns"
+      [showSelection]="false"
+      [paginator]="false"
+      [columnTemplates]="{
+        unitPrice: unitPriceTemplate,
+        discount: discountTemplate,
+        additionalFee: additionalFeeTemplate,
+        subtotal: subtotalTemplate
+      }"
+      emptyMessage="Nenhum item cadastrado nesta locação."
+    ></app-data-table>
+
+    <h4 class="mt-4 mb-3">Unidades vinculadas</h4>
+    <ng-template #unitStatusTemplate let-unit>
+      {{ getStatusLabel(unit.status) }}
+    </ng-template>
+    <ng-template #reservedAtTemplate let-unit>
+      {{ unit.reservedAt ? (unit.reservedAt | date: "dd/MM/yyyy HH:mm") : "-" }}
+    </ng-template>
+    <ng-template #deliveredAtTemplate let-unit>
+      {{ unit.deliveredAt ? (unit.deliveredAt | date: "dd/MM/yyyy HH:mm") : "-" }}
+    </ng-template>
+    <ng-template #returnedAtTemplate let-unit>
+      {{ unit.returnedAt ? (unit.returnedAt | date: "dd/MM/yyyy HH:mm") : "-" }}
+    </ng-template>
+    <app-data-table
+      [records]="units"
+      [columns]="unitColumns"
+      [loading]="loadingUnits"
+      [showSelection]="false"
+      [paginator]="false"
+      [columnTemplates]="{
+        status: unitStatusTemplate,
+        reservedAt: reservedAtTemplate,
+        deliveredAt: deliveredAtTemplate,
+        returnedAt: returnedAtTemplate
+      }"
+      emptyMessage="Nenhuma unidade vinculada nesta locação."
+    ></app-data-table>
+
+    <h4 class="mt-4 mb-3">Histórico de status</h4>
+    <ng-template #changedAtTemplate let-entry>
+      {{ entry.changedAt ? (entry.changedAt | date: "dd/MM/yyyy HH:mm") : "-" }}
+    </ng-template>
+    <ng-template #previousStatusTemplate let-entry>
+      {{ getStatusLabel(entry.previousStatus) }}
+    </ng-template>
+    <ng-template #newStatusTemplate let-entry>
+      {{ getStatusLabel(entry.newStatus) }}
+    </ng-template>
+    <app-data-table
+      [records]="history"
+      [columns]="historyColumns"
+      [loading]="loadingHistory"
+      [showSelection]="false"
+      [paginator]="false"
+      [columnTemplates]="{
+        changedAt: changedAtTemplate,
+        previousStatus: previousStatusTemplate,
+        newStatus: newStatusTemplate
+      }"
+      emptyMessage="Nenhuma alteração de status registrada."
+    ></app-data-table>
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="empty">Carregando...</div>
+  </ng-template>
+</p-dialog>
