@@ -107,8 +107,19 @@
               class="d-flex align-items-center nav-link px-4"
               *ngIf="hasAuthority('RENTAL_READ')"
             >
-              <i class="fa-solid fa-clock me-2"></i>
+              <i class="fa-solid fa-file-signature me-2"></i>
               <span>Locações</span>
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/rental-history"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+              *ngIf="hasAuthority('RENTAL_HISTORY_READ')"
+            >
+              <i class="fa-solid fa-clock-rotate-left me-2"></i>
+              <span>Histórico de locações</span>
             </a>
           </li>
         </ul>

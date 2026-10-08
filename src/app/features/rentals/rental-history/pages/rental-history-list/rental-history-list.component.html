@@ -1,0 +1,89 @@
+<main class="history-page">
+  <header class="history-header">
+    <div>
+      <span class="history-eyebrow">MINHA CONTA</span>
+      <h1>Histórico de locações</h1>
+      <p>Acompanhe todas as suas locações e consulte os itens de cada pedido.</p>
+    </div>
+
+    <div class="history-header-icon">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+    </div>
+  </header>
+
+  <section class="history-content">
+    <div class="history-loading" *ngIf="loading">
+      <i class="pi pi-spin pi-spinner"></i>
+      Carregando seu histórico...
+    </div>
+
+    <div class="history-empty" *ngIf="!loading && rentals.length === 0">
+      <i class="fa-solid fa-gamepad"></i>
+      <h2>Você ainda não possui locações</h2>
+      <p>Explore o catálogo e encontre os itens para sua próxima locação.</p>
+      <a routerLink="/catalog" class="btn btn-primary">Explorar catálogo</a>
+    </div>
+
+    <div class="rental-history-list" *ngIf="!loading && rentals.length > 0">
+      <article class="rental-history-card" *ngFor="let rental of rentals">
+        <div class="rental-card-header">
+          <div>
+            <span class="rental-number">{{ rental.rentalNumber }}</span>
+            <span class="rental-date">
+              Registrada em {{
+                rental.registrationDate ? (rental.registrationDate | date: "dd/MM/yyyy") : "-"
+              }}
+            </span>
+          </div>
+
+          <span class="status-badge" [ngClass]="getStatusClass(rental.status)">
+            {{ getStatusLabel(rental.status) }}
+          </span>
+        </div>
+
+        <div class="rental-info-grid">
+          <div class="info-item">
+            <span>Tipo de locação</span>
+            <strong>{{ rental.rentalTypeName }}</strong>
+          </div>
+          <div class="info-item">
+            <span>Início da locação</span>
+            <strong>{{
+              rental.rentalStartDate ? (rental.rentalStartDate | date: "dd/MM/yyyy") : "-"
+            }}</strong>
+          </div>
+          <div class="info-item">
+            <span>Previsão de devolução</span>
+            <strong>{{
+              rental.returnForecastDate ? (rental.returnForecastDate | date: "dd/MM/yyyy") : "-"
+            }}</strong>
+          </div>
+          <div class="info-item">
+            <span>Valor total</span>
+            <strong>{{ rental.totalAmount | currency: "BRL" }}</strong>
+          </div>
+        </div>
+
+        <div class="rental-items">
+          <h2>Itens da locação</h2>
+          <div class="rental-item" *ngFor="let item of rental.items">
+            <span class="item-icon"><i class="fa-solid fa-compact-disc"></i></span>
+            <div>
+              <strong>{{ item.itemName }}</strong>
+              <small>{{ item.quantity }} unidade(s)</small>
+            </div>
+            <span class="item-value">{{ item.subtotal | currency: "BRL" }}</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <p-paginator
+      *ngIf="totalElements > pagination.linesPerPage"
+      [rows]="pagination.linesPerPage"
+      [first]="pagination.page * pagination.linesPerPage"
+      [totalRecords]="totalElements"
+      (onPageChange)="changePage($event)"
+    ></p-paginator>
+  </section>
+</main>

@@ -1,0 +1,231 @@
+.history-page {
+  min-height: 100%;
+  padding: 0;
+  background: #f4f6fb;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2.25rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #17233f, #3156a3);
+  color: #ffffff;
+  box-shadow: 0 18px 40px rgba(23, 35, 63, 0.2);
+}
+
+.history-eyebrow {
+  color: #9fc5ff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.history-header h1 {
+  margin: 0.5rem 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 750;
+}
+
+.history-header p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.history-header-icon {
+  display: grid;
+  width: 82px;
+  height: 82px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 2rem;
+}
+
+.history-content {
+  max-width: 1050px;
+  margin: 2rem 0 0;
+}
+
+.history-loading,
+.history-empty {
+  padding: 4rem 2rem;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #667085;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(28, 42, 75, 0.07);
+}
+
+.history-loading i,
+.history-empty > i {
+  display: block;
+  margin-bottom: 1rem;
+  color: #3156a3;
+  font-size: 2.5rem;
+}
+
+.history-empty h2 {
+  color: #17233f;
+}
+
+.rental-history-list {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.rental-history-card {
+  overflow: hidden;
+  border: 1px solid #e4e9f2;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(28, 42, 75, 0.07);
+}
+
+.rental-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.rental-number,
+.rental-date {
+  display: block;
+}
+
+.rental-number {
+  color: #17233f;
+  font-size: 1.15rem;
+  font-weight: 750;
+}
+
+.rental-date {
+  margin-top: 0.2rem;
+  color: #7b8497;
+  font-size: 0.85rem;
+}
+
+.status-badge {
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: #e8eefb;
+  color: #3156a3;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.status-delivered,
+.status-returned {
+  background: #dcf6e8;
+  color: #16744a;
+}
+
+.status-canceled {
+  background: #fee5e5;
+  color: #ad2e2e;
+}
+
+.status-overdue {
+  background: #fff0d5;
+  color: #9a5b00;
+}
+
+
+.rental-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.info-item span,
+.info-item strong {
+  display: block;
+}
+
+.info-item span {
+  margin-bottom: 0.3rem;
+  color: #7b8497;
+  font-size: 0.78rem;
+}
+
+.info-item strong {
+  color: #28344f;
+  font-size: 0.95rem;
+}
+
+.rental-items {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.rental-items h2 {
+  margin: 0 0 0.75rem;
+  color: #34405a;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.rental-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 10px;
+  background: #f7f8fb;
+}
+
+.rental-item + .rental-item {
+  margin-top: 0.5rem;
+}
+
+.rental-item strong,
+.rental-item small {
+  display: block;
+}
+
+.rental-item small {
+  color: #7b8497;
+}
+
+.item-icon {
+  color: #3156a3;
+  font-size: 1.25rem;
+}
+
+.item-value {
+  color: #25324e;
+  font-weight: 700;
+}
+
+
+@media (max-width: 767px) {
+  .history-page {
+    padding: 0;
+  }
+
+  .history-header {
+    padding: 1.5rem;
+  }
+
+  .history-header-icon {
+    display: none;
+  }
+
+  .rental-info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rental-card-header {
+    align-items: flex-start;
+  }
+
+}

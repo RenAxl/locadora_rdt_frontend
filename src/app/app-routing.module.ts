@@ -121,12 +121,20 @@ const routes: Routes = [
             (m) => m.RentalTypesModule,
           ),
       },
-      
+
       {
         path: 'rental',
         loadChildren: () =>
           import('./features/rentals/rental/rental.module').then(
             (m) => m.RentalModule,
+          ),
+      },
+
+      {
+        path: 'rental-history',
+        loadChildren: () =>
+          import('./features/rentals/rental-history/rental-history.module').then(
+            (m) => m.RentalHistoryModule,
           ),
       },
 
