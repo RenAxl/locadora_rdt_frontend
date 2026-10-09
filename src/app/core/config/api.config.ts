@@ -180,6 +180,12 @@ export const API = {
     COMPARISON: `${BASE_URL}/reports/financial-reports/comparison`,
   },
 
+  RENTAL_REPORTS: {
+    GENERATE: (reportType: string, format: string) =>
+      `${BASE_URL}/reports/rental-reports/${reportType}/${format}`,
+    COMPARISON: `${BASE_URL}/reports/rental-reports/comparison`,
+  },
+
   ROLES: {
     ROOT: `${BASE_URL}/roles`,
     BY_ID: (id: number | string) => `${BASE_URL}/roles/${id}`,

@@ -1,0 +1,284 @@
+<div class="rental-report-list-container">
+  <header class="module-page-header">
+    <div>
+      <span class="module-page-eyebrow">RELATÓRIOS</span>
+      <h1>Relatórios de locações</h1>
+      <p>Gere e consulte os relatórios de locações da locadora.</p>
+    </div>
+    <div class="module-page-header-icon">
+      <i class="fa-solid fa-chart-line"></i>
+    </div>
+  </header>
+
+  <form class="rental-report-card">
+    <div class="row g-3 rental-report-form-inputs">
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom" for="report-type">Relatório</label>
+        <select
+          id="report-type"
+          class="form-control"
+          name="reportType"
+          [(ngModel)]="selectedReportType"
+        >
+          <option *ngFor="let option of reportOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-3">
+        <label class="form-label-custom" for="report-year">Ano</label>
+        <input
+          id="report-year"
+          type="number"
+          class="form-control"
+          name="year"
+          min="1900"
+          max="9999"
+          [(ngModel)]="filters.year"
+        />
+      </div>
+
+      <div class="col-12 col-lg-3">
+        <label class="form-label-custom" for="report-period-type">Tipo de Período</label>
+        <select
+          id="report-period-type"
+          class="form-control"
+          name="periodType"
+          [(ngModel)]="filters.periodType"
+        >
+          <option value="REGISTRATION_DATE">Data do registro</option>
+          <option value="RENTAL_START_DATE">Início da locação</option>
+          <option value="RETURN_FORECAST_DATE">Previsão de devolução</option>
+          <option value="EFFECTIVE_RETURN_DATE">Devolução efetiva</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showPeriodFilters()">
+        <label class="form-label-custom" for="report-start-date">Data Inicial</label>
+        <input
+          id="report-start-date"
+          type="date"
+          class="form-control"
+          name="startDate"
+          [(ngModel)]="filters.startDate"
+        />
+      </div>
+
+      <div class="col-12 col-lg-3" *ngIf="showPeriodFilters()">
+        <label class="form-label-custom" for="report-end-date">Data Final</label>
+        <input
+          id="report-end-date"
+          type="date"
+          class="form-control"
+          name="endDate"
+          [(ngModel)]="filters.endDate"
+        />
+      </div>
+
+      <div class="col-12 col-lg-3">
+        <label class="form-label-custom" for="report-status">Situação</label>
+        <select
+          id="report-status"
+          class="form-control"
+          name="status"
+          [(ngModel)]="filters.status"
+        >
+          <option value="ALL">Todas</option>
+          <option value="RENTED">Alugada</option>
+          <option value="DELIVERED">Entregue</option>
+          <option value="RESERVED">Reservada</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <label class="form-label-custom" for="report-search">Busca</label>
+        <input
+          id="report-search"
+          type="text"
+          class="form-control"
+          name="search"
+          [(ngModel)]="filters.search"
+          placeholder="Número da locação, cliente ou tipo"
+        />
+      </div>
+
+      <div class="col-12 col-lg-3">
+        <label class="form-label-custom" for="report-customer">Cliente</label>
+        <select
+          id="report-customer"
+          class="form-control"
+          name="customerId"
+          [(ngModel)]="filters.customerId"
+        >
+          <option [ngValue]="null">Todos</option>
+          <option *ngFor="let customer of customers" [ngValue]="customer.id">
+            {{ customer.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-3">
+        <label class="form-label-custom" for="report-rental-type">Tipo de Locação</label>
+        <select
+          id="report-rental-type"
+          class="form-control"
+          name="rentalTypeId"
+          [(ngModel)]="filters.rentalTypeId"
+        >
+          <option [ngValue]="null">Todos</option>
+          <option *ngFor="let rentalType of rentalTypes" [ngValue]="rentalType.id">
+            {{ rentalType.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-3">
+        <label class="form-label-custom" for="report-payment-method">Forma de Pagamento</label>
+        <select
+          id="report-payment-method"
+          class="form-control"
+          name="paymentMethodId"
+          [(ngModel)]="filters.paymentMethodId"
+        >
+          <option [ngValue]="null">Todas</option>
+          <option *ngFor="let method of paymentMethods" [ngValue]="method.id">
+            {{ method.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-12 col-lg-3">
+        <label class="form-label-custom" for="report-minimum-amount">Valor Inicial</label>
+        <input
+          id="report-minimum-amount"
+          type="number"
+          min="0"
+          step="0.01"
+          class="form-control"
+          name="minimumAmount"
+          [(ngModel)]="filters.minimumAmount"
+        />
+      </div>
+
+      <div class="col-12 col-lg-3">
+        <label class="form-label-custom" for="report-maximum-amount">Valor Final</label>
+        <input
+          id="report-maximum-amount"
+          type="number"
+          min="0"
+          step="0.01"
+          class="form-control"
+          name="maximumAmount"
+          [(ngModel)]="filters.maximumAmount"
+        />
+      </div>
+    </div>
+
+    <div
+      class="rental-report-form-buttons mt-4"
+      *ngIf="hasAuthority('RENTAL_REPORTS_READ')"
+    >
+      <button
+        type="button"
+        class="btn btn-primary rental-report-form-button"
+        [disabled]="loading"
+        (click)="generate('pdf')"
+      >
+        <i class="pi pi-file-pdf me-2"></i>GERAR PDF
+      </button>
+      <button
+        type="button"
+        class="btn btn-success rental-report-form-button"
+        [disabled]="loading"
+        (click)="generate('xlsx')"
+      >
+        <i class="pi pi-file-excel me-2"></i>GERAR EXCEL
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-danger rental-report-form-button"
+        [disabled]="loading"
+        (click)="clearFilters()"
+      >
+        LIMPAR
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary rental-report-form-button"
+        [disabled]="chartLoading"
+        (click)="loadComparison()"
+      >
+        <i class="pi pi-chart-bar me-2"></i>ATUALIZAR GRÁFICO
+      </button>
+    </div>
+  </form>
+
+  <section class="rental-report-card">
+    <div class="comparison-header">
+      <div>
+        <h2>Locações {{ chartYear }}</h2>
+      </div>
+      <span class="loading-label" *ngIf="chartLoading">Carregando...</span>
+    </div>
+
+    <div class="comparison-summary">
+      <div class="summary-item">
+        <span>Valor registrado</span>
+        <strong>{{ comparison.rentalTotal | currency: "BRL": "symbol": "1.2-2" }}</strong>
+        <small>{{ comparison.rentalCount }} locação(ões)</small>
+      </div>
+      <div class="summary-item">
+        <span>Valor pago</span>
+        <strong>{{ comparison.paidTotal | currency: "BRL": "symbol": "1.2-2" }}</strong>
+        <small>{{ comparison.paidCount }} locação(ões)</small>
+      </div>
+      <div class="summary-item">
+        <span>Locações não pagas</span>
+        <strong>{{ (comparison.rentalTotal - comparison.paidTotal) | currency: "BRL": "symbol": "1.2-2" }}</strong>
+        <small>{{ comparison.rentalCount - comparison.paidCount }} locação(ões)</small>
+      </div>
+    </div>
+
+    <p class="loading-label">O gráfico considera o ano e o tipo de período selecionados, mantendo os demais filtros. Valor registrado inclui apenas multas e descontos já gravados.</p>
+
+    <div class="chart-legend">
+      <span><i class="legend-marker recorded"></i> Valor registrado</span>
+      <span><i class="legend-marker paid"></i> Valor pago</span>
+    </div>
+
+    <div class="monthly-chart" aria-label="Gráfico mensal dos valores registrados e pagos de locações">
+      <div class="chart-y-axis">
+        <span>{{ chartTickValue(1) | number: "1.0-0" }}</span>
+        <span>{{ chartTickValue(0.75) | number: "1.0-0" }}</span>
+        <span>{{ chartTickValue(0.5) | number: "1.0-0" }}</span>
+        <span>{{ chartTickValue(0.25) | number: "1.0-0" }}</span>
+        <span>0</span>
+      </div>
+
+      <div class="chart-plot">
+        <div class="grid-line line-100"></div>
+        <div class="grid-line line-75"></div>
+        <div class="grid-line line-50"></div>
+        <div class="grid-line line-25"></div>
+        <div class="grid-line line-0"></div>
+
+        <div class="month-group" *ngFor="let month of comparison.months">
+          <div class="month-bars">
+            <div
+              class="month-column recorded"
+              [style.height]="chartColumnHeight(month.rentalTotal)"
+              [title]="'Valor registrado: ' + (month.rentalTotal | currency: 'BRL': 'symbol': '1.2-2')"
+            ></div>
+            <div
+              class="month-column paid"
+              [style.height]="chartColumnHeight(month.paidTotal)"
+              [title]="'Valor pago: ' + (month.paidTotal | currency: 'BRL': 'symbol': '1.2-2')"
+            ></div>
+          </div>
+          <div class="month-label">{{ month.label }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

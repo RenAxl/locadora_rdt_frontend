@@ -350,6 +350,7 @@
           data-bs-target="#submenuRelatoriosDesktop"
           *ngIf="
             hasAuthority('FINANCIAL_REPORTS_READ') ||
+            hasAuthority('RENTAL_REPORTS_READ') ||
             hasAuthority('STOCK_REPORTS_READ')
           "
         >
@@ -377,6 +378,17 @@
             >
               <i class="fa-solid fa-chart-line me-2"></i>
               <span>Relatórios Financeiros</span>
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/reports/rental-reports"
+              *ngIf="hasAuthority('RENTAL_REPORTS_READ')"
+              routerLinkActive="active"
+              class="d-flex align-items-center nav-link px-4"
+            >
+              <i class="fa-solid fa-file-contract me-2"></i>
+              <span>Relatórios de Locações</span>
             </a>
           </li>
           <li>
