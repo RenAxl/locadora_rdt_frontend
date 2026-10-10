@@ -79,6 +79,20 @@ const routes: Routes = [
     component: MainComponent,
     children: [
       {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('./features/dashboard/dashboard.module').then(
+            (m) => m.DashboardModule,
+          ),
+      },
+    ],
+  },
+
+  {
+    path: '',
+    component: MainComponent,
+    children: [
+      {
         path: 'catalog',
         loadChildren: () =>
           import('./features/rentals/catalog/catalog.module').then(

@@ -47,6 +47,18 @@
 
       <li class="treeview">
         <a
+          routerLink="/dashboard"
+          routerLinkActive="active"
+          class="d-flex align-items-center nav-link px-3"
+          *ngIf="hasAuthority('DASHBOARD_READ')"
+        >
+          <i class="fa-solid fa-gauge me-2"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+
+      <li class="treeview">
+        <a
           routerLink="/catalog"
           routerLinkActive="active"
           class="d-flex align-items-center nav-link px-3"

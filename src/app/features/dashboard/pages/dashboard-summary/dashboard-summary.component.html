@@ -1,0 +1,205 @@
+<div class="dashboard-page">
+  <header class="module-page-header">
+    <div>
+      <span class="module-page-eyebrow">VISÃO GERAL</span>
+      <h1>Dashboard</h1>
+      <p>Acompanhe os principais indicadores da locadora.</p>
+    </div>
+    <div class="module-page-header-icon"><i class="fa-solid fa-gauge"></i></div>
+  </header>
+
+  <div class="row g-3 justify-content-center">
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+      <div class="figure-card">
+        <div class="figure-icon bg-primary">
+          <i class="fa fa-gamepad"></i>
+        </div>
+        <div class="figure-value">{{ dashboard.availableGames }}</div>
+        <div class="figure-label">Jogos Disponíveis</div>
+      </div>
+    </div>
+
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+      <div class="figure-card">
+        <div class="figure-icon bg-info">
+          <i class="fa fa-playstation"></i>
+        </div>
+        <div class="figure-value">{{ dashboard.activeConsoles }}</div>
+        <div class="figure-label">Consoles Ativos</div>
+      </div>
+    </div>
+
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+      <div class="figure-card">
+        <div class="figure-icon bg-success">
+          <i class="fa fa-handshake"></i>
+        </div>
+        <div class="figure-value">{{ dashboard.activeRentals }}</div>
+        <div class="figure-label">Locações Ativas</div>
+      </div>
+    </div>
+
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+      <div class="figure-card">
+        <div class="figure-icon bg-warning">
+          <i class="fa fa-clock"></i>
+        </div>
+        <div class="figure-value">{{ dashboard.returnsToday }}</div>
+        <div class="figure-label">Devoluções Hoje</div>
+      </div>
+    </div>
+
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+      <div class="figure-card">
+        <div class="figure-icon bg-secondary">
+          <i class="fa fa-users"></i>
+        </div>
+        <div class="figure-value">{{ dashboard.activeCustomers }}</div>
+        <div class="figure-label">Clientes Ativos</div>
+      </div>
+    </div>
+
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+      <div class="figure-card">
+        <div class="figure-icon bg-danger">
+          <i class="fa fa-exclamation-triangle"></i>
+        </div>
+        <div class="figure-value">{{ dashboard.overdueRentals }}</div>
+        <div class="figure-label">Atrasos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mt-2">
+    <div class="col-12">
+      <div class="report-card">
+        <div class="report-header">
+          <div>
+            <div class="report-title-main">Relatório</div>
+            <div class="report-title-sub">Locações por dia (últimos 7 dias)</div>
+          </div>
+
+          <div class="report-badge">
+            <i class="fa fa-line-chart"></i>
+            <span>7 dias</span>
+          </div>
+        </div>
+
+        <div class="report-body">
+          <div class="chart-wrap">
+            <div class="chart-grid"></div>
+
+            <div class="chart-bars">
+              <div
+                class="bar"
+                *ngFor="let day of dashboard.dailyRentals"
+                [style.--h]="weeklyBarHeight(day.quantity)"
+                [title]="day.quantity + ' locação(ões)'"
+              >
+                <span>{{ day.label }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-metrics">
+            <div class="metric">
+              <div class="metric-label">Total semana</div>
+              <div class="metric-value">{{ weeklyTotal }}</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Pico</div>
+              <div class="metric-value">{{ weeklyPeak }}</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Média/dia</div>
+              <div class="metric-value">{{ weeklyAverage | number: "1.0-1" }}</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Atrasos</div>
+              <div class="metric-value">{{ dashboard.overdueRentals }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mt-2">
+    <div class="col-12">
+      <section class="financial-card">
+        <div class="financial-header">
+          <div>
+            <h2>Recebimentos / Despesas {{ chartYear }}</h2>
+          </div>
+          <span class="loading-label" *ngIf="chartLoading">Carregando...</span>
+        </div>
+
+        <div class="comparison-summary">
+          <div class="summary-item">
+            <span>Contas à Receber</span>
+            <strong>{{
+              comparison.receivableTotal | currency: "BRL" : "symbol" : "1.2-2"
+            }}</strong>
+            <small>{{ comparison.receivableCount }} conta(s)</small>
+          </div>
+          <div class="summary-item">
+            <span>Contas a Pagar</span>
+            <strong>{{
+              comparison.payableTotal | currency: "BRL" : "symbol" : "1.2-2"
+            }}</strong>
+            <small>{{ comparison.payableCount }} conta(s)</small>
+          </div>
+          <div class="summary-item balance" [ngClass]="balanceClass">
+            <span>Saldo</span>
+            <strong>{{
+              comparison.balance | currency: "BRL" : "symbol" : "1.2-2"
+            }}</strong>
+            <small>Receber - Pagar</small>
+          </div>
+        </div>
+
+        <div class="financial-legend">
+          <span><i class="legend-marker receivable"></i> Contas à Receber</span>
+          <span><i class="legend-marker payable"></i> Contas a Pagar</span>
+        </div>
+
+        <div
+          class="monthly-chart"
+          aria-label="Gráfico mensal de Recebimentos e Despesas"
+        >
+          <div class="chart-y-axis">
+            <span>{{ chartTickValue(1) | number: "1.0-0" }}</span>
+            <span>{{ chartTickValue(0.75) | number: "1.0-0" }}</span>
+            <span>{{ chartTickValue(0.5) | number: "1.0-0" }}</span>
+            <span>{{ chartTickValue(0.25) | number: "1.0-0" }}</span>
+            <span>0</span>
+          </div>
+
+          <div class="financial-chart-plot">
+            <div class="grid-line line-100"></div>
+            <div class="grid-line line-75"></div>
+            <div class="grid-line line-50"></div>
+            <div class="grid-line line-25"></div>
+            <div class="grid-line line-0"></div>
+
+            <div class="month-group" *ngFor="let month of comparison.months">
+              <div class="month-bars">
+                <div
+                  class="month-column receivable"
+                  [style.height]="chartColumnHeight(month.receivableTotal)"
+                  [title]="'Contas à Receber: ' + (month.receivableTotal | currency: 'BRL' : 'symbol' : '1.2-2')"
+                ></div>
+                <div
+                  class="month-column payable"
+                  [style.height]="chartColumnHeight(month.payableTotal)"
+                  [title]="'Contas a Pagar: ' + (month.payableTotal | currency: 'BRL' : 'symbol' : '1.2-2')"
+                ></div>
+              </div>
+              <div class="month-label">{{ month.label }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
