@@ -22,7 +22,7 @@ import { NotAuthorizedComponent } from './pages/not-authorized/not-authorized.co
     JwtModule.forRoot({
       config: {
         tokenGetter,
-        allowedDomains: ['localhost:8080'],
+        allowedDomains: [new URL(API.BASE).host],
         disallowedRoutes: [
           API.AUTH.TOKEN,
           API.CUSTOMER_ACCOUNT.REGISTER,
