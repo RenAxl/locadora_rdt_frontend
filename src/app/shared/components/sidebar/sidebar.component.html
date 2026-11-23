@@ -1,4 +1,5 @@
 <aside
+  #offcanvas
   id="sidebarOffcanvas"
   class="sidebar offcanvas-md offcanvas-start d-flex flex-column"
   [class.sidebar-collapsed]="collapsed"
@@ -28,7 +29,7 @@
     </div>
   </div>
 
-  <nav class="sidebar-nav flex-grow-1">
+  <nav class="sidebar-nav flex-grow-1" (click)="onMenuClick($event)">
     <ul class="sidebar-menu list-unstyled mb-0">
       <li class="header">
         <span class="header-chip">MENU NAVEGAÇÃO</span>
